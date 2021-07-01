@@ -1,23 +1,19 @@
 package initialize
 
 import (
-	"github.com/TualatinX/durian-go/global"
-	"github.com/TualatinX/durian-go/model"
+	"fmt"
 	"log"
 	"os"
 	"time"
-	"fmt"
+
+	"github.com/TualatinX/durian-go/global"
+	"github.com/TualatinX/durian-go/model"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
 )
 
 func InitMySQL() {
-	// ADDR:=os.Getenv("ADDR")
-	// USR:=os.Getenv("USR")
-	// PWD:=os.Getenv("PWD")
-	// DB:=os.Getenv("DB")
-	// dsn := USR + ":" + PWD + "@tcp(" + ADDR + ")/" + DB + "?charset=utf8mb4&parseTime=True&loc=Local"
 	addr, username, password, database := "rm-uf6ji600qianqe6921o.mysql.rds.aliyuncs.com:3306", "buaase2021", "buaase(2021)", "durian"
 	dsn := username + ":" + password + "@tcp(" + addr + ")/" + database + "?charset=utf8mb4&parseTime=True&loc=Local"
 	fmt.Println(dsn)
