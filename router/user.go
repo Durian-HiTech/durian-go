@@ -12,4 +12,5 @@ func InitUserRouter(Router *gin.RouterGroup) {
 		UserRouter.POST("/register", v1.Register)
 
 	}
+	Router.GET("/", v1.Index)
 }

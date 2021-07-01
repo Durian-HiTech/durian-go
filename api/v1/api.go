@@ -24,5 +24,8 @@ func Register(c *gin.Context) {
 	// service.CreateAUser(&user)
 	c.JSON(http.StatusOK, gin.H{"success": true, "message": username + "/" + password})
 	return
+}
 
+func Index(c *gin.Context) {
+	c.JSON(http.StatusOK, gin.H{"success": true, "message": "durian"})
 }
