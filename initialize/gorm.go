@@ -6,19 +6,21 @@ import (
 	"log"
 	"os"
 	"time"
-
+	"fmt"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
 )
 
 func InitMySQL() {
-	// host, port, username, password, database := FetchMySQLConfig()
-	ADDR:=os.Getenv("ADDR")
-	USR:=os.Getenv("USR")
-	PWD:=os.Getenv("PWD")
-	DB:=os.Getenv("DB")
-	dsn := USR + ":" + PWD + "@tcp(" + ADDR + ")/" + DB + "?charset=utf8mb4&parseTime=True&loc=Local"
+	// ADDR:=os.Getenv("ADDR")
+	// USR:=os.Getenv("USR")
+	// PWD:=os.Getenv("PWD")
+	// DB:=os.Getenv("DB")
+	// dsn := USR + ":" + PWD + "@tcp(" + ADDR + ")/" + DB + "?charset=utf8mb4&parseTime=True&loc=Local"
+	addr, username, password, database := "rm-uf6ji600qianqe6921o.mysql.rds.aliyuncs.com:3306", "buaase2021", "buaase(2021)", "durian"
+	dsn := username + ":" + password + "@tcp(" + addr + ")/" + database + "?charset=utf8mb4&parseTime=True&loc=Local"
+	fmt.Println(dsn)
 	newLogger := logger.New(
 		log.New(os.Stdout, "\r\n", log.LstdFlags), // io writer
 		logger.Config{

@@ -2,6 +2,7 @@ package main
 
 import (
 	"github.com/TualatinX/durian-go/initialize"
+	"log"
 	"os"
 )
 
