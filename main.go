@@ -2,6 +2,7 @@ package main
 
 import (
 	"github.com/TualatinX/durian-go/initialize"
+	"os"
 )
 
 func main() {
@@ -10,5 +11,9 @@ func main() {
 
 	r := initialize.SetupRouter()
 
-	r.Run(":8080")
+	port := os.Getenv("PORT")
+	if port == "" {
+        log.Fatal("$PORT must be set")
+    }
+	r.Run(":"+port)
 }
