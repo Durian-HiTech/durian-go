@@ -27,5 +27,5 @@ func Register(c *gin.Context) {
 }
 
 func Index(c *gin.Context) {
-	c.JSON(http.StatusOK, gin.H{"success": true, "message": "durian"})
+	c.JSON(http.StatusOK, gin.H{"success": true, "message": "gcp yyds"})
 }
