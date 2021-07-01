@@ -1,1 +1,1 @@
-# durian-backend
+# durian-go
