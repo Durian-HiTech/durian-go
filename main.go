@@ -1,7 +1,7 @@
 package main
 
 import (
-	"demo/initialize"
+	"github.com/TualatinX/durian-go/initialize"
 )
 
 func main() {

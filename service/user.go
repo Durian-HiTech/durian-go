@@ -1,8 +1,8 @@
 package service
 
 import (
-	"demo/global"
-	"demo/model"
+	"github.com/TualatinX/durian-go/global"
+	"github.com/TualatinX/durian-go/model"
 )
 
 func CreateAUser(user *model.User) (err error) {

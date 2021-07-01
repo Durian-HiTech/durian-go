@@ -1,7 +1,7 @@
 package router
 
 import (
-	v1 "demo/api/v1"
+	v1 "github.com/TualatinX/durian-go/api/v1"
 
 	"github.com/gin-gonic/gin"
 )

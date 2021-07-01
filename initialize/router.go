@@ -1,8 +1,8 @@
 package initialize
 
 import (
-	"demo/middleware"
-	"demo/router"
+	"github.com/TualatinX/durian-go/middleware"
+	"github.com/TualatinX/durian-go/router"
 
 	"github.com/gin-gonic/gin"
 )
