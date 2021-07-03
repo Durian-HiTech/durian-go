@@ -156,9 +156,9 @@ func Subscribe(c *gin.Context) {
 		return
 	}
 
-	_, notFoundSubscriptionByID := service.QueryAsubscriptionByID(userID, cityName)
+	_, notFoundSubscriptionByUserIDAndCityName := service.QueryASubscriptionByUserIDAndCityName(userID, cityName)
 
-	if !notFoundSubscriptionByID {
+	if !notFoundSubscriptionByUserIDAndCityName {
 		c.JSON(http.StatusOK, gin.H{
 			"success": false,
 			"message": "已经订阅过这个城市的疫情信息",
@@ -194,18 +194,28 @@ func ListAllSubscriptions(c *gin.Context) {
 	return
 }
 
-// // RemoveFavorite doc
-// // @description 移除收藏
-// // @Tags user
-// // @Param favor_id formData string true "收藏ID"
-// // @Success 200 {string} string "{"success":true, "message":"删除成功"}"
-// // @Router /user/favorite/remove [post]
-// func RemoveFavorite(c *gin.Context) {
-// 	favorID, _ := strconv.ParseUint(c.Request.FormValue("favor_id"), 0, 64)
-// 	if err := service.DeleteAFavorite(favorID); err != nil {
-// 		c.JSON(http.StatusOK, gin.H{"success": false, "message": err.Error()})
-// 	} else {
-// 		c.JSON(http.StatusOK, gin.H{"success": true, "message": "删除成功"})
-// 	}
-// 	return
-// }
+// RemoveSubscription doc
+// @description 删除订阅
+// @Tags user
+// @Param subscription_id formData string true "订阅ID"
+// @Success 200 {string} string "{"success":true, "message":"删除成功"}"
+// @Router /user/remove [post]
+func RemoveSubscription(c *gin.Context) {
+	subscriptionID, _ := strconv.ParseUint(c.Request.FormValue("subscription_id"), 0, 64)
+
+	_, notFoundSubscription := service.QueryASubscriptionByID(subscriptionID)
+	if notFoundSubscription {
+		c.JSON(http.StatusOK, gin.H{
+			"success": false,
+			"message": "这一订阅ID不存在",
+		})
+		return
+	}
+
+	if err := service.DeleteASubscription(subscriptionID); err != nil {
+		c.JSON(http.StatusOK, gin.H{"success": false, "message": err.Error()})
+	} else {
+		c.JSON(http.StatusOK, gin.H{"success": true, "message": "删除成功"})
+	}
+	return
+}

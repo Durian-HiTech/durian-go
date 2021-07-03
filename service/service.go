@@ -52,7 +52,18 @@ func CreateASubscription(userID uint64, cityName string) (err error) {
 	return
 }
 
-func QueryAsubscriptionByID(userID uint64, cityName string) (subscription model.Subscription, notFound bool) {
+func QueryASubscriptionByID(subscriptionID uint64) (subscription model.Subscription, notFound bool) {
+	err := global.DB.Where("subscription_id = ?", subscriptionID).First(&subscription).Error
+	if err != nil && errors.Is(err, gorm.ErrRecordNotFound) {
+		return subscription, true
+	} else if err != nil && !errors.Is(err, gorm.ErrRecordNotFound) {
+		panic(err)
+	} else {
+		return subscription, false
+	}
+}
+
+func QueryASubscriptionByUserIDAndCityName(userID uint64, cityName string) (subscription model.Subscription, notFound bool) {
 	err := global.DB.Where("user_id = ? AND city_name = ?", userID, cityName).First(&subscription).Error
 	if err != nil && errors.Is(err, gorm.ErrRecordNotFound) {
 		return subscription, true
@@ -63,12 +74,12 @@ func QueryAsubscriptionByID(userID uint64, cityName string) (subscription model.
 	}
 }
 
-// func DeleteAFavorite(favorID uint64) (err error) {
-// 	var favorite model.Favorite
-// 	err = global.DB.First(&favorite, favorID).Error
-// 	_ = global.DB.Delete(&favorite).Error
-// 	return err
-// }
+func DeleteASubscription(subscriptionID uint64) (err error) {
+	var subscription model.Subscription
+	err = global.DB.First(&subscription, subscriptionID).Error
+	_ = global.DB.Delete(&subscription).Error
+	return err
+}
 
 func QueryAllSubscriptions(userID uint64) (subscriptions []model.Subscription) {
 	global.DB.Where("user_id = ?", userID).Find(&subscriptions)

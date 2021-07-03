@@ -121,6 +121,22 @@ paths:
             type: string
       tags:
       - user
+  /user/remove:
+    post:
+      description: 删除订阅
+      parameters:
+      - description: 订阅ID
+        in: formData
+        name: subscription_id
+        required: true
+        type: string
+      responses:
+        "200":
+          description: '{"success":true, "message":"删除成功"}'
+          schema:
+            type: string
+      tags:
+      - user
   /user/subscribe:
     post:
       description: 订阅城市疫情信息

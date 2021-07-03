@@ -202,6 +202,31 @@ var doc = `{
                 }
             }
         },
+        "/user/remove": {
+            "post": {
+                "description": "删除订阅",
+                "tags": [
+                    "user"
+                ],
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "订阅ID",
+                        "name": "subscription_id",
+                        "in": "formData",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "{\"success\":true, \"message\":\"删除成功\"}",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
         "/user/subscribe": {
             "post": {
                 "description": "订阅城市疫情信息",
