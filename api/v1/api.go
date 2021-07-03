@@ -32,6 +32,13 @@ func Register(c *gin.Context) {
 	}
 }
 
+// Register doc
+// @description 登录
+// @Tags user
+// @Param username formData string true "用户名"
+// @Param password formData string true "密码"
+// @Success 200 {string} string "{"success": true, "message": "登录成功", "detail": user的信息}"
+// @Router /user/login [post]
 func Login(c *gin.Context) {
 	username := c.Request.FormValue("username")
 	password := c.Request.FormValue("password")
