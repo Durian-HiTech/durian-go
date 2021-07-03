@@ -1,11 +1,12 @@
 package model
 
-import "gorm.io/gorm"
-
 type User struct {
-	gorm.Model
-	Username string `gorm:"size:15; not null; unique" json:"username"`
-	Password string `gorm:"size:20; not null" json:"password"`
-	// Email    string `gorm:"size:20; not null; unique" json:"email"`
-	// CityList string `gorm:"size:255;" json:"city_list"`
+	UserID   uint64 `gorm:"primary_key; not null;" json:"user_id"`
+	Username string `gorm:"size:25; not null; unique" json:"username"`
+	Password string `gorm:"size:25; not null" json:"password"`
+}
+type Favorite struct {
+	FavorID  uint64 `gorm:"primary_key;" json:"favor_id"`
+	UserID   uint64 `gorm:"not null" json:"user_id"`
+	CityName string `gorm:"size:25;not null" json:"city_name"`
 }
