@@ -136,30 +136,28 @@ func TellUserInfo(c *gin.Context) {
 	return
 }
 
-// // AddToFavorites doc
-// // @description 订阅城市疫情信息
-// // @Tags user
-// // @Param user_id formData string true "用户ID"
-// // @Param paper_id formData string true "文献ID"
-// // @Param paper_info formData string true "文献描述"
-// // @Success 200 {string} string "{"success":true, "message":"收藏成功"}"
-// // @Router /user/favorite/add [post]
-// func AddToFavorites(c *gin.Context) {
-// 	userID, _ := strconv.ParseUint(c.Request.FormValue("user_id"), 0, 64)
-// 	paperID := c.Request.FormValue("paper_id")
-// 	paperInfo := c.Request.FormValue("paper_info")
+// Subscribe doc
+// @description 订阅城市疫情信息
+// @Tags user
+// @Param user_id formData string true "用户ID"
+// @Param city_name formData string true "城市名字"
+// @Success 200 {string} string "{"success":true, "message":"订阅成功"}"
+// @Router /user/subscribe [post]
+func Subscribe(c *gin.Context) {
+	userID, _ := strconv.ParseUint(c.Request.FormValue("user_id"), 0, 64)
+	cityName := c.Request.FormValue("city_name")
 
-// 	if userID == 0 {
-// 		c.JSON(http.StatusOK, gin.H{"success": false, "message": "请先登录"})
-// 		return
-// 	}
+	if userID == 0 {
+		c.JSON(http.StatusOK, gin.H{"success": false, "message": "请先登录"})
+		return
+	}
 
-// 	if err := service.CreateAFavorite(userID, paperID, paperInfo); err != nil {
-// 		c.JSON(http.StatusOK, gin.H{"success": false, "message": err.Error()})
-// 	} else {
-// 		c.JSON(http.StatusOK, gin.H{"success": true, "message": "收藏成功"})
-// 	}
-// }
+	if err := service.CreateASubscription(userID, cityName); err != nil {
+		c.JSON(http.StatusOK, gin.H{"success": false, "message": err.Error()})
+	} else {
+		c.JSON(http.StatusOK, gin.H{"success": true, "message": "订阅成功"})
+	}
+}
 
 // // ListAllFavorites doc
 // // @description 获取收藏列表

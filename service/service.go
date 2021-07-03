@@ -44,13 +44,13 @@ func UpdateAUser(user *model.User, username string, password string) error {
 	return err
 }
 
-// func CreateAFavorite(userID uint64, cityName string) (err error) {
-// 	favorite := model.Favorite{UserID: userID, CityName: cityName}
-// 	if err = global.DB.Create(&favorite).Error; err != nil {
-// 		return err
-// 	}
-// 	return
-// }
+func CreateASubscription(userID uint64, cityName string) (err error) {
+	subscription := model.Subscription{UserID: userID, CityName: cityName}
+	if err = global.DB.Create(&subscription).Error; err != nil {
+		return err
+	}
+	return
+}
 
 // func DeleteAFavorite(favorID uint64) (err error) {
 // 	var favorite model.Favorite
