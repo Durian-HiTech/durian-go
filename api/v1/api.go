@@ -147,8 +147,22 @@ func Subscribe(c *gin.Context) {
 	userID, _ := strconv.ParseUint(c.Request.FormValue("user_id"), 0, 64)
 	cityName := c.Request.FormValue("city_name")
 
-	if userID == 0 {
-		c.JSON(http.StatusOK, gin.H{"success": false, "message": "请先登录"})
+	_, notFoundUserByID := service.QueryAUserByID(userID)
+	if notFoundUserByID {
+		c.JSON(http.StatusOK, gin.H{
+			"success": false,
+			"message": "用户ID不存在",
+		})
+		return
+	}
+
+	_, notFoundSubscriptionByID := service.QueryAsubscriptionByID(userID, cityName)
+
+	if !notFoundSubscriptionByID {
+		c.JSON(http.StatusOK, gin.H{
+			"success": false,
+			"message": "已经订阅过这个城市的疫情信息",
+		})
 		return
 	}
 
