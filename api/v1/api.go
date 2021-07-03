@@ -66,6 +66,8 @@ func Login(c *gin.Context) {
 // @Param password_old formData string true "原密码"
 // @Param password_new formData string true "新密码"
 // @Success 200 {string} string "{"success": true, "message": "修改成功", "data": "model.User的所有信息"}"
+// @Failure 400 {string} string "{"success": false, "message": "原密码输入错误"}"
+// @Failure 404 {string} string "{"success": false, "message": "用户ID不存在"}"
 // @Router /user/modify [post]
 func ModifyUser(c *gin.Context) {
 	userID, _ := strconv.ParseUint(c.Request.FormValue("user_id"), 0, 64)
@@ -74,14 +76,14 @@ func ModifyUser(c *gin.Context) {
 	password_new := c.Request.FormValue("password_new")
 	user, notFoundUserByID := service.QueryAUserByID(userID)
 	if notFoundUserByID {
-		c.JSON(http.StatusOK, gin.H{
+		c.JSON(404, gin.H{
 			"success": false,
 			"message": "用户ID不存在",
 		})
 		return
 	}
 	if password_old != user.Password {
-		c.JSON(http.StatusOK, gin.H{
+		c.JSON(400, gin.H{
 			"success": false,
 			"message": "原密码输入错误",
 		})
@@ -109,7 +111,6 @@ func ModifyUser(c *gin.Context) {
 		"message": "修改成功",
 		"data":    user,
 	})
-	return
 }
 
 // TellUserInfo doc
@@ -117,12 +118,13 @@ func ModifyUser(c *gin.Context) {
 // @Tags user
 // @Param user_id formData string true "用户ID"
 // @Success 200 {string} string "{"success": true, "message": "查看用户信息成功", "data": "model.User的所有信息"}"
+// @Failure 404 {string} string "{"success": false, "message": "用户ID不存在"}"
 // @Router /user/info [post]
 func TellUserInfo(c *gin.Context) {
 	userID, _ := strconv.ParseUint(c.Request.FormValue("user_id"), 0, 64)
 	user, notFoundUserByID := service.QueryAUserByID(userID)
 	if notFoundUserByID {
-		c.JSON(http.StatusOK, gin.H{
+		c.JSON(404, gin.H{
 			"success": false,
 			"message": "用户ID不存在",
 		})
@@ -133,7 +135,6 @@ func TellUserInfo(c *gin.Context) {
 		"message": "查看用户信息成功",
 		"data":    user,
 	})
-	return
 }
 
 // Subscribe doc
@@ -142,6 +143,9 @@ func TellUserInfo(c *gin.Context) {
 // @Param user_id formData string true "用户ID"
 // @Param city_name formData string true "城市名字"
 // @Success 200 {string} string "{"success":true, "message":"订阅成功"}"
+// @Failure 404 {string} string "{"success": false, "message": "已经订阅过这个城市的疫情信息"}"
+// @Failure 401 {string} string "{"success": false, "message": "数据库error, 一些其他错误"}"
+// @Failure 404 {string} string "{"success": false, "message": "用户ID不存在"}"
 // @Router /user/subscribe [post]
 func Subscribe(c *gin.Context) {
 	userID, _ := strconv.ParseUint(c.Request.FormValue("user_id"), 0, 64)
@@ -149,7 +153,7 @@ func Subscribe(c *gin.Context) {
 
 	_, notFoundUserByID := service.QueryAUserByID(userID)
 	if notFoundUserByID {
-		c.JSON(http.StatusOK, gin.H{
+		c.JSON(404, gin.H{
 			"success": false,
 			"message": "用户ID不存在",
 		})
@@ -159,7 +163,7 @@ func Subscribe(c *gin.Context) {
 	_, notFoundSubscriptionByUserIDAndCityName := service.QueryASubscriptionByUserIDAndCityName(userID, cityName)
 
 	if !notFoundSubscriptionByUserIDAndCityName {
-		c.JSON(http.StatusOK, gin.H{
+		c.JSON(400, gin.H{
 			"success": false,
 			"message": "已经订阅过这个城市的疫情信息",
 		})
@@ -167,7 +171,7 @@ func Subscribe(c *gin.Context) {
 	}
 
 	if err := service.CreateASubscription(userID, cityName); err != nil {
-		c.JSON(http.StatusOK, gin.H{"success": false, "message": err.Error()})
+		c.JSON(401, gin.H{"success": false, "message": err.Error()})
 	} else {
 		c.JSON(http.StatusOK, gin.H{"success": true, "message": "订阅成功"})
 	}
@@ -178,12 +182,13 @@ func Subscribe(c *gin.Context) {
 // @Tags user
 // @Param user_id formData string true "用户ID"
 // @Success 200 {string} string "{"success":true, "message":"查询成功","data":"user的所有订阅"}"
+// @Failure 404 {string} string "{"success": false, "message": "用户ID不存在"}"
 // @Router /user/list_all_subscriptions [post]
 func ListAllSubscriptions(c *gin.Context) {
 	userID, _ := strconv.ParseUint(c.Request.FormValue("user_id"), 0, 64)
 	_, notFoundUserByID := service.QueryAUserByID(userID)
 	if notFoundUserByID {
-		c.JSON(http.StatusOK, gin.H{
+		c.JSON(404, gin.H{
 			"success": false,
 			"message": "用户ID不存在",
 		})
@@ -191,7 +196,6 @@ func ListAllSubscriptions(c *gin.Context) {
 	}
 	subscriptions := service.QueryAllSubscriptions(userID)
 	c.JSON(http.StatusOK, gin.H{"success": true, "message": "查询成功", "data": subscriptions})
-	return
 }
 
 // RemoveSubscription doc
@@ -199,13 +203,15 @@ func ListAllSubscriptions(c *gin.Context) {
 // @Tags user
 // @Param subscription_id formData string true "订阅ID"
 // @Success 200 {string} string "{"success":true, "message":"删除成功"}"
+// @Failure 401 {string} string "{"success": false, "message": "数据库error, 一些其他错误"}"
+// @Failure 404 {string} string "{"success": false, "message": "用户ID不存在"}"
 // @Router /user/remove [post]
 func RemoveSubscription(c *gin.Context) {
 	subscriptionID, _ := strconv.ParseUint(c.Request.FormValue("subscription_id"), 0, 64)
 
 	_, notFoundSubscription := service.QueryASubscriptionByID(subscriptionID)
 	if notFoundSubscription {
-		c.JSON(http.StatusOK, gin.H{
+		c.JSON(404, gin.H{
 			"success": false,
 			"message": "这一订阅ID不存在",
 		})
@@ -213,9 +219,8 @@ func RemoveSubscription(c *gin.Context) {
 	}
 
 	if err := service.DeleteASubscription(subscriptionID); err != nil {
-		c.JSON(http.StatusOK, gin.H{"success": false, "message": err.Error()})
+		c.JSON(401, gin.H{"success": false, "message": err.Error()})
 	} else {
 		c.JSON(http.StatusOK, gin.H{"success": true, "message": "删除成功"})
 	}
-	return
 }

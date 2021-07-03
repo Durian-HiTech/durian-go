@@ -18,6 +18,10 @@ paths:
           description: '{"success": true, "message": "查看用户信息成功", "data": "model.User的所有信息"}'
           schema:
             type: string
+        "404":
+          description: '{"success": false, "message": "用户ID不存在"}'
+          schema:
+            type: string
       tags:
       - user
   /user/list_all_subscriptions:
@@ -32,6 +36,10 @@ paths:
       responses:
         "200":
           description: '{"success":true, "message":"查询成功","data":"user的所有订阅"}'
+          schema:
+            type: string
+        "404":
+          description: '{"success": false, "message": "用户ID不存在"}'
           schema:
             type: string
       tags:
@@ -94,6 +102,14 @@ paths:
           description: '{"success": true, "message": "修改成功", "data": "model.User的所有信息"}'
           schema:
             type: string
+        "400":
+          description: '{"success": false, "message": "原密码输入错误"}'
+          schema:
+            type: string
+        "404":
+          description: '{"success": false, "message": "用户ID不存在"}'
+          schema:
+            type: string
       tags:
       - user
   /user/register:
@@ -135,6 +151,14 @@ paths:
           description: '{"success":true, "message":"删除成功"}'
           schema:
             type: string
+        "401":
+          description: '{"success": false, "message": "数据库error, 一些其他错误"}'
+          schema:
+            type: string
+        "404":
+          description: '{"success": false, "message": "用户ID不存在"}'
+          schema:
+            type: string
       tags:
       - user
   /user/subscribe:
@@ -154,6 +178,14 @@ paths:
       responses:
         "200":
           description: '{"success":true, "message":"订阅成功"}'
+          schema:
+            type: string
+        "401":
+          description: '{"success": false, "message": "数据库error, 一些其他错误"}'
+          schema:
+            type: string
+        "404":
+          description: '{"success": false, "message": "用户ID不存在"}'
           schema:
             type: string
       tags:

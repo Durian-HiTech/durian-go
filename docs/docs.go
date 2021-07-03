@@ -45,6 +45,12 @@ var doc = `{
                         "schema": {
                             "type": "string"
                         }
+                    },
+                    "404": {
+                        "description": "{\"success\": false, \"message\": \"用户ID不存在\"}",
+                        "schema": {
+                            "type": "string"
+                        }
                     }
                 }
             }
@@ -67,6 +73,12 @@ var doc = `{
                 "responses": {
                     "200": {
                         "description": "{\"success\":true, \"message\":\"查询成功\",\"data\":\"user的所有订阅\"}",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "404": {
+                        "description": "{\"success\": false, \"message\": \"用户ID不存在\"}",
                         "schema": {
                             "type": "string"
                         }
@@ -160,6 +172,18 @@ var doc = `{
                         "schema": {
                             "type": "string"
                         }
+                    },
+                    "400": {
+                        "description": "{\"success\": false, \"message\": \"原密码输入错误\"}",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "404": {
+                        "description": "{\"success\": false, \"message\": \"用户ID不存在\"}",
+                        "schema": {
+                            "type": "string"
+                        }
                     }
                 }
             }
@@ -223,6 +247,18 @@ var doc = `{
                         "schema": {
                             "type": "string"
                         }
+                    },
+                    "401": {
+                        "description": "{\"success\": false, \"message\": \"数据库error, 一些其他错误\"}",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "404": {
+                        "description": "{\"success\": false, \"message\": \"用户ID不存在\"}",
+                        "schema": {
+                            "type": "string"
+                        }
                     }
                 }
             }
@@ -252,6 +288,18 @@ var doc = `{
                 "responses": {
                     "200": {
                         "description": "{\"success\":true, \"message\":\"订阅成功\"}",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "401": {
+                        "description": "{\"success\": false, \"message\": \"数据库error, 一些其他错误\"}",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "404": {
+                        "description": "{\"success\": false, \"message\": \"用户ID不存在\"}",
                         "schema": {
                             "type": "string"
                         }
