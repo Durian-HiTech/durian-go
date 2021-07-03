@@ -15,5 +15,6 @@ func InitRouter(Router *gin.RouterGroup) {
 		UserRouter.POST("/modify", v1.ModifyUser)
 		UserRouter.POST("/info", v1.TellUserInfo)
 		UserRouter.POST("/subscribe", v1.Subscribe)
+		UserRouter.POST("/list_all_subscriptions", v1.ListAllSubscriptions)
 	}
 }

@@ -173,18 +173,26 @@ func Subscribe(c *gin.Context) {
 	}
 }
 
-// // ListAllFavorites doc
-// // @description 获取收藏列表
-// // @Tags user
-// // @Param user_id formData string true "用户ID"
-// // @Success 200 {string} string "{"success":true, "message":"查询成功","data":"user的所有收藏"}"
-// // @Router /user/favorite/list [post]
-// func ListAllFavorites(c *gin.Context) {
-// 	userID, _ := strconv.ParseUint(c.Request.FormValue("user_id"), 0, 64)
-// 	favorites := service.QueryAllFavorites(userID)
-// 	c.JSON(http.StatusOK, gin.H{"success": true, "message": "查询成功", "data": favorites})
-// 	return
-// }
+// ListAllSubscriptions doc
+// @description 获取订阅列表
+// @Tags user
+// @Param user_id formData string true "用户ID"
+// @Success 200 {string} string "{"success":true, "message":"查询成功","data":"user的所有订阅"}"
+// @Router /user/list_all_subscriptions [post]
+func ListAllSubscriptions(c *gin.Context) {
+	userID, _ := strconv.ParseUint(c.Request.FormValue("user_id"), 0, 64)
+	_, notFoundUserByID := service.QueryAUserByID(userID)
+	if notFoundUserByID {
+		c.JSON(http.StatusOK, gin.H{
+			"success": false,
+			"message": "用户ID不存在",
+		})
+		return
+	}
+	subscriptions := service.QueryAllSubscriptions(userID)
+	c.JSON(http.StatusOK, gin.H{"success": true, "message": "查询成功", "data": subscriptions})
+	return
+}
 
 // // RemoveFavorite doc
 // // @description 移除收藏

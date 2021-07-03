@@ -70,7 +70,7 @@ func QueryAsubscriptionByID(userID uint64, cityName string) (subscription model.
 // 	return err
 // }
 
-// func QueryAllFavorites(userID uint64) (favorites []model.Favorite) {
-// 	global.DB.Where("user_id = ?", userID).Find(&favorites)
-// 	return favorites
-// }
+func QueryAllSubscriptions(userID uint64) (subscriptions []model.Subscription) {
+	global.DB.Where("user_id = ?", userID).Find(&subscriptions)
+	return subscriptions
+}

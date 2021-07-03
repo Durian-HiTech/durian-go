@@ -36,6 +36,31 @@
                 }
             }
         },
+        "/user/list_all_subscriptions": {
+            "post": {
+                "description": "获取订阅列表",
+                "tags": [
+                    "user"
+                ],
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "用户ID",
+                        "name": "user_id",
+                        "in": "formData",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "{\"success\":true, \"message\":\"查询成功\",\"data\":\"user的所有订阅\"}",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
         "/user/login": {
             "post": {
                 "description": "登录",
