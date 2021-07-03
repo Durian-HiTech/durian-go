@@ -30,7 +30,7 @@ func Register(c *gin.Context) {
 		service.CreateAUser(&user)
 		c.JSON(http.StatusOK, gin.H{"success": true, "message": "用户创建成功"})
 	} else {
-		c.JSON(http.StatusOK, gin.H{"success": false, "message": "用户已存在"})
+		c.JSON(400, gin.H{"success": false, "message": "用户已存在"})
 	}
 }
 
@@ -112,22 +112,29 @@ func ModifyUser(c *gin.Context) {
 	return
 }
 
-// // TellUserInfo doc
-// // @description 查看用户个人信息
-// // @Tags user
-// // @Param user_id formData string true "用户ID"
-// // @Success 200 {string} string "{"success": true, "message": "查看用户信息成功", "data": "model.User的所有信息"}"
-// // @Router /user/info [post]
-// func TellUserInfo(c *gin.Context) {
-// 	userID, _ := strconv.ParseUint(c.Request.FormValue("user_id"), 0, 64)
-// 	user, _ := service.QueryAUserByID(userID)
-// 	c.JSON(http.StatusOK, gin.H{
-// 		"success": true,
-// 		"message": "查看用户信息成功",
-// 		"data":    user,
-// 	})
-// 	return
-// }
+// TellUserInfo doc
+// @description 查看用户个人信息
+// @Tags user
+// @Param user_id formData string true "用户ID"
+// @Success 200 {string} string "{"success": true, "message": "查看用户信息成功", "data": "model.User的所有信息"}"
+// @Router /user/info [post]
+func TellUserInfo(c *gin.Context) {
+	userID, _ := strconv.ParseUint(c.Request.FormValue("user_id"), 0, 64)
+	user, notFoundUserByID := service.QueryAUserByID(userID)
+	if notFoundUserByID {
+		c.JSON(http.StatusOK, gin.H{
+			"success": false,
+			"message": "用户ID不存在",
+		})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{
+		"success": true,
+		"message": "查看用户信息成功",
+		"data":    user,
+	})
+	return
+}
 
 // // AddToFavorites doc
 // // @description 订阅城市疫情信息
