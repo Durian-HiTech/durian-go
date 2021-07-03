@@ -38,16 +38,18 @@ func Register(c *gin.Context) {
 // @Param username formData string true "用户名"
 // @Param password formData string true "密码"
 // @Success 200 {string} string "{"success": true, "message": "登录成功", "detail": user的信息}"
+// @Failure 400 {string} web.APIError "We need ID!!"
+// @Failure 404 {string} web.APIError "Can not find ID"
 // @Router /user/login [post]
 func Login(c *gin.Context) {
 	username := c.Request.FormValue("username")
 	password := c.Request.FormValue("password")
 	user, notFound := service.QueryAUserByUsername(username)
 	if notFound {
-		c.JSON(http.StatusOK, gin.H{"success": true, "message": "没有该用户"})
+		c.JSON(404, gin.H{"success": false, "message": "没有该用户"})
 	} else {
 		if user.Password != password {
-			c.JSON(http.StatusOK, gin.H{"success": true, "message": "密码错误"})
+			c.JSON(400, gin.H{"success": false, "message": "密码错误"})
 		} else {
 			c.JSON(http.StatusOK, gin.H{"success": true, "message": "登录成功", "detail": user})
 		}

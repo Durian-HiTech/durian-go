@@ -1,6 +1,7 @@
 package initialize
 
 import (
+	v1 "github.com/TualatinX/durian-go/api/v1"
 	"github.com/TualatinX/durian-go/middleware"
 	"github.com/TualatinX/durian-go/router"
 
@@ -10,9 +11,10 @@ import (
 func SetupRouter() *gin.Engine {
 	r := gin.Default()
 	r.Use(middleware.Cors())
-	Group := r.Group("")
+	r.GET("/", v1.Index)
+	Group := r.Group("api/v1/")
 	{
-		router.InitUserRouter(Group) // 注册用户路由
+		router.InitRouter(Group)
 	}
 	return r
 }
