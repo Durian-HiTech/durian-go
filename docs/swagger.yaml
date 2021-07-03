@@ -1,0 +1,64 @@
+info:
+  contact: {}
+  description: Durian HiTech
+  title: Durian Covid-19 Golang Backend
+  version: "1.0"
+paths:
+  /user/login:
+    post:
+      description: 登录
+      parameters:
+      - description: 用户名
+        in: formData
+        name: username
+        required: true
+        type: string
+      - description: 密码
+        in: formData
+        name: password
+        required: true
+        type: string
+      responses:
+        "200":
+          description: '{"success": true, "message": "登录成功", "detail": user的信息}'
+          schema:
+            type: string
+        "400":
+          description: '{"success": false, "message": "密码错误"}'
+          schema:
+            type: string
+        "404":
+          description: '{"success": false, "message": "没有该用户"}'
+          schema:
+            type: string
+      tags:
+      - user
+  /user/register:
+    post:
+      description: 注册
+      parameters:
+      - description: 用户名
+        in: formData
+        name: username
+        required: true
+        type: string
+      - description: 密码
+        in: formData
+        name: password
+        required: true
+        type: string
+      responses:
+        "200":
+          description: '{"success": true, "message": "用户创建成功"}'
+          schema:
+            type: string
+        "400":
+          description: '{"success": false, "message": "用户已存在"}'
+          schema:
+            type: string
+      tags:
+      - user
+schemes:
+- http
+- https
+swagger: "2.0"
