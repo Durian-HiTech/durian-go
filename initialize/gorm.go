@@ -32,5 +32,6 @@ func InitMySQL() {
 	}
 	global.DB.Set("gorm:table_options", "ENGINE=InnoDB").AutoMigrate(
 		&model.User{},
+		&model.Favorite{},
 	)
 }

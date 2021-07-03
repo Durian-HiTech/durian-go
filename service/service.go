@@ -37,22 +37,29 @@ func QueryAUserByUsername(username string) (user model.User, notFound bool) {
 	}
 }
 
-func CreateAFavorite(userID uint64, cityName string) (err error) {
-	favorite := model.Favorite{UserID: userID, CityName: cityName}
-	if err = global.DB.Create(&favorite).Error; err != nil {
-		return err
-	}
-	return
-}
-
-func DeleteAFavorite(favorID uint64) (err error) {
-	var favorite model.Favorite
-	err = global.DB.First(&favorite, favorID).Error
-	_ = global.DB.Delete(&favorite).Error
+func UpdateAUser(user *model.User, username string, password string) error {
+	user.Username = username
+	user.Password = password
+	err := global.DB.Save(user).Error
 	return err
 }
 
-func QueryAllFavorites(userID uint64) (favorites []model.Favorite) {
-	global.DB.Where("user_id = ?", userID).Find(&favorites)
-	return favorites
-}
+// func CreateAFavorite(userID uint64, cityName string) (err error) {
+// 	favorite := model.Favorite{UserID: userID, CityName: cityName}
+// 	if err = global.DB.Create(&favorite).Error; err != nil {
+// 		return err
+// 	}
+// 	return
+// }
+
+// func DeleteAFavorite(favorID uint64) (err error) {
+// 	var favorite model.Favorite
+// 	err = global.DB.First(&favorite, favorID).Error
+// 	_ = global.DB.Delete(&favorite).Error
+// 	return err
+// }
+
+// func QueryAllFavorites(userID uint64) (favorites []model.Favorite) {
+// 	global.DB.Where("user_id = ?", userID).Find(&favorites)
+// 	return favorites
+// }
