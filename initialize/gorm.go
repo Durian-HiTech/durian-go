@@ -34,5 +34,7 @@ func InitMySQL() {
 		&model.User{},
 		&model.Subscription{},
 		&model.News{},
+		&model.Question{},
+		&model.Comment{},
 	)
 }
