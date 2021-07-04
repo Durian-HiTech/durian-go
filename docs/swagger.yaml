@@ -4,7 +4,106 @@ info:
   title: Durian Covid-19 Golang Backend
   version: "1.0"
 paths:
-  /portal/del_sub:
+  /news/detail:
+    post:
+      description: 查看单条新闻
+      parameters:
+      - description: 新闻ID
+        in: formData
+        name: news_id
+        required: true
+        type: string
+      responses:
+        "200":
+          description: '{"success":true, "message":"查询成功","data":"该条新闻的详细信息"}'
+          schema:
+            type: string
+        "404":
+          description: '{"success":true, "message":"查询失败，新闻ID不存在"}'
+          schema:
+            type: string
+      tags:
+      - 新闻
+  /news/list_all_news:
+    get:
+      description: 获取所有新闻，返回列表
+      responses:
+        "200":
+          description: '{"success":true, "message":"查询成功","data":"所有新闻""}'
+          schema:
+            type: string
+      tags:
+      - 新闻
+  /portal/comment:
+    post:
+      description: 创建一条评论
+      parameters:
+      - description: 用户ID
+        in: formData
+        name: user_id
+        required: true
+        type: string
+      - description: 用户类型
+        in: formData
+        name: user_type
+        required: true
+        type: string
+      - description: 问题ID
+        in: formData
+        name: question_id
+        required: true
+        type: string
+      - description: 评论内容
+        in: formData
+        name: comment_content
+        required: true
+        type: string
+      responses:
+        "200":
+          description: '{"success": true, "message": "用户评论成功"}'
+          schema:
+            type: string
+        "404":
+          description: '{"success": true, "message": "问题ID不存在"}'
+          schema:
+            type: string
+      tags:
+      - 问答门户
+  /portal/create:
+    post:
+      description: 创建一个问题
+      parameters:
+      - description: 用户ID
+        in: formData
+        name: user_id
+        required: true
+        type: string
+      - description: 提问标题
+        in: formData
+        name: question_title
+        required: true
+        type: string
+      - description: 提问内容
+        in: formData
+        name: question_content
+        required: true
+        type: string
+      responses:
+        "200":
+          description: '{"success": true, "message": "用户提问成功", "detail": 提问的全部信息}'
+          schema:
+            type: string
+        "401":
+          description: '{"success": false, "message": "数据库error, 一些其他错误"}'
+          schema:
+            type: string
+        "404":
+          description: '{"success": false, "message": "用户ID不存在"}'
+          schema:
+            type: string
+      tags:
+      - 问答门户
+  /sub/del_sub:
     post:
       description: 删除订阅
       parameters:
@@ -27,8 +126,8 @@ paths:
           schema:
             type: string
       tags:
-      - user
-  /portal/list_all_subs:
+      - 订阅
+  /sub/list_all_subs:
     post:
       description: 获取订阅列表
       parameters:
@@ -47,8 +146,8 @@ paths:
           schema:
             type: string
       tags:
-      - user
-  /portal/sub:
+      - 订阅
+  /sub/subscribe:
     post:
       description: 订阅城市疫情信息
       parameters:
@@ -76,7 +175,7 @@ paths:
           schema:
             type: string
       tags:
-      - user
+      - 订阅
   /user/info:
     post:
       description: 查看用户个人信息
@@ -96,7 +195,7 @@ paths:
           schema:
             type: string
       tags:
-      - user
+      - 用户
   /user/login:
     post:
       description: 登录
@@ -125,7 +224,7 @@ paths:
           schema:
             type: string
       tags:
-      - user
+      - 用户
   /user/modify:
     post:
       description: 修改用户信息（支持修改用户名和密码）
@@ -164,7 +263,7 @@ paths:
           schema:
             type: string
       tags:
-      - user
+      - 用户
   /user/register:
     post:
       description: 注册
@@ -179,6 +278,15 @@ paths:
         name: password
         required: true
         type: string
+      - description: '用户类型（0: 普通用户，1: 认证机构用户）'
+        in: formData
+        name: user_type
+        required: true
+        type: string
+      - description: 认证机构名
+        in: formData
+        name: affiliation
+        type: string
       responses:
         "200":
           description: '{"success": true, "message": "用户创建成功"}'
@@ -189,7 +297,7 @@ paths:
           schema:
             type: string
       tags:
-      - user
+      - 用户
 schemes:
 - http
 - https

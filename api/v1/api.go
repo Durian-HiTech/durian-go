@@ -16,16 +16,20 @@ func Index(c *gin.Context) {
 
 // Register doc
 // @description 注册
-// @Tags user
+// @Tags 用户
 // @Param username formData string true "用户名"
 // @Param password formData string true "密码"
+// @Param user_type formData string true "用户类型（0: 普通用户，1: 认证机构用户）"
+// @Param affiliation formData string false "认证机构名"
 // @Success 200 {string} string "{"success": true, "message": "用户创建成功"}"
 // @Failure 400 {string} string "{"success": false, "message": "用户已存在"}"
 // @Router /user/register [post]
 func Register(c *gin.Context) {
 	username := c.Request.FormValue("username")
 	password := c.Request.FormValue("password")
-	user := model.User{Username: username, Password: password}
+	userType, _ := strconv.ParseUint(c.Request.FormValue("user_type"), 0, 64)
+	affiliation := c.Request.FormValue("affiliation")
+	user := model.User{Username: username, Password: password, UserType: userType, Affiliation: affiliation}
 	_, notFound := service.QueryAUserByUsername(username)
 	if notFound {
 		service.CreateAUser(&user)
@@ -37,7 +41,7 @@ func Register(c *gin.Context) {
 
 // Register doc
 // @description 登录
-// @Tags user
+// @Tags 用户
 // @Param username formData string true "用户名"
 // @Param password formData string true "密码"
 // @Success 200 {string} string "{"success": true, "message": "登录成功", "detail": user的信息}"
@@ -61,7 +65,7 @@ func Login(c *gin.Context) {
 
 // ModifyUser doc
 // @description 修改用户信息（支持修改用户名和密码）
-// @Tags user
+// @Tags 用户
 // @Param user_id formData string true "用户ID"
 // @Param username formData string true "用户名"
 // @Param password_old formData string true "原密码"
@@ -116,7 +120,7 @@ func ModifyUser(c *gin.Context) {
 
 // TellUserInfo doc
 // @description 查看用户个人信息
-// @Tags user
+// @Tags 用户
 // @Param user_id formData string true "用户ID"
 // @Success 200 {string} string "{"success": true, "message": "查看用户信息成功", "data": "model.User的所有信息"}"
 // @Failure 404 {string} string "{"success": false, "message": "用户ID不存在"}"
@@ -140,14 +144,14 @@ func TellUserInfo(c *gin.Context) {
 
 // Subscribe doc
 // @description 订阅城市疫情信息
-// @Tags user
+// @Tags 订阅
 // @Param user_id formData string true "用户ID"
 // @Param city_name formData string true "城市名字"
 // @Success 200 {string} string "{"success":true, "message":"订阅成功"}"
 // @Failure 404 {string} string "{"success": false, "message": "已经订阅过这个城市的疫情信息"}"
 // @Failure 401 {string} string "{"success": false, "message": "数据库error, 一些其他错误"}"
 // @Failure 404 {string} string "{"success": false, "message": "用户ID不存在"}"
-// @Router /portal/sub [post]
+// @Router /sub/subscribe [post]
 func Subscribe(c *gin.Context) {
 	userID, _ := strconv.ParseUint(c.Request.FormValue("user_id"), 0, 64)
 	cityName := c.Request.FormValue("city_name")
@@ -180,11 +184,11 @@ func Subscribe(c *gin.Context) {
 
 // ListAllSubscriptions doc
 // @description 获取订阅列表
-// @Tags user
+// @Tags 订阅
 // @Param user_id formData string true "用户ID"
 // @Success 200 {string} string "{"success":true, "message":"查询成功","data":"user的所有订阅"}"
 // @Failure 404 {string} string "{"success": false, "message": "用户ID不存在"}"
-// @Router /portal/list_all_subs [post]
+// @Router /sub/list_all_subs [post]
 func ListAllSubscriptions(c *gin.Context) {
 	userID, _ := strconv.ParseUint(c.Request.FormValue("user_id"), 0, 64)
 	_, notFoundUserByID := service.QueryAUserByID(userID)
@@ -201,12 +205,12 @@ func ListAllSubscriptions(c *gin.Context) {
 
 // RemoveSubscription doc
 // @description 删除订阅
-// @Tags user
+// @Tags 订阅
 // @Param subscription_id formData string true "订阅ID"
 // @Success 200 {string} string "{"success":true, "message":"删除成功"}"
 // @Failure 401 {string} string "{"success": false, "message": "数据库error, 一些其他错误"}"
 // @Failure 404 {string} string "{"success": false, "message": "用户ID不存在"}"
-// @Router /portal/del_sub [post]
+// @Router /sub/del_sub [post]
 func RemoveSubscription(c *gin.Context) {
 	subscriptionID, _ := strconv.ParseUint(c.Request.FormValue("subscription_id"), 0, 64)
 
@@ -228,7 +232,7 @@ func RemoveSubscription(c *gin.Context) {
 
 // CreateAQuestion doc
 // @description 创建一个问题
-// @Tags portal
+// @Tags 问答门户
 // @Param user_id formData string true "用户ID"
 // @Param question_title formData string true "提问标题"
 // @Param question_content formData string true "提问内容"
@@ -265,7 +269,7 @@ func CreateAQuestion(c *gin.Context) {
 
 // CreateAComment doc
 // @description 创建一条评论
-// @Tags portal
+// @Tags 问答门户
 // @Param user_id formData string true "用户ID"
 // @Param user_type formData string true "用户类型"
 // @Param question_id formData string true "问题ID"
@@ -292,14 +296,16 @@ func CreateAComment(c *gin.Context) {
 			"success": false,
 			"message": "问题ID不存在",
 		})
+		return
 	}
 
-	userType, _ := strconv.ParseUint(c.Request.FormValue("question_id"), 0, 64)
-	comment_content := c.Request.FormValue("comment_content")
+	userType, _ := strconv.ParseUint(c.Request.FormValue("user_type"), 0, 64)
 	valid := false
 	if userType != 0 {
 		valid = true
 	}
+
+	comment_content := c.Request.FormValue("comment_content")
 
 	comment := model.Comment{UserID: userID, QuestionID: questionID, CommentContent: comment_content, CommentTime: time.Now(), Valid: valid, UserType: userType}
 	err := service.CreateAComment(&comment)
@@ -308,6 +314,34 @@ func CreateAComment(c *gin.Context) {
 			"success": false,
 			"message": "评论失败",
 		})
+		return
 	}
 	c.JSON(http.StatusOK, gin.H{"success": true, "message": "用户评论成功"})
+}
+
+// ListAllNews doc
+// @description 获取所有新闻，返回列表
+// @Tags 新闻
+// @Success 200 {string} string "{"success":true, "message":"查询成功","data":"所有新闻""}"
+// @Router /news/list_all_news [GET]
+func ListAllNews(c *gin.Context) {
+	newsList := service.QueryAllNews()
+	c.JSON(http.StatusOK, gin.H{"success": true, "message": "查询成功", "data": newsList})
+}
+
+// ViewNewsDetail doc
+// @description 查看单条新闻
+// @Tags 新闻
+// @Param news_id formData string true "新闻ID"
+// @Success 200 {string} string "{"success":true, "message":"查询成功","data":"该条新闻的详细信息"}"
+// @Success 404 {string} string "{"success":true, "message":"查询失败，新闻ID不存在"}"
+// @Router /news/detail [POST]
+func ViewNewsDetail(c *gin.Context) {
+	newsID, _ := strconv.ParseUint(c.Request.FormValue("news_id"), 0, 64)
+	news, notFound := service.QueryANewsByID(newsID)
+	if !notFound {
+		c.JSON(http.StatusOK, gin.H{"success": true, "message": "查询成功", "data": news})
+	} else {
+		c.JSON(404, gin.H{"success": false, "message": "查询失败，新闻ID不存在"})
+	}
 }

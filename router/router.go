@@ -17,10 +17,18 @@ func InitRouter(Router *gin.RouterGroup) {
 	}
 	PortalRouter := Router.Group("/portal")
 	{
-		PortalRouter.POST("/sub", v1.Subscribe)
-		PortalRouter.POST("/list_all_subs", v1.ListAllSubscriptions)
-		PortalRouter.POST("/del_sub", v1.RemoveSubscription)
 		PortalRouter.POST("/question", v1.CreateAQuestion)
 		PortalRouter.POST("/comment", v1.CreateAComment)
+	}
+	SubRouter := Router.Group("/sub")
+	{
+		SubRouter.POST("/subscribe", v1.Subscribe)
+		SubRouter.POST("/list_all_subs", v1.ListAllSubscriptions)
+		SubRouter.POST("/del_sub", v1.RemoveSubscription)
+	}
+	NewsRouter := Router.Group("/news")
+	{
+		NewsRouter.GET("/news/list_all_news", v1.ListAllNews)
+		NewsRouter.POST("/news/detail", v1.ViewNewsDetail)
 	}
 }
