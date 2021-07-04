@@ -24,11 +24,58 @@ var doc = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
-        "/portal/del_sub": {
+        "/news/detail": {
+            "post": {
+                "description": "查看单条新闻",
+                "tags": [
+                    "新闻"
+                ],
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "新闻ID",
+                        "name": "news_id",
+                        "in": "formData",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "{\"success\":true, \"message\":\"查询成功\",\"data\":\"该条新闻的详细信息\"}",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "404": {
+                        "description": "{\"success\":true, \"message\":\"查询失败，新闻ID不存在\"}",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/news/list_all_news": {
+            "get": {
+                "description": "获取所有新闻，返回列表",
+                "tags": [
+                    "新闻"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "{\"success\":true, \"message\":\"查询成功\",\"data\":\"所有新闻\"\"}",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/sub/del_sub": {
             "post": {
                 "description": "删除订阅",
                 "tags": [
-                    "user"
+                    "订阅"
                 ],
                 "parameters": [
                     {
@@ -61,11 +108,11 @@ var doc = `{
                 }
             }
         },
-        "/portal/list_all_subs": {
+        "/sub/list_all_subs": {
             "post": {
                 "description": "获取订阅列表",
                 "tags": [
-                    "user"
+                    "订阅"
                 ],
                 "parameters": [
                     {
@@ -92,11 +139,11 @@ var doc = `{
                 }
             }
         },
-        "/portal/sub": {
+        "/sub/subscribe": {
             "post": {
                 "description": "订阅城市疫情信息",
                 "tags": [
-                    "user"
+                    "订阅"
                 ],
                 "parameters": [
                     {
@@ -140,7 +187,7 @@ var doc = `{
             "post": {
                 "description": "查看用户个人信息",
                 "tags": [
-                    "user"
+                    "用户"
                 ],
                 "parameters": [
                     {
@@ -171,7 +218,7 @@ var doc = `{
             "post": {
                 "description": "登录",
                 "tags": [
-                    "user"
+                    "用户"
                 ],
                 "parameters": [
                     {
@@ -215,7 +262,7 @@ var doc = `{
             "post": {
                 "description": "修改用户信息（支持修改用户名和密码）",
                 "tags": [
-                    "user"
+                    "用户"
                 ],
                 "parameters": [
                     {
@@ -273,7 +320,7 @@ var doc = `{
             "post": {
                 "description": "注册",
                 "tags": [
-                    "user"
+                    "用户"
                 ],
                 "parameters": [
                     {
