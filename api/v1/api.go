@@ -16,7 +16,7 @@ func Index(c *gin.Context) {
 
 // Register doc
 // @description 注册
-// @Tags 用户
+// @Tags 用户管理
 // @Param username formData string true "用户名"
 // @Param password formData string true "密码"
 // @Param user_type formData string true "用户类型（0: 普通用户，1: 认证机构用户）"
@@ -41,7 +41,7 @@ func Register(c *gin.Context) {
 
 // Register doc
 // @description 登录
-// @Tags 用户
+// @Tags 用户管理
 // @Param username formData string true "用户名"
 // @Param password formData string true "密码"
 // @Success 200 {string} string "{"success": true, "message": "登录成功", "detail": user的信息}"
@@ -65,7 +65,7 @@ func Login(c *gin.Context) {
 
 // ModifyUser doc
 // @description 修改用户信息（支持修改用户名和密码）
-// @Tags 用户
+// @Tags 用户管理
 // @Param user_id formData string true "用户ID"
 // @Param username formData string true "用户名"
 // @Param password_old formData string true "原密码"
@@ -120,7 +120,7 @@ func ModifyUser(c *gin.Context) {
 
 // TellUserInfo doc
 // @description 查看用户个人信息
-// @Tags 用户
+// @Tags 用户管理
 // @Param user_id formData string true "用户ID"
 // @Success 200 {string} string "{"success": true, "message": "查看用户信息成功", "data": "model.User的所有信息"}"
 // @Failure 404 {string} string "{"success": false, "message": "用户ID不存在"}"
@@ -144,7 +144,7 @@ func TellUserInfo(c *gin.Context) {
 
 // Subscribe doc
 // @description 订阅城市疫情信息
-// @Tags 订阅
+// @Tags 订阅城市
 // @Param user_id formData string true "用户ID"
 // @Param city_name formData string true "城市名字"
 // @Success 200 {string} string "{"success":true, "message":"订阅成功"}"
@@ -184,7 +184,7 @@ func Subscribe(c *gin.Context) {
 
 // ListAllSubscriptions doc
 // @description 获取订阅列表
-// @Tags 订阅
+// @Tags 订阅城市
 // @Param user_id formData string true "用户ID"
 // @Success 200 {string} string "{"success":true, "message":"查询成功","data":"user的所有订阅"}"
 // @Failure 404 {string} string "{"success": false, "message": "用户ID不存在"}"
@@ -205,7 +205,7 @@ func ListAllSubscriptions(c *gin.Context) {
 
 // RemoveSubscription doc
 // @description 删除订阅
-// @Tags 订阅
+// @Tags 订阅城市
 // @Param subscription_id formData string true "订阅ID"
 // @Success 200 {string} string "{"success":true, "message":"删除成功"}"
 // @Failure 401 {string} string "{"success": false, "message": "数据库error, 一些其他错误"}"
@@ -232,7 +232,7 @@ func RemoveSubscription(c *gin.Context) {
 
 // CreateAQuestion doc
 // @description 创建一个问题
-// @Tags 问答门户
+// @Tags 防控知识板块
 // @Param user_id formData string true "用户ID"
 // @Param question_title formData string true "提问标题"
 // @Param question_content formData string true "提问内容"
@@ -269,7 +269,7 @@ func CreateAQuestion(c *gin.Context) {
 
 // ListAllComments doc
 // @description 列出某个问题的全部评论
-// @Tags portal
+// @Tags 防控知识板块
 // @Param question_id formData string true "问题ID"
 // @Success 200 {string} string "{"success": true, "message": "查看成功", "data": "某问题的所有评论"}"
 // @Failure 404 {string} string "{"success": false, "message": "问题ID不存在"}"
@@ -290,7 +290,7 @@ func ListAllComments(c *gin.Context) {
 
 // CreateAComment doc
 // @description 创建一条评论
-// @Tags 问答门户
+// @Tags 防控知识板块
 // @Param user_id formData string true "用户ID"
 // @Param user_type formData string true "用户类型"
 // @Param question_id formData string true "问题ID"

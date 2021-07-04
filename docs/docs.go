@@ -75,7 +75,7 @@ var doc = `{
             "post": {
                 "description": "创建一条评论",
                 "tags": [
-                    "问答门户"
+                    "防控知识板块"
                 ],
                 "parameters": [
                     {
@@ -139,7 +139,7 @@ var doc = `{
             "post": {
                 "description": "创建一个问题",
                 "tags": [
-                    "问答门户"
+                    "防控知识板块"
                 ],
                 "parameters": [
                     {
@@ -190,7 +190,7 @@ var doc = `{
             "post": {
                 "description": "列出某个问题的全部评论",
                 "tags": [
-                    "portal"
+                    "防控知识板块"
                 ],
                 "parameters": [
                     {
@@ -221,7 +221,7 @@ var doc = `{
             "post": {
                 "description": "删除订阅",
                 "tags": [
-                    "订阅"
+                    "订阅城市"
                 ],
                 "parameters": [
                     {
@@ -258,7 +258,7 @@ var doc = `{
             "post": {
                 "description": "获取订阅列表",
                 "tags": [
-                    "订阅"
+                    "订阅城市"
                 ],
                 "parameters": [
                     {
@@ -289,7 +289,7 @@ var doc = `{
             "post": {
                 "description": "订阅城市疫情信息",
                 "tags": [
-                    "订阅"
+                    "订阅城市"
                 ],
                 "parameters": [
                     {
@@ -333,7 +333,7 @@ var doc = `{
             "post": {
                 "description": "查看用户个人信息",
                 "tags": [
-                    "用户"
+                    "用户管理"
                 ],
                 "parameters": [
                     {
@@ -364,7 +364,7 @@ var doc = `{
             "post": {
                 "description": "登录",
                 "tags": [
-                    "用户"
+                    "用户管理"
                 ],
                 "parameters": [
                     {
@@ -408,7 +408,7 @@ var doc = `{
             "post": {
                 "description": "修改用户信息（支持修改用户名和密码）",
                 "tags": [
-                    "用户"
+                    "用户管理"
                 ],
                 "parameters": [
                     {
@@ -466,7 +466,7 @@ var doc = `{
             "post": {
                 "description": "注册",
                 "tags": [
-                    "用户"
+                    "用户管理"
                 ],
                 "parameters": [
                     {

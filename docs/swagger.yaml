@@ -76,7 +76,7 @@ paths:
           schema:
             type: string
       tags:
-      - 问答门户
+      - 防控知识板块
   /notice/create_question:
     post:
       description: 创建一个问题
@@ -110,7 +110,7 @@ paths:
           schema:
             type: string
       tags:
-      - 问答门户
+      - 防控知识板块
   /notice/list_all_comments:
     post:
       description: 列出某个问题的全部评论
@@ -130,7 +130,7 @@ paths:
           schema:
             type: string
       tags:
-      - portal
+      - 防控知识板块
   /sub/del_sub:
     post:
       description: 删除订阅
@@ -154,7 +154,7 @@ paths:
           schema:
             type: string
       tags:
-      - 订阅
+      - 订阅城市
   /sub/list_all_subs:
     post:
       description: 获取订阅列表
@@ -174,7 +174,7 @@ paths:
           schema:
             type: string
       tags:
-      - 订阅
+      - 订阅城市
   /sub/subscribe:
     post:
       description: 订阅城市疫情信息
@@ -203,7 +203,7 @@ paths:
           schema:
             type: string
       tags:
-      - 订阅
+      - 订阅城市
   /user/info:
     post:
       description: 查看用户个人信息
@@ -223,7 +223,7 @@ paths:
           schema:
             type: string
       tags:
-      - 用户
+      - 用户管理
   /user/login:
     post:
       description: 登录
@@ -252,7 +252,7 @@ paths:
           schema:
             type: string
       tags:
-      - 用户
+      - 用户管理
   /user/modify:
     post:
       description: 修改用户信息（支持修改用户名和密码）
@@ -291,7 +291,7 @@ paths:
           schema:
             type: string
       tags:
-      - 用户
+      - 用户管理
   /user/register:
     post:
       description: 注册
@@ -325,7 +325,7 @@ paths:
           schema:
             type: string
       tags:
-      - 用户
+      - 用户管理
 schemes:
 - http
 - https
