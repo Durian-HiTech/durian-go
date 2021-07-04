@@ -85,3 +85,19 @@ func QueryAllSubscriptions(userID uint64) (subscriptions []model.Subscription) {
 	global.DB.Where("user_id = ?", userID).Find(&subscriptions)
 	return subscriptions
 }
+
+func QueryANewsByID(NewsID uint64) (news model.News, notFound bool) {
+	err := global.DB.Where("news_id = ?", news).First(&news).Error
+	if err != nil && errors.Is(err, gorm.ErrRecordNotFound) {
+		return news, true
+	} else if err != nil && !errors.Is(err, gorm.ErrRecordNotFound) {
+		panic(err)
+	} else {
+		return news, false
+	}
+}
+
+func QueryAllNews() (subscriptions []model.Subscription) {
+	global.DB.Find(&subscriptions)
+	return subscriptions
+}

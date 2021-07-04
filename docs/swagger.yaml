@@ -4,6 +4,79 @@ info:
   title: Durian Covid-19 Golang Backend
   version: "1.0"
 paths:
+  /portal/del_sub:
+    post:
+      description: 删除订阅
+      parameters:
+      - description: 订阅ID
+        in: formData
+        name: subscription_id
+        required: true
+        type: string
+      responses:
+        "200":
+          description: '{"success":true, "message":"删除成功"}'
+          schema:
+            type: string
+        "401":
+          description: '{"success": false, "message": "数据库error, 一些其他错误"}'
+          schema:
+            type: string
+        "404":
+          description: '{"success": false, "message": "用户ID不存在"}'
+          schema:
+            type: string
+      tags:
+      - user
+  /portal/list_all_subs:
+    post:
+      description: 获取订阅列表
+      parameters:
+      - description: 用户ID
+        in: formData
+        name: user_id
+        required: true
+        type: string
+      responses:
+        "200":
+          description: '{"success":true, "message":"查询成功","data":"user的所有订阅"}'
+          schema:
+            type: string
+        "404":
+          description: '{"success": false, "message": "用户ID不存在"}'
+          schema:
+            type: string
+      tags:
+      - user
+  /portal/sub:
+    post:
+      description: 订阅城市疫情信息
+      parameters:
+      - description: 用户ID
+        in: formData
+        name: user_id
+        required: true
+        type: string
+      - description: 城市名字
+        in: formData
+        name: city_name
+        required: true
+        type: string
+      responses:
+        "200":
+          description: '{"success":true, "message":"订阅成功"}'
+          schema:
+            type: string
+        "401":
+          description: '{"success": false, "message": "数据库error, 一些其他错误"}'
+          schema:
+            type: string
+        "404":
+          description: '{"success": false, "message": "用户ID不存在"}'
+          schema:
+            type: string
+      tags:
+      - user
   /user/info:
     post:
       description: 查看用户个人信息
@@ -16,26 +89,6 @@ paths:
       responses:
         "200":
           description: '{"success": true, "message": "查看用户信息成功", "data": "model.User的所有信息"}'
-          schema:
-            type: string
-        "404":
-          description: '{"success": false, "message": "用户ID不存在"}'
-          schema:
-            type: string
-      tags:
-      - user
-  /user/list_all_subscriptions:
-    post:
-      description: 获取订阅列表
-      parameters:
-      - description: 用户ID
-        in: formData
-        name: user_id
-        required: true
-        type: string
-      responses:
-        "200":
-          description: '{"success":true, "message":"查询成功","data":"user的所有订阅"}'
           schema:
             type: string
         "404":
@@ -133,59 +186,6 @@ paths:
             type: string
         "400":
           description: '{"success": false, "message": "用户已存在"}'
-          schema:
-            type: string
-      tags:
-      - user
-  /user/remove:
-    post:
-      description: 删除订阅
-      parameters:
-      - description: 订阅ID
-        in: formData
-        name: subscription_id
-        required: true
-        type: string
-      responses:
-        "200":
-          description: '{"success":true, "message":"删除成功"}'
-          schema:
-            type: string
-        "401":
-          description: '{"success": false, "message": "数据库error, 一些其他错误"}'
-          schema:
-            type: string
-        "404":
-          description: '{"success": false, "message": "用户ID不存在"}'
-          schema:
-            type: string
-      tags:
-      - user
-  /user/subscribe:
-    post:
-      description: 订阅城市疫情信息
-      parameters:
-      - description: 用户ID
-        in: formData
-        name: user_id
-        required: true
-        type: string
-      - description: 城市名字
-        in: formData
-        name: city_name
-        required: true
-        type: string
-      responses:
-        "200":
-          description: '{"success":true, "message":"订阅成功"}'
-          schema:
-            type: string
-        "401":
-          description: '{"success": false, "message": "数据库error, 一些其他错误"}'
-          schema:
-            type: string
-        "404":
-          description: '{"success": false, "message": "用户ID不存在"}'
           schema:
             type: string
       tags:

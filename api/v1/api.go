@@ -146,7 +146,7 @@ func TellUserInfo(c *gin.Context) {
 // @Failure 404 {string} string "{"success": false, "message": "已经订阅过这个城市的疫情信息"}"
 // @Failure 401 {string} string "{"success": false, "message": "数据库error, 一些其他错误"}"
 // @Failure 404 {string} string "{"success": false, "message": "用户ID不存在"}"
-// @Router /user/subscribe [post]
+// @Router /portal/sub [post]
 func Subscribe(c *gin.Context) {
 	userID, _ := strconv.ParseUint(c.Request.FormValue("user_id"), 0, 64)
 	cityName := c.Request.FormValue("city_name")
@@ -183,7 +183,7 @@ func Subscribe(c *gin.Context) {
 // @Param user_id formData string true "用户ID"
 // @Success 200 {string} string "{"success":true, "message":"查询成功","data":"user的所有订阅"}"
 // @Failure 404 {string} string "{"success": false, "message": "用户ID不存在"}"
-// @Router /user/list_all_subscriptions [post]
+// @Router /portal/list_all_subs [post]
 func ListAllSubscriptions(c *gin.Context) {
 	userID, _ := strconv.ParseUint(c.Request.FormValue("user_id"), 0, 64)
 	_, notFoundUserByID := service.QueryAUserByID(userID)
@@ -205,7 +205,7 @@ func ListAllSubscriptions(c *gin.Context) {
 // @Success 200 {string} string "{"success":true, "message":"删除成功"}"
 // @Failure 401 {string} string "{"success": false, "message": "数据库error, 一些其他错误"}"
 // @Failure 404 {string} string "{"success": false, "message": "用户ID不存在"}"
-// @Router /user/remove [post]
+// @Router /portal/del_sub [post]
 func RemoveSubscription(c *gin.Context) {
 	subscriptionID, _ := strconv.ParseUint(c.Request.FormValue("subscription_id"), 0, 64)
 
