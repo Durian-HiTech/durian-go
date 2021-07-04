@@ -97,7 +97,7 @@ func QueryANewsByID(NewsID uint64) (news model.News, notFound bool) {
 	}
 }
 
-func QueryAllNews() (subscriptions []model.Subscription) {
-	global.DB.Find(&subscriptions)
-	return subscriptions
+func QueryAllNews() (news []model.News) {
+	global.DB.Find(&news)
+	return news
 }

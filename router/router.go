@@ -23,7 +23,7 @@ func InitRouter(Router *gin.RouterGroup) {
 	}
 	NewsRouter := Router.Group("/news")
 	{
-		NewsRouter.GET("/news/list_all_news", v1.ListAllNews)
-		NewsRouter.POST("/news/detail", v1.ViewNewsDetail)
+		NewsRouter.GET("/list_all_news", v1.ListAllNews)
+		NewsRouter.POST("/detail", v1.ViewNewsDetail)
 	}
 }
