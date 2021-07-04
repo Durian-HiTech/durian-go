@@ -217,7 +217,6 @@ paths:
       - description: 认证机构名
         in: formData
         name: affiliation
-        required: true
         type: string
       responses:
         "200":

@@ -19,7 +19,7 @@ func Index(c *gin.Context) {
 // @Param username formData string true "用户名"
 // @Param password formData string true "密码"
 // @Param user_type formData string true "用户类型（0: 普通用户，1: 认证机构用户）"
-// @Param affiliation formData string true "认证机构名"
+// @Param affiliation formData string false "认证机构名"
 // @Success 200 {string} string "{"success": true, "message": "用户创建成功"}"
 // @Failure 400 {string} string "{"success": false, "message": "用户已存在"}"
 // @Router /user/register [post]

@@ -348,8 +348,7 @@ var doc = `{
                         "type": "string",
                         "description": "认证机构名",
                         "name": "affiliation",
-                        "in": "formData",
-                        "required": true
+                        "in": "formData"
                     }
                 ],
                 "responses": {
