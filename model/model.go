@@ -24,6 +24,7 @@ type News struct {
 type Question struct {
 	QuestionID      uint64    `gorm:"primary_key;" json:"question_id"`
 	UserID          uint64    `gorm:"not null" json:"user_id"`
+	QuestionTitle   string    `gorm:"size:200;not null" json:"question_title"`
 	QuestionContent string    `gorm:"size:200;not null" json:"question_content"`
 	QuestionTime    time.Time `json:"question_time"`
 }

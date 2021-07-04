@@ -101,3 +101,28 @@ func QueryAllNews() (subscriptions []model.Subscription) {
 	global.DB.Find(&subscriptions)
 	return subscriptions
 }
+
+func CreateAQuestion(question *model.Question) (err error) {
+	if err = global.DB.Create(&question).Error; err != nil {
+		return err
+	}
+	return
+}
+
+func QueryAQuestionByID(questionID uint64) (question model.Question, notFound bool) {
+	err := global.DB.Where("question_id = ?", questionID).First(&question).Error
+	if err != nil && errors.Is(err, gorm.ErrRecordNotFound) {
+		return question, true
+	} else if err != nil && !errors.Is(err, gorm.ErrRecordNotFound) {
+		panic(err)
+	} else {
+		return question, false
+	}
+}
+
+func CreateAComment(comment *model.Comment) (err error) {
+	if err = global.DB.Create(&comment).Error; err != nil {
+		return err
+	}
+	return
+}

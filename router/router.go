@@ -20,5 +20,7 @@ func InitRouter(Router *gin.RouterGroup) {
 		PortalRouter.POST("/sub", v1.Subscribe)
 		PortalRouter.POST("/list_all_subs", v1.ListAllSubscriptions)
 		PortalRouter.POST("/del_sub", v1.RemoveSubscription)
+		PortalRouter.POST("/question", v1.CreateAQuestion)
+		PortalRouter.POST("/comment", v1.CreateAComment)
 	}
 }

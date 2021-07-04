@@ -3,6 +3,7 @@ package v1
 import (
 	"net/http"
 	"strconv"
+	"time"
 
 	"github.com/TualatinX/durian-go/model"
 	"github.com/TualatinX/durian-go/service"
@@ -223,4 +224,90 @@ func RemoveSubscription(c *gin.Context) {
 	} else {
 		c.JSON(http.StatusOK, gin.H{"success": true, "message": "删除成功"})
 	}
+}
+
+// CreateAQuestion doc
+// @description 创建一个问题
+// @Tags portal
+// @Param user_id formData string true "用户ID"
+// @Param question_title formData string true "提问标题"
+// @Param question_content formData string true "提问内容"
+// @Success 200 {string} string "{"success": true, "message": "用户提问成功", "detail": 提问的全部信息}"
+// @Failure 401 {string} string "{"success": false, "message": "数据库error, 一些其他错误"}"
+// @Failure 404 {string} string "{"success": false, "message": "用户ID不存在"}"
+// @Router /portal/create [post]
+func CreateAQuestion(c *gin.Context) {
+	userID, _ := strconv.ParseUint(c.Request.FormValue("user_id"), 0, 64)
+
+	_, notFoundUserByID := service.QueryAUserByID(userID)
+	if notFoundUserByID {
+		c.JSON(404, gin.H{
+			"success": false,
+			"message": "用户ID不存在",
+		})
+		return
+	}
+
+	question_title := c.Request.FormValue("question_title")
+	question_content := c.Request.FormValue("question_content")
+
+	question := model.Question{UserID: userID, QuestionTitle: question_title, QuestionContent: question_content, QuestionTime: time.Now()}
+	err := service.CreateAQuestion(&question)
+	if err != nil {
+		c.JSON(401, gin.H{
+			"success": false,
+			"message": "提问失败",
+		})
+	} else {
+		c.JSON(http.StatusOK, gin.H{"success": true, "message": "用户提问成功", "detail": question})
+	}
+}
+
+// CreateAComment doc
+// @description 创建一条评论
+// @Tags portal
+// @Param user_id formData string true "用户ID"
+// @Param user_type formData string true "用户类型"
+// @Param question_id formData string true "问题ID"
+// @Param comment_content formData string true "评论内容"
+// @Success 200 {string} string "{"success": true, "message": "用户评论成功"}"
+// @Success 404 {string} string "{"success": true, "message": "用户ID不存在"}"
+// @Success 404 {string} string "{"success": true, "message": "问题ID不存在"}"
+// @Router /portal/comment [post]
+func CreateAComment(c *gin.Context) {
+	userID, _ := strconv.ParseUint(c.Request.FormValue("user_id"), 0, 64)
+	_, notFoundUserByID := service.QueryAUserByID(userID)
+	if notFoundUserByID {
+		c.JSON(404, gin.H{
+			"success": false,
+			"message": "用户ID不存在",
+		})
+		return
+	}
+
+	questionID, _ := strconv.ParseUint(c.Request.FormValue("question_id"), 0, 64)
+	_, notFoundQuestionByID := service.QueryAQuestionByID(questionID)
+	if notFoundQuestionByID {
+		c.JSON(404, gin.H{
+			"success": false,
+			"message": "问题ID不存在",
+		})
+	}
+
+	userType, _ := strconv.ParseUint(c.Request.FormValue("question_id"), 0, 64)
+	comment_content := c.Request.FormValue("comment_content")
+	valid := false
+	if userType != 0 {
+		valid = true
+	}
+
+	comment := model.Comment{UserID: userID, QuestionID: questionID, CommentContent: comment_content, CommentTime: time.Now(), Valid: valid, UserType: userType}
+	err := service.CreateAComment(&comment)
+	if err != nil {
+		c.JSON(http.StatusOK, gin.H{
+			"success": false,
+			"message": "评论失败",
+		})
+	}
+	c.JSON(http.StatusOK, gin.H{"success": true, "message": "用户评论成功"})
 }
