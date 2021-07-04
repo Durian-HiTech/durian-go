@@ -101,3 +101,46 @@ func QueryAllNews() (news []model.News) {
 	global.DB.Find(&news)
 	return news
 }
+
+func CreateAQuestion(question *model.Question) (err error) {
+	if err = global.DB.Create(&question).Error; err != nil {
+		return err
+	}
+	return
+}
+
+func QueryAQuestionByID(questionID uint64) (question model.Question, notFound bool) {
+	err := global.DB.Where("question_id = ?", questionID).First(&question).Error
+	if err != nil && errors.Is(err, gorm.ErrRecordNotFound) {
+		return question, true
+	} else if err != nil && !errors.Is(err, gorm.ErrRecordNotFound) {
+		panic(err)
+	} else {
+		return question, false
+	}
+}
+
+func CreateAComment(comment *model.Comment) (err error) {
+	if err = global.DB.Create(&comment).Error; err != nil {
+		return err
+	}
+	return
+}
+
+// 列出某个文献的所有评论
+func QueryAllComments(questionID uint64) (res []model.Comment) {
+	var comments []model.Comment
+	global.DB.Where("question_id = ?", questionID).Order("comment_time desc").Find(&comments)
+	// 将置顶的评论提前，存入res
+	for _, e := range comments {
+		if e.Valid {
+			res = append(res, e)
+		}
+	}
+	for _, e := range comments {
+		if !e.Valid {
+			res = append(res, e)
+		}
+	}
+	return res
+}
