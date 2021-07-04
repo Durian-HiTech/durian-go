@@ -3,10 +3,10 @@ package model
 import "time"
 
 type User struct {
-	UserID              uint64 `gorm:"primary_key; not null;" json:"user_id"`
-	Username            string `gorm:"size:25; not null; unique" json:"username"`
-	Password            string `gorm:"size:25; not null" json:"password"`
-	IsRelatedDepartment bool   `gorm:"default:false" json:"is_related_department"`
+	UserID   uint64 `gorm:"primary_key; not null;" json:"user_id"`
+	Username string `gorm:"size:25; not null; unique" json:"username"`
+	Password string `gorm:"size:25; not null" json:"password"`
+	UserType uint64 `gorm:"default:0" json:"user_type"`
 }
 type Subscription struct {
 	SubscriptionID uint64 `gorm:"primary_key;" json:"subscription_id"`
@@ -29,11 +29,11 @@ type Question struct {
 }
 
 type Comment struct {
-	CommentID           uint64    `gorm:"primary_key;" json:"comment_id"`
-	UserID              uint64    `gorm:"not null" json:"user_id"`
-	QuestionID          uint64    `gorm:"not null" json:"question_id"`
-	CommentContent      string    `gorm:"size:200;not null" json:"comment_content"`
-	CommentTime         time.Time `json:"comment_time"`
-	Valid               bool      `gorm:"default:false" json:"valid"`
-	IsRelatedDepartment bool      `gorm:"default:false" json:"is_related_department"`
+	CommentID      uint64    `gorm:"primary_key;" json:"comment_id"`
+	UserID         uint64    `gorm:"not null" json:"user_id"`
+	QuestionID     uint64    `gorm:"not null" json:"question_id"`
+	CommentContent string    `gorm:"size:200;not null" json:"comment_content"`
+	CommentTime    time.Time `json:"comment_time"`
+	Valid          bool      `gorm:"default:false" json:"valid"`
+	UserType       uint64    `gorm:"default:0" json:"user_type"`
 }
