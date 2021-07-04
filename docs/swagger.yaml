@@ -179,6 +179,16 @@ paths:
         name: password
         required: true
         type: string
+      - description: '用户类型（0: 普通用户，1: 认证机构用户）'
+        in: formData
+        name: user_type
+        required: true
+        type: string
+      - description: 认证机构名
+        in: formData
+        name: affiliation
+        required: true
+        type: string
       responses:
         "200":
           description: '{"success": true, "message": "用户创建成功"}'

@@ -289,6 +289,20 @@ var doc = `{
                         "name": "password",
                         "in": "formData",
                         "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "用户类型（0: 普通用户，1: 认证机构用户）",
+                        "name": "user_type",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "认证机构名",
+                        "name": "affiliation",
+                        "in": "formData",
+                        "required": true
                     }
                 ],
                 "responses": {

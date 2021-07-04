@@ -18,13 +18,17 @@ func Index(c *gin.Context) {
 // @Tags user
 // @Param username formData string true "用户名"
 // @Param password formData string true "密码"
+// @Param user_type formData string true "用户类型（0: 普通用户，1: 认证机构用户）"
+// @Param affiliation formData string true "认证机构名"
 // @Success 200 {string} string "{"success": true, "message": "用户创建成功"}"
 // @Failure 400 {string} string "{"success": false, "message": "用户已存在"}"
 // @Router /user/register [post]
 func Register(c *gin.Context) {
 	username := c.Request.FormValue("username")
 	password := c.Request.FormValue("password")
-	user := model.User{Username: username, Password: password}
+	userType, _ := strconv.ParseUint(c.Request.FormValue("user_type"), 0, 64)
+	affiliation := c.Request.FormValue("affiliation")
+	user := model.User{Username: username, Password: password, UserType: userType, Affiliation: affiliation}
 	_, notFound := service.QueryAUserByUsername(username)
 	if notFound {
 		service.CreateAUser(&user)
