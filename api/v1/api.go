@@ -239,7 +239,7 @@ func RemoveSubscription(c *gin.Context) {
 // @Success 200 {string} string "{"success": true, "message": "用户提问成功", "detail": 提问的全部信息}"
 // @Failure 401 {string} string "{"success": false, "message": "数据库error, 一些其他错误"}"
 // @Failure 404 {string} string "{"success": false, "message": "用户ID不存在"}"
-// @Router /portal/create [post]
+// @Router /notice/create_question [post]
 func CreateAQuestion(c *gin.Context) {
 	userID, _ := strconv.ParseUint(c.Request.FormValue("user_id"), 0, 64)
 
@@ -272,7 +272,8 @@ func CreateAQuestion(c *gin.Context) {
 // @Tags portal
 // @Param question_id formData string true "问题ID"
 // @Success 200 {string} string "{"success": true, "message": "查看成功", "data": "某问题的所有评论"}"
-// @Router /branch/comment/list_all_comments [post]
+// @Failure 404 {string} string "{"success": false, "message": "问题ID不存在"}"
+// @Router /notice/list_all_comments [post]
 func ListAllComments(c *gin.Context) {
 	questionID, _ := strconv.ParseUint(c.Request.FormValue("question_id"), 0, 64)
 	_, notFoundQuestionByID := service.QueryAQuestionByID(questionID)
@@ -295,14 +296,15 @@ func ListAllComments(c *gin.Context) {
 // @Param question_id formData string true "问题ID"
 // @Param comment_content formData string true "评论内容"
 // @Success 200 {string} string "{"success": true, "message": "用户评论成功"}"
-// @Success 404 {string} string "{"success": true, "message": "用户ID不存在"}"
-// @Success 404 {string} string "{"success": true, "message": "问题ID不存在"}"
-// @Router /portal/comment [post]
+// @Failure 400 {string} string "{"success": false, "message": "用户ID不存在"}"
+// @Failure 401 {string} string "{"success": false, "message": "问题ID不存在"}"
+// @Failure 402 {string} string "{"success": false, "message": "评论失败"}"
+// @Router /notice/create_comment [post]
 func CreateAComment(c *gin.Context) {
 	userID, _ := strconv.ParseUint(c.Request.FormValue("user_id"), 0, 64)
 	_, notFoundUserByID := service.QueryAUserByID(userID)
 	if notFoundUserByID {
-		c.JSON(404, gin.H{
+		c.JSON(400, gin.H{
 			"success": false,
 			"message": "用户ID不存在",
 		})
@@ -312,7 +314,7 @@ func CreateAComment(c *gin.Context) {
 	questionID, _ := strconv.ParseUint(c.Request.FormValue("question_id"), 0, 64)
 	_, notFoundQuestionByID := service.QueryAQuestionByID(questionID)
 	if notFoundQuestionByID {
-		c.JSON(404, gin.H{
+		c.JSON(401, gin.H{
 			"success": false,
 			"message": "问题ID不存在",
 		})
@@ -330,7 +332,7 @@ func CreateAComment(c *gin.Context) {
 	comment := model.Comment{UserID: userID, QuestionID: questionID, CommentContent: comment_content, CommentTime: time.Now(), Valid: valid, UserType: userType}
 	err := service.CreateAComment(&comment)
 	if err != nil {
-		c.JSON(http.StatusOK, gin.H{
+		c.JSON(402, gin.H{
 			"success": false,
 			"message": "评论失败",
 		})
@@ -354,7 +356,7 @@ func ListAllNews(c *gin.Context) {
 // @Tags 新闻
 // @Param news_id formData string true "新闻ID"
 // @Success 200 {string} string "{"success":true, "message":"查询成功","data":"该条新闻的详细信息"}"
-// @Success 404 {string} string "{"success":true, "message":"查询失败，新闻ID不存在"}"
+// @Failure 404 {string} string "{"success":true, "message":"查询失败，新闻ID不存在"}"
 // @Router /news/detail [POST]
 func ViewNewsDetail(c *gin.Context) {
 	newsID, _ := strconv.ParseUint(c.Request.FormValue("news_id"), 0, 64)

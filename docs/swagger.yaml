@@ -4,22 +4,6 @@ info:
   title: Durian Covid-19 Golang Backend
   version: "1.0"
 paths:
-  /branch/comment/list_all_comments:
-    post:
-      description: 列出某个问题的全部评论
-      parameters:
-      - description: 问题ID
-        in: formData
-        name: question_id
-        required: true
-        type: string
-      responses:
-        "200":
-          description: '{"success": true, "message": "查看成功", "data": "某问题的所有评论"}'
-          schema:
-            type: string
-      tags:
-      - portal
   /news/detail:
     post:
       description: 查看单条新闻
@@ -50,7 +34,7 @@ paths:
             type: string
       tags:
       - 新闻
-  /portal/comment:
+  /notice/create_comment:
     post:
       description: 创建一条评论
       parameters:
@@ -79,13 +63,21 @@ paths:
           description: '{"success": true, "message": "用户评论成功"}'
           schema:
             type: string
-        "404":
-          description: '{"success": true, "message": "问题ID不存在"}'
+        "400":
+          description: '{"success": false, "message": "用户ID不存在"}'
+          schema:
+            type: string
+        "401":
+          description: '{"success": false, "message": "问题ID不存在"}'
+          schema:
+            type: string
+        "402":
+          description: '{"success": false, "message": "评论失败"}'
           schema:
             type: string
       tags:
       - 问答门户
-  /portal/create:
+  /notice/create_question:
     post:
       description: 创建一个问题
       parameters:
@@ -119,6 +111,26 @@ paths:
             type: string
       tags:
       - 问答门户
+  /notice/list_all_comments:
+    post:
+      description: 列出某个问题的全部评论
+      parameters:
+      - description: 问题ID
+        in: formData
+        name: question_id
+        required: true
+        type: string
+      responses:
+        "200":
+          description: '{"success": true, "message": "查看成功", "data": "某问题的所有评论"}'
+          schema:
+            type: string
+        "404":
+          description: '{"success": false, "message": "问题ID不存在"}'
+          schema:
+            type: string
+      tags:
+      - portal
   /sub/del_sub:
     post:
       description: 删除订阅

@@ -15,11 +15,11 @@ func InitRouter(Router *gin.RouterGroup) {
 		UserRouter.POST("/modify", v1.ModifyUser)
 		UserRouter.POST("/info", v1.TellUserInfo)
 	}
-	PortalRouter := Router.Group("/portal")
+	NoticeRouter := Router.Group("/notice")
 	{
-		PortalRouter.POST("/question", v1.CreateAQuestion)
-		PortalRouter.POST("/comment", v1.CreateAComment)
-		PortalRouter.POST("/list_all_comments", v1.ListAllComments)
+		NoticeRouter.POST("/create_question", v1.CreateAQuestion)
+		NoticeRouter.POST("/create_comment", v1.CreateAComment)
+		NoticeRouter.POST("/list_all_comments", v1.ListAllComments)
 	}
 	SubRouter := Router.Group("/sub")
 	{
