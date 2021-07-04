@@ -87,7 +87,7 @@ func QueryAllSubscriptions(userID uint64) (subscriptions []model.Subscription) {
 }
 
 func QueryANewsByID(NewsID uint64) (news model.News, notFound bool) {
-	err := global.DB.Where("news_id = ?", news).First(&news).Error
+	err := global.DB.Where("news_id = ?", NewsID).First(&news).Error
 	if err != nil && errors.Is(err, gorm.ErrRecordNotFound) {
 		return news, true
 	} else if err != nil && !errors.Is(err, gorm.ErrRecordNotFound) {
@@ -133,12 +133,12 @@ func QueryAllComments(questionID uint64) (res []model.Comment) {
 	global.DB.Where("question_id = ?", questionID).Order("comment_time desc").Find(&comments)
 	// 将置顶的评论提前，存入res
 	for _, e := range comments {
-		if e.Valid {
+		if e.UserType == 1 {
 			res = append(res, e)
 		}
 	}
 	for _, e := range comments {
-		if !e.Valid {
+		if e.UserType != 1 {
 			res = append(res, e)
 		}
 	}

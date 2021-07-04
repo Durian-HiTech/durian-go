@@ -322,14 +322,8 @@ func CreateAComment(c *gin.Context) {
 	}
 
 	userType, _ := strconv.ParseUint(c.Request.FormValue("user_type"), 0, 64)
-	valid := false
-	if userType != 0 {
-		valid = true
-	}
-
 	comment_content := c.Request.FormValue("comment_content")
-
-	comment := model.Comment{UserID: userID, QuestionID: questionID, CommentContent: comment_content, CommentTime: time.Now(), Valid: valid, UserType: userType}
+	comment := model.Comment{UserID: userID, QuestionID: questionID, CommentContent: comment_content, CommentTime: time.Now(), UserType: userType}
 	err := service.CreateAComment(&comment)
 	if err != nil {
 		c.JSON(402, gin.H{

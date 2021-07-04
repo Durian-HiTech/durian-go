@@ -36,6 +36,5 @@ type Comment struct {
 	QuestionID     uint64    `gorm:"not null" json:"question_id"`
 	CommentContent string    `gorm:"size:200;not null" json:"comment_content"`
 	CommentTime    time.Time `json:"comment_time"`
-	Valid          bool      `gorm:"default:false" json:"valid"`
 	UserType       uint64    `gorm:"default:0" json:"user_type"`
 }
