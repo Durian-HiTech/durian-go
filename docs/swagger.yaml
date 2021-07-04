@@ -4,6 +4,22 @@ info:
   title: Durian Covid-19 Golang Backend
   version: "1.0"
 paths:
+  /branch/comment/list_all_comments:
+    post:
+      description: 列出某个问题的全部评论
+      parameters:
+      - description: 问题ID
+        in: formData
+        name: question_id
+        required: true
+        type: string
+      responses:
+        "200":
+          description: '{"success": true, "message": "查看成功", "data": "某问题的所有评论"}'
+          schema:
+            type: string
+      tags:
+      - portal
   /news/detail:
     post:
       description: 查看单条新闻

@@ -19,6 +19,7 @@ func InitRouter(Router *gin.RouterGroup) {
 	{
 		PortalRouter.POST("/question", v1.CreateAQuestion)
 		PortalRouter.POST("/comment", v1.CreateAComment)
+		PortalRouter.POST("/list_all_comments", v1.ListAllComments)
 	}
 	SubRouter := Router.Group("/sub")
 	{

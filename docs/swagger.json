@@ -11,6 +11,31 @@
         "version": "1.0"
     },
     "paths": {
+        "/branch/comment/list_all_comments": {
+            "post": {
+                "description": "列出某个问题的全部评论",
+                "tags": [
+                    "portal"
+                ],
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "问题ID",
+                        "name": "question_id",
+                        "in": "formData",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "{\"success\": true, \"message\": \"查看成功\", \"data\": \"某问题的所有评论\"}",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
         "/news/detail": {
             "post": {
                 "description": "查看单条新闻",

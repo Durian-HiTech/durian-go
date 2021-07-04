@@ -267,6 +267,26 @@ func CreateAQuestion(c *gin.Context) {
 	}
 }
 
+// ListAllComments doc
+// @description 列出某个问题的全部评论
+// @Tags portal
+// @Param question_id formData string true "问题ID"
+// @Success 200 {string} string "{"success": true, "message": "查看成功", "data": "某问题的所有评论"}"
+// @Router /branch/comment/list_all_comments [post]
+func ListAllComments(c *gin.Context) {
+	questionID, _ := strconv.ParseUint(c.Request.FormValue("question_id"), 0, 64)
+	_, notFoundQuestionByID := service.QueryAQuestionByID(questionID)
+	if notFoundQuestionByID {
+		c.JSON(404, gin.H{
+			"success": false,
+			"message": "问题ID不存在",
+		})
+		return
+	}
+	comments := service.QueryAllComments(questionID)
+	c.JSON(http.StatusOK, gin.H{"success": true, "message": "查看成功", "data": comments})
+}
+
 // CreateAComment doc
 // @description 创建一条评论
 // @Tags 问答门户

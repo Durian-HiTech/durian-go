@@ -126,3 +126,21 @@ func CreateAComment(comment *model.Comment) (err error) {
 	}
 	return
 }
+
+// 列出某个文献的所有评论
+func QueryAllComments(questionID uint64) (res []model.Comment) {
+	var comments []model.Comment
+	global.DB.Where("question_id = ?", questionID).Order("comment_time desc").Find(&comments)
+	// 将置顶的评论提前，存入res
+	for _, e := range comments {
+		if e.Valid {
+			res = append(res, e)
+		}
+	}
+	for _, e := range comments {
+		if !e.Valid {
+			res = append(res, e)
+		}
+	}
+	return res
+}
