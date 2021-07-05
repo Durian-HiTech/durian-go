@@ -1,7 +1,9 @@
 package v1
 
 import (
+	"io"
 	"net/http"
+	"os"
 	"strconv"
 	"time"
 
@@ -391,15 +393,23 @@ func ListHighRiskAreas(c *gin.Context) {
 // FetchRequiredData doc
 // @description 获取在数据库中直接存的 Json File
 // @Tags 数据
+// @Param name formData string true "数据文件名"
 // @Success 200 {string} string "{"success":true, "message":"查询成功","data":"Json data""}"
 // @Failure 200 {string} string "{"success":true, "message":"查询失败，无所需数据"}"
 // @Router /data/query_data [POST]
 func FetchRequiredData(c *gin.Context) {
 	name := c.Request.FormValue("name")
-	directData, notFound := service.QueryDataByName(name)
-	if notFound {
+	// directData, notFound := service.QueryDataByName(name)
+	// if notFound {
+	// 	c.JSON(http.StatusOK, gin.H{"success": false, "message": "查询失败，无所需数据"})
+	// } else {
+	// 	c.JSON(http.StatusOK, gin.H{"success": true, "message": "查询成功", "data": directData})
+	// }
+	fin, err := os.Open("./data/" + name + ".json")
+	if err != nil {
 		c.JSON(http.StatusOK, gin.H{"success": false, "message": "查询失败，无所需数据"})
 	} else {
-		c.JSON(http.StatusOK, gin.H{"success": true, "message": "查询成功", "data": directData})
+		cin, _ := io.ReadAll(fin)
+		c.JSON(http.StatusOK, gin.H{"success": true, "message": "查询成功", "data": string(cin)})
 	}
 }
