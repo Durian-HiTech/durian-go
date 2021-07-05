@@ -1,7 +1,9 @@
 package v1
 
 import (
+	"io"
 	"net/http"
+	"os"
 	"strconv"
 	"time"
 
@@ -397,10 +399,17 @@ func ListHighRiskAreas(c *gin.Context) {
 // @Router /data/query_data [POST]
 func FetchRequiredData(c *gin.Context) {
 	name := c.Request.FormValue("name")
-	directData, notFound := service.QueryDataByName(name)
-	if notFound {
+	// directData, notFound := service.QueryDataByName(name)
+	// if notFound {
+	// 	c.JSON(http.StatusOK, gin.H{"success": false, "message": "查询失败，无所需数据"})
+	// } else {
+	// 	c.JSON(http.StatusOK, gin.H{"success": true, "message": "查询成功", "data": directData})
+	// }
+	fin, err := os.Open("./data/" + name + ".json")
+	if err != nil {
 		c.JSON(http.StatusOK, gin.H{"success": false, "message": "查询失败，无所需数据"})
 	} else {
-		c.JSON(http.StatusOK, gin.H{"success": true, "message": "查询成功", "data": directData})
+		cin, _ := io.ReadAll(fin)
+		c.JSON(http.StatusOK, gin.H{"success": true, "message": "查询成功", "data": string(cin)})
 	}
 }
