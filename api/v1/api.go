@@ -279,6 +279,17 @@ func CreateAQuestion(c *gin.Context) {
 // @description 列出全部问题
 // @Tags 防控知识板块
 // @Success 200 {string} string "{"success": true, "message": "查看成功", "data": "全部问题"}"
+// @Router /notice/list_all_comments [POST]
+func ListAllQuestions(c *gin.Context) {
+	questionList := service.QueryAllQuestions()
+	c.JSON(http.StatusOK, gin.H{"success": true, "message": "查询成功", "data": questionList})
+}
+
+// ListAllComments doc
+// @description 列出某个问题的全部评论
+// @Tags 防控知识板块
+// @Param question_id formData string true "问题ID"
+// @Success 200 {string} string "{"success": true, "message": "查看成功", "data": "某问题的所有评论"}"
 // @Failure 404 {string} string "{"success": false, "message": "问题ID不存在"}"
 // @Router /notice/list_all_comments [GET]
 func ListAllComments(c *gin.Context) {
@@ -293,18 +304,6 @@ func ListAllComments(c *gin.Context) {
 	}
 	comments := service.QueryAllComments(questionID)
 	c.JSON(http.StatusOK, gin.H{"success": true, "message": "查看成功", "data": comments})
-}
-
-// ListAllQuestions doc
-// @description 列出某个问题的全部评论
-// @Tags 防控知识板块
-// @Param question_id formData string true "问题ID"
-// @Success 200 {string} string "{"success": true, "message": "查看成功", "data": "某问题的所有评论"}"
-// @Failure 404 {string} string "{"success": false, "message": "问题ID不存在"}"
-// @Router /notice/list_all_comments [POST]
-func ListAllQuestions(c *gin.Context) {
-	questionList := service.QueryAllQuestions()
-	c.JSON(http.StatusOK, gin.H{"success": true, "message": "查询成功", "data": questionList})
 }
 
 // CreateAComment doc
