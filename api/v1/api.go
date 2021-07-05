@@ -1,7 +1,7 @@
 package v1
 
 import (
-	"io"
+	"io/ioutil"
 	"net/http"
 	"os"
 	"strconv"
@@ -410,7 +410,7 @@ func FetchRequiredData(c *gin.Context) {
 	if err != nil {
 		c.JSON(http.StatusOK, gin.H{"success": false, "message": "查询失败，无所需数据"})
 	} else {
-		cin, _ := io.ReadAll(fin)
+		cin, _ := ioutil.ReadAll(fin)
 		c.JSON(http.StatusOK, gin.H{"success": true, "message": "查询成功", "data": string(cin)})
 	}
 }
