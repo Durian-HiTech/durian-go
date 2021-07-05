@@ -37,5 +37,6 @@ func InitRouter(Router *gin.RouterGroup) {
 	DataRouter := Router.Group("/data")
 	{
 		DataRouter.GET("/list_all_high_risk_areas", v1.ListHighRiskAreas)
+		DataRouter.POST("/query_data", v1.FetchRequiredData)
 	}
 }

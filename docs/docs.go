@@ -56,6 +56,22 @@ var doc = `{
                 }
             }
         },
+        "/data/query_data": {
+            "post": {
+                "description": "获取在数据库中直接存的 Json File",
+                "tags": [
+                    "数据"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "{\"success\":true, \"message\":\"查询失败，无所需数据\"}",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
         "/news/detail": {
             "post": {
                 "description": "查看单条新闻",

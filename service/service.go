@@ -170,3 +170,15 @@ func QueryAllHighRiskAreas() (areas []model.HighRiskArea) {
 	global.DB.Find(&areas)
 	return areas
 }
+
+// 根据 name 返回对应的数据 content (Json)
+func QueryDataByName(name string) (directData model.DirectData, notFound bool) {
+	err := global.DB.Where("name = ?", name).First(&directData).Error
+	if err != nil && errors.Is(err, gorm.ErrRecordNotFound) {
+		return directData, true
+	} else if err != nil && !errors.Is(err, gorm.ErrRecordNotFound) {
+		panic(err)
+	} else {
+		return directData, false
+	}
+}
