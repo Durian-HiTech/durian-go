@@ -8,6 +8,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+// 配置组路由
 func SetupRouter() *gin.Engine {
 	r := gin.Default()
 	r.Use(middleware.Cors())

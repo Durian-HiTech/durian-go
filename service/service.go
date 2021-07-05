@@ -8,6 +8,7 @@ import (
 	"gorm.io/gorm"
 )
 
+// 创建用户
 func CreateAUser(user *model.User) (err error) {
 	if err = global.DB.Create(&user).Error; err != nil {
 		return err
@@ -15,6 +16,7 @@ func CreateAUser(user *model.User) (err error) {
 	return nil
 }
 
+// 根据用户 ID 查询某个用户
 func QueryAUserByID(userID uint64) (user model.User, notFound bool) {
 	err := global.DB.Where("user_id = ?", userID).First(&user).Error
 	if err != nil && errors.Is(err, gorm.ErrRecordNotFound) {
@@ -26,6 +28,7 @@ func QueryAUserByID(userID uint64) (user model.User, notFound bool) {
 	}
 }
 
+// 根据用户 username 查询某个用户
 func QueryAUserByUsername(username string) (user model.User, notFound bool) {
 	err := global.DB.Where("username = ?", username).First(&user).Error
 	if err != nil && errors.Is(err, gorm.ErrRecordNotFound) {
@@ -37,6 +40,7 @@ func QueryAUserByUsername(username string) (user model.User, notFound bool) {
 	}
 }
 
+// 更新用户的用户名、密码信息
 func UpdateAUser(user *model.User, username string, password string) error {
 	user.Username = username
 	user.Password = password
@@ -44,6 +48,7 @@ func UpdateAUser(user *model.User, username string, password string) error {
 	return err
 }
 
+// 创建用户订阅城市
 func CreateASubscription(userID uint64, cityName string) (err error) {
 	subscription := model.Subscription{UserID: userID, CityName: cityName}
 	if err = global.DB.Create(&subscription).Error; err != nil {
@@ -52,6 +57,7 @@ func CreateASubscription(userID uint64, cityName string) (err error) {
 	return
 }
 
+// 根据订阅 ID 查询某个订阅情况
 func QueryASubscriptionByID(subscriptionID uint64) (subscription model.Subscription, notFound bool) {
 	err := global.DB.Where("subscription_id = ?", subscriptionID).First(&subscription).Error
 	if err != nil && errors.Is(err, gorm.ErrRecordNotFound) {
@@ -63,6 +69,7 @@ func QueryASubscriptionByID(subscriptionID uint64) (subscription model.Subscript
 	}
 }
 
+// 根据用户名和其订阅城市名查询某个订阅情况
 func QueryASubscriptionByUserIDAndCityName(userID uint64, cityName string) (subscription model.Subscription, notFound bool) {
 	err := global.DB.Where("user_id = ? AND city_name = ?", userID, cityName).First(&subscription).Error
 	if err != nil && errors.Is(err, gorm.ErrRecordNotFound) {
@@ -74,6 +81,7 @@ func QueryASubscriptionByUserIDAndCityName(userID uint64, cityName string) (subs
 	}
 }
 
+// 删除订阅城市
 func DeleteASubscription(subscriptionID uint64) (err error) {
 	var subscription model.Subscription
 	err = global.DB.First(&subscription, subscriptionID).Error
@@ -81,11 +89,13 @@ func DeleteASubscription(subscriptionID uint64) (err error) {
 	return err
 }
 
+// 查询某用户的所有城市
 func QueryAllSubscriptions(userID uint64) (subscriptions []model.Subscription) {
 	global.DB.Where("user_id = ?", userID).Find(&subscriptions)
 	return subscriptions
 }
 
+// 根据新闻 ID 查询新闻详情
 func QueryANewsByID(NewsID uint64) (news model.News, notFound bool) {
 	err := global.DB.Where("news_id = ?", NewsID).First(&news).Error
 	if err != nil && errors.Is(err, gorm.ErrRecordNotFound) {
@@ -97,11 +107,13 @@ func QueryANewsByID(NewsID uint64) (news model.News, notFound bool) {
 	}
 }
 
+// 查询所有新闻
 func QueryAllNews() (news []model.News) {
 	global.DB.Find(&news)
 	return news
 }
 
+// 创建一个知识版块下的问题
 func CreateAQuestion(question *model.Question) (err error) {
 	if err = global.DB.Create(&question).Error; err != nil {
 		return err
@@ -109,6 +121,7 @@ func CreateAQuestion(question *model.Question) (err error) {
 	return
 }
 
+// 根据问题 ID 查询一个问题
 func QueryAQuestionByID(questionID uint64) (question model.Question, notFound bool) {
 	err := global.DB.Where("question_id = ?", questionID).First(&question).Error
 	if err != nil && errors.Is(err, gorm.ErrRecordNotFound) {
@@ -120,6 +133,7 @@ func QueryAQuestionByID(questionID uint64) (question model.Question, notFound bo
 	}
 }
 
+// 创建一个对问题的评论
 func CreateAComment(comment *model.Comment) (err error) {
 	if err = global.DB.Create(&comment).Error; err != nil {
 		return err

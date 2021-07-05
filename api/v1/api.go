@@ -10,6 +10,11 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+// Index doc
+// @description 测试 Index 页
+// @Tags 测试
+// @Success 200 {string} string "{"success": true, "message": "gcp"}"
+// @Router / [GET]
 func Index(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"success": true, "message": "gcp"})
 }
@@ -23,7 +28,7 @@ func Index(c *gin.Context) {
 // @Param affiliation formData string false "认证机构名"
 // @Success 200 {string} string "{"success": true, "message": "用户创建成功"}"
 // @Failure 400 {string} string "{"success": false, "message": "用户已存在"}"
-// @Router /user/register [post]
+// @Router /user/register [POST]
 func Register(c *gin.Context) {
 	username := c.Request.FormValue("username")
 	password := c.Request.FormValue("password")
@@ -47,7 +52,7 @@ func Register(c *gin.Context) {
 // @Success 200 {string} string "{"success": true, "message": "登录成功", "detail": user的信息}"
 // @Failure 400 {string} string "{"success": false, "message": "密码错误"}"
 // @Failure 404 {string} string "{"success": false, "message": "没有该用户"}"
-// @Router /user/login [post]
+// @Router /user/login [POST]
 func Login(c *gin.Context) {
 	username := c.Request.FormValue("username")
 	password := c.Request.FormValue("password")
@@ -73,12 +78,12 @@ func Login(c *gin.Context) {
 // @Success 200 {string} string "{"success": true, "message": "修改成功", "data": "model.User的所有信息"}"
 // @Failure 400 {string} string "{"success": false, "message": "原密码输入错误"}"
 // @Failure 404 {string} string "{"success": false, "message": "用户ID不存在"}"
-// @Router /user/modify [post]
+// @Router /user/modify [POST]
 func ModifyUser(c *gin.Context) {
 	userID, _ := strconv.ParseUint(c.Request.FormValue("user_id"), 0, 64)
 	username := c.Request.FormValue("username")
-	password_old := c.Request.FormValue("password_old")
-	password_new := c.Request.FormValue("password_new")
+	passwordOld := c.Request.FormValue("password_old")
+	passwordNew := c.Request.FormValue("password_new")
 	user, notFoundUserByID := service.QueryAUserByID(userID)
 	if notFoundUserByID {
 		c.JSON(404, gin.H{
@@ -87,7 +92,7 @@ func ModifyUser(c *gin.Context) {
 		})
 		return
 	}
-	if password_old != user.Password {
+	if passwordOld != user.Password {
 		c.JSON(400, gin.H{
 			"success": false,
 			"message": "原密码输入错误",
@@ -102,7 +107,7 @@ func ModifyUser(c *gin.Context) {
 		})
 		return
 	}
-	err := service.UpdateAUser(&user, username, password_new)
+	err := service.UpdateAUser(&user, username, passwordNew)
 	if err != nil {
 		c.JSON(http.StatusOK, gin.H{
 			"success": false,
@@ -124,7 +129,7 @@ func ModifyUser(c *gin.Context) {
 // @Param user_id formData string true "用户ID"
 // @Success 200 {string} string "{"success": true, "message": "查看用户信息成功", "data": "model.User的所有信息"}"
 // @Failure 404 {string} string "{"success": false, "message": "用户ID不存在"}"
-// @Router /user/info [post]
+// @Router /user/info [POST]
 func TellUserInfo(c *gin.Context) {
 	userID, _ := strconv.ParseUint(c.Request.FormValue("user_id"), 0, 64)
 	user, notFoundUserByID := service.QueryAUserByID(userID)
@@ -151,7 +156,7 @@ func TellUserInfo(c *gin.Context) {
 // @Failure 404 {string} string "{"success": false, "message": "已经订阅过这个城市的疫情信息"}"
 // @Failure 401 {string} string "{"success": false, "message": "数据库error, 一些其他错误"}"
 // @Failure 404 {string} string "{"success": false, "message": "用户ID不存在"}"
-// @Router /sub/subscribe [post]
+// @Router /sub/subscribe [POST]
 func Subscribe(c *gin.Context) {
 	userID, _ := strconv.ParseUint(c.Request.FormValue("user_id"), 0, 64)
 	cityName := c.Request.FormValue("city_name")
@@ -188,7 +193,7 @@ func Subscribe(c *gin.Context) {
 // @Param user_id formData string true "用户ID"
 // @Success 200 {string} string "{"success":true, "message":"查询成功","data":"user的所有订阅"}"
 // @Failure 404 {string} string "{"success": false, "message": "用户ID不存在"}"
-// @Router /sub/list_all_subs [post]
+// @Router /sub/list_all_subs [POST]
 func ListAllSubscriptions(c *gin.Context) {
 	userID, _ := strconv.ParseUint(c.Request.FormValue("user_id"), 0, 64)
 	_, notFoundUserByID := service.QueryAUserByID(userID)
@@ -210,7 +215,7 @@ func ListAllSubscriptions(c *gin.Context) {
 // @Success 200 {string} string "{"success":true, "message":"删除成功"}"
 // @Failure 401 {string} string "{"success": false, "message": "数据库error, 一些其他错误"}"
 // @Failure 404 {string} string "{"success": false, "message": "用户ID不存在"}"
-// @Router /sub/del_sub [post]
+// @Router /sub/del_sub [POST]
 func RemoveSubscription(c *gin.Context) {
 	subscriptionID, _ := strconv.ParseUint(c.Request.FormValue("subscription_id"), 0, 64)
 
@@ -239,7 +244,7 @@ func RemoveSubscription(c *gin.Context) {
 // @Success 200 {string} string "{"success": true, "message": "用户提问成功", "detail": 提问的全部信息}"
 // @Failure 401 {string} string "{"success": false, "message": "数据库error, 一些其他错误"}"
 // @Failure 404 {string} string "{"success": false, "message": "用户ID不存在"}"
-// @Router /notice/create_question [post]
+// @Router /notice/create_question [POST]
 func CreateAQuestion(c *gin.Context) {
 	userID, _ := strconv.ParseUint(c.Request.FormValue("user_id"), 0, 64)
 
@@ -252,10 +257,10 @@ func CreateAQuestion(c *gin.Context) {
 		return
 	}
 
-	question_title := c.Request.FormValue("question_title")
-	question_content := c.Request.FormValue("question_content")
+	questionTitle := c.Request.FormValue("question_title")
+	questionContent := c.Request.FormValue("question_content")
 
-	question := model.Question{UserID: userID, QuestionTitle: question_title, QuestionContent: question_content, QuestionTime: time.Now()}
+	question := model.Question{UserID: userID, QuestionTitle: questionTitle, QuestionContent: questionContent, QuestionTime: time.Now()}
 	err := service.CreateAQuestion(&question)
 	if err != nil {
 		c.JSON(401, gin.H{
@@ -273,7 +278,7 @@ func CreateAQuestion(c *gin.Context) {
 // @Param question_id formData string true "问题ID"
 // @Success 200 {string} string "{"success": true, "message": "查看成功", "data": "某问题的所有评论"}"
 // @Failure 404 {string} string "{"success": false, "message": "问题ID不存在"}"
-// @Router /notice/list_all_comments [post]
+// @Router /notice/list_all_comments [POST]
 func ListAllComments(c *gin.Context) {
 	questionID, _ := strconv.ParseUint(c.Request.FormValue("question_id"), 0, 64)
 	_, notFoundQuestionByID := service.QueryAQuestionByID(questionID)
@@ -299,7 +304,7 @@ func ListAllComments(c *gin.Context) {
 // @Failure 400 {string} string "{"success": false, "message": "用户ID不存在"}"
 // @Failure 401 {string} string "{"success": false, "message": "问题ID不存在"}"
 // @Failure 402 {string} string "{"success": false, "message": "评论失败"}"
-// @Router /notice/create_comment [post]
+// @Router /notice/create_comment [POST]
 func CreateAComment(c *gin.Context) {
 	userID, _ := strconv.ParseUint(c.Request.FormValue("user_id"), 0, 64)
 	_, notFoundUserByID := service.QueryAUserByID(userID)
@@ -322,8 +327,8 @@ func CreateAComment(c *gin.Context) {
 	}
 
 	userType, _ := strconv.ParseUint(c.Request.FormValue("user_type"), 0, 64)
-	comment_content := c.Request.FormValue("comment_content")
-	comment := model.Comment{UserID: userID, QuestionID: questionID, CommentContent: comment_content, CommentTime: time.Now(), UserType: userType}
+	commentContent := c.Request.FormValue("comment_content")
+	comment := model.Comment{UserID: userID, QuestionID: questionID, CommentContent: commentContent, CommentTime: time.Now(), UserType: userType}
 	err := service.CreateAComment(&comment)
 	if err != nil {
 		c.JSON(402, gin.H{

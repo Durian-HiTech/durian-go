@@ -4,6 +4,16 @@ info:
   title: Durian Covid-19 Golang Backend
   version: "1.0"
 paths:
+  /:
+    get:
+      description: 测试 Index 页
+      responses:
+        "200":
+          description: '{"success": true, "message": "gcp"}'
+          schema:
+            type: string
+      tags:
+      - 测试
   /news/detail:
     post:
       description: 查看单条新闻

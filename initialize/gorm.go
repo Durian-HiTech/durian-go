@@ -12,6 +12,7 @@ import (
 	"gorm.io/gorm/logger"
 )
 
+// 初始化 MySQL 的相关配置
 func InitMySQL() {
 	addr, username, password, database := "rm-uf6ji600qianqe6921o.mysql.rds.aliyuncs.com:3306", "buaase2021", "buaase(2021)", "durian"
 	dsn := username + ":" + password + "@tcp(" + addr + ")/" + database + "?charset=utf8mb4&parseTime=True&loc=Local"

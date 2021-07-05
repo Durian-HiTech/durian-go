@@ -5,5 +5,6 @@ import (
 )
 
 var (
+	// 全局变量 DB
 	DB *gorm.DB
 )
