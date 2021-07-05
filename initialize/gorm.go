@@ -10,6 +10,7 @@ import (
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
+	"gorm.io/gorm/schema"
 )
 
 // 初始化 MySQL 的相关配置
@@ -27,6 +28,9 @@ func InitMySQL() {
 	var err error
 	global.DB, err = gorm.Open(mysql.Open(dsn), &gorm.Config{
 		Logger: newLogger,
+		NamingStrategy: schema.NamingStrategy{
+			SingularTable: true,
+		},
 	})
 	if err != nil {
 		panic(err)
@@ -39,5 +43,8 @@ func InitMySQL() {
 		&model.Comment{},
 		&model.HighRiskArea{},
 		&model.DirectData{},
+		&model.CovidCases{},
+		&model.CovidDeaths{},
+		&model.CovidRecovered{},
 	)
 }

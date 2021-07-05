@@ -58,3 +58,24 @@ type DirectData struct {
 	Name    string `gorm:"size:25;" json:"name"`
 	Content string `gorm:"size:2555500;" json:"content"`
 }
+
+// 新冠感染人数
+type CovidCases struct {
+	Date        time.Time `json:"date"`
+	CountryName string    `gorm:"size:255;" json:"country_name"`
+	Info        uint64    `json:"info"`
+}
+
+// 新冠死亡人数
+type CovidDeaths struct {
+	Date        time.Time `json:"date"`
+	CountryName string    `gorm:"size:255;" json:"country_name"`
+	Info        uint64    `json:"info"`
+}
+
+// 新冠治愈人数
+type CovidRecovered struct {
+	Date        time.Time `json:"date"`
+	CountryName string    `gorm:"size:255;" json:"country_name"`
+	Info        uint64    `json:"info"`
+}
