@@ -127,7 +127,7 @@ func CreateAComment(comment *model.Comment) (err error) {
 	return
 }
 
-// 列出某个文献的所有评论
+// 列出某个问题的所有评论
 func QueryAllComments(questionID uint64) (res []model.Comment) {
 	var comments []model.Comment
 	global.DB.Where("question_id = ?", questionID).Order("comment_time desc").Find(&comments)

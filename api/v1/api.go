@@ -39,7 +39,7 @@ func Register(c *gin.Context) {
 	}
 }
 
-// Register doc
+// Login doc
 // @description 登录
 // @Tags 用户管理
 // @Param username formData string true "用户名"
