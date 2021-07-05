@@ -14,6 +14,16 @@ paths:
             type: string
       tags:
       - 测试
+  /data/list_all_covid_cases:
+    get:
+      description: 获取所有地区的新冠感染人数，返回列表
+      responses:
+        "200":
+          description: '{"success":true, "message":"查询成功","data":"所有地区的新冠感染人数""}'
+          schema:
+            type: string
+      tags:
+      - 数据
   /data/list_all_high_risk_areas:
     get:
       description: 获取所有中高风险地区，返回列表

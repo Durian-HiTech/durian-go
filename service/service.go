@@ -182,3 +182,9 @@ func QueryDataByName(name string) (directData model.DirectData, notFound bool) {
 		return directData, false
 	}
 }
+
+// 查询所有地区的新冠感染人数
+func QueryAllCovidCases() (cases []model.CovidCases) {
+	global.DB.Find(&cases)
+	return cases
+}
