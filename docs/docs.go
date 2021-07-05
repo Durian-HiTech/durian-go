@@ -325,7 +325,7 @@ var doc = `{
                 ],
                 "responses": {
                     "200": {
-                        "description": "{\"success\":true, \"message\":\"订阅成功\"}",
+                        "description": "{\"success\": false, \"message\": \"已经订阅过这个城市的疫情信息\"}",
                         "schema": {
                             "type": "string"
                         }
@@ -400,18 +400,6 @@ var doc = `{
                 ],
                 "responses": {
                     "200": {
-                        "description": "{\"success\": true, \"message\": \"登录成功\", \"detail\": user的信息}",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    "400": {
-                        "description": "{\"success\": false, \"message\": \"密码错误\"}",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    "404": {
                         "description": "{\"success\": false, \"message\": \"没有该用户\"}",
                         "schema": {
                             "type": "string"
@@ -458,19 +446,13 @@ var doc = `{
                 ],
                 "responses": {
                     "200": {
-                        "description": "{\"success\": true, \"message\": \"修改成功\", \"data\": \"model.User的所有信息\"}",
+                        "description": "{\"success\": false, \"message\": \"用户ID不存在\"}",
                         "schema": {
                             "type": "string"
                         }
                     },
                     "400": {
-                        "description": "{\"success\": false, \"message\": \"原密码输入错误\"}",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    "404": {
-                        "description": "{\"success\": false, \"message\": \"用户ID不存在\"}",
+                        "description": "{\"success\": false, \"message\": \"数据库操作时的其他错误\"}",
                         "schema": {
                             "type": "string"
                         }
@@ -515,12 +497,6 @@ var doc = `{
                 ],
                 "responses": {
                     "200": {
-                        "description": "{\"success\": true, \"message\": \"用户创建成功\"}",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    "400": {
                         "description": "{\"success\": false, \"message\": \"用户已存在\"}",
                         "schema": {
                             "type": "string"

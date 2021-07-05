@@ -27,7 +27,7 @@ func Index(c *gin.Context) {
 // @Param user_type formData string true "用户类型（0: 普通用户，1: 认证机构用户）"
 // @Param affiliation formData string false "认证机构名"
 // @Success 200 {string} string "{"success": true, "message": "用户创建成功"}"
-// @Failure 400 {string} string "{"success": false, "message": "用户已存在"}"
+// @Failure 200 {string} string "{"success": false, "message": "用户已存在"}"
 // @Router /user/register [POST]
 func Register(c *gin.Context) {
 	username := c.Request.FormValue("username")
@@ -40,7 +40,7 @@ func Register(c *gin.Context) {
 		service.CreateAUser(&user)
 		c.JSON(http.StatusOK, gin.H{"success": true, "message": "用户创建成功"})
 	} else {
-		c.JSON(400, gin.H{"success": false, "message": "用户已存在"})
+		c.JSON(http.StatusOK, gin.H{"success": false, "message": "用户已存在"})
 	}
 }
 
@@ -50,18 +50,18 @@ func Register(c *gin.Context) {
 // @Param username formData string true "用户名"
 // @Param password formData string true "密码"
 // @Success 200 {string} string "{"success": true, "message": "登录成功", "detail": user的信息}"
-// @Failure 400 {string} string "{"success": false, "message": "密码错误"}"
-// @Failure 404 {string} string "{"success": false, "message": "没有该用户"}"
+// @Failure 200 {string} string "{"success": false, "message": "密码错误"}"
+// @Failure 200 {string} string "{"success": false, "message": "没有该用户"}"
 // @Router /user/login [POST]
 func Login(c *gin.Context) {
 	username := c.Request.FormValue("username")
 	password := c.Request.FormValue("password")
 	user, notFound := service.QueryAUserByUsername(username)
 	if notFound {
-		c.JSON(404, gin.H{"success": false, "message": "没有该用户"})
+		c.JSON(http.StatusOK, gin.H{"success": false, "message": "没有该用户"})
 	} else {
 		if user.Password != password {
-			c.JSON(400, gin.H{"success": false, "message": "密码错误"})
+			c.JSON(http.StatusOK, gin.H{"success": false, "message": "密码错误"})
 		} else {
 			c.JSON(http.StatusOK, gin.H{"success": true, "message": "登录成功", "detail": user})
 		}
@@ -76,8 +76,9 @@ func Login(c *gin.Context) {
 // @Param password_old formData string true "原密码"
 // @Param password_new formData string true "新密码"
 // @Success 200 {string} string "{"success": true, "message": "修改成功", "data": "model.User的所有信息"}"
-// @Failure 400 {string} string "{"success": false, "message": "原密码输入错误"}"
-// @Failure 404 {string} string "{"success": false, "message": "用户ID不存在"}"
+// @Failure 200 {string} string "{"success": false, "message": "原密码输入错误"}"
+// @Failure 200 {string} string "{"success": false, "message": "用户ID不存在"}"
+// @Failure 400 {string} string "{"success": false, "message": "数据库操作时的其他错误"}"
 // @Router /user/modify [POST]
 func ModifyUser(c *gin.Context) {
 	userID, _ := strconv.ParseUint(c.Request.FormValue("user_id"), 0, 64)
@@ -86,14 +87,14 @@ func ModifyUser(c *gin.Context) {
 	passwordNew := c.Request.FormValue("password_new")
 	user, notFoundUserByID := service.QueryAUserByID(userID)
 	if notFoundUserByID {
-		c.JSON(404, gin.H{
+		c.JSON(http.StatusOK, gin.H{
 			"success": false,
 			"message": "用户ID不存在",
 		})
 		return
 	}
 	if passwordOld != user.Password {
-		c.JSON(400, gin.H{
+		c.JSON(http.StatusOK, gin.H{
 			"success": false,
 			"message": "原密码输入错误",
 		})
@@ -109,7 +110,7 @@ func ModifyUser(c *gin.Context) {
 	}
 	err := service.UpdateAUser(&user, username, passwordNew)
 	if err != nil {
-		c.JSON(http.StatusOK, gin.H{
+		c.JSON(400, gin.H{
 			"success": false,
 			"message": err.Error(),
 		})
@@ -153,7 +154,7 @@ func TellUserInfo(c *gin.Context) {
 // @Param user_id formData string true "用户ID"
 // @Param city_name formData string true "城市名字"
 // @Success 200 {string} string "{"success":true, "message":"订阅成功"}"
-// @Failure 404 {string} string "{"success": false, "message": "已经订阅过这个城市的疫情信息"}"
+// @Failure 200 {string} string "{"success": false, "message": "已经订阅过这个城市的疫情信息"}"
 // @Failure 401 {string} string "{"success": false, "message": "数据库error, 一些其他错误"}"
 // @Failure 404 {string} string "{"success": false, "message": "用户ID不存在"}"
 // @Router /sub/subscribe [POST]
@@ -173,7 +174,7 @@ func Subscribe(c *gin.Context) {
 	_, notFoundSubscriptionByUserIDAndCityName := service.QueryASubscriptionByUserIDAndCityName(userID, cityName)
 
 	if !notFoundSubscriptionByUserIDAndCityName {
-		c.JSON(400, gin.H{
+		c.JSON(http.StatusOK, gin.H{
 			"success": false,
 			"message": "已经订阅过这个城市的疫情信息",
 		})
