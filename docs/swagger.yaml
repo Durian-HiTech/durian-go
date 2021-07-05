@@ -132,6 +132,19 @@ paths:
       tags:
       - 防控知识板块
   /notice/list_all_comments:
+    get:
+      description: 列出全部问题
+      responses:
+        "200":
+          description: '{"success": true, "message": "查看成功", "data": "全部问题"}'
+          schema:
+            type: string
+        "404":
+          description: '{"success": false, "message": "问题ID不存在"}'
+          schema:
+            type: string
+      tags:
+      - 防控知识板块
     post:
       description: 列出某个问题的全部评论
       parameters:

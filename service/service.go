@@ -133,6 +133,12 @@ func QueryAQuestionByID(questionID uint64) (question model.Question, notFound bo
 	}
 }
 
+// 查询所有问题
+func QueryAllQuestions() (questions []model.Question) {
+	global.DB.Order("question_time desc").Find(&questions)
+	return questions
+}
+
 // 创建一个对问题的评论
 func CreateAComment(comment *model.Comment) (err error) {
 	if err = global.DB.Create(&comment).Error; err != nil {
