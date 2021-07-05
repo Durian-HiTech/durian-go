@@ -394,6 +394,7 @@ func ListHighRiskAreas(c *gin.Context) {
 // FetchRequiredData doc
 // @description 获取在数据库中直接存的 Json File
 // @Tags 数据
+// @Param name formData string true "数据文件名"
 // @Success 200 {string} string "{"success":true, "message":"查询成功","data":"Json data""}"
 // @Failure 200 {string} string "{"success":true, "message":"查询失败，无所需数据"}"
 // @Router /data/query_data [POST]

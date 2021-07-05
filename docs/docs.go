@@ -62,6 +62,15 @@ var doc = `{
                 "tags": [
                     "数据"
                 ],
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "数据文件名",
+                        "name": "name",
+                        "in": "formData",
+                        "required": true
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "{\"success\":true, \"message\":\"查询失败，无所需数据\"}",
