@@ -56,5 +56,5 @@ type HighRiskArea struct {
 // 直接传输数据
 type DirectData struct {
 	Name    string `gorm:"size:25;" json:"name"`
-	Content string `gorm:"size:255550;" json:"content"`
+	Content string `gorm:"size:2555500;" json:"content"`
 }
