@@ -158,3 +158,9 @@ func QueryAllComments(questionID uint64) (res []model.Comment) {
 	}
 	return res
 }
+
+// 查询所有高风险地区
+func QueryAllHighRiskAreas() (areas []model.HighRiskArea) {
+	global.DB.Find(&areas)
+	return areas
+}

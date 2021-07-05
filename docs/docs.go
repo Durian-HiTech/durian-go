@@ -40,6 +40,22 @@ var doc = `{
                 }
             }
         },
+        "/data/list_all_high_risk_areas": {
+            "get": {
+                "description": "获取所有中高风险地区，返回列表",
+                "tags": [
+                    "数据"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "{\"success\":true, \"message\":\"查询成功\",\"data\":\"所有中高风险地区\"\"}",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
         "/news/detail": {
             "post": {
                 "description": "查看单条新闻",

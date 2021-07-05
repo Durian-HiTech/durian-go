@@ -367,3 +367,13 @@ func ViewNewsDetail(c *gin.Context) {
 		c.JSON(404, gin.H{"success": false, "message": "查询失败，新闻ID不存在"})
 	}
 }
+
+// ListHighRiskAreas doc
+// @description 获取所有中高风险地区，返回列表
+// @Tags 数据
+// @Success 200 {string} string "{"success":true, "message":"查询成功","data":"所有中高风险地区""}"
+// @Router /data/list_all_high_risk_areas [GET]
+func ListHighRiskAreas(c *gin.Context) {
+	areas := service.QueryAllHighRiskAreas()
+	c.JSON(http.StatusOK, gin.H{"success": true, "message": "查询成功", "data": areas})
+}

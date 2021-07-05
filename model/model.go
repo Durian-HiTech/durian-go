@@ -44,3 +44,10 @@ type Comment struct {
 	CommentTime    time.Time `json:"comment_time"`
 	UserType       uint64    `gorm:"default:0" json:"user_type"`
 }
+
+type HighRiskArea struct {
+	Type     string `gorm:"size:15;" json:"type"`
+	Province string `gorm:"size:25;" json:"province"`
+	District string `gorm:"size:25;" json:"district"`
+	Name     string `gorm:"size:105;" json:"name"`
+}
