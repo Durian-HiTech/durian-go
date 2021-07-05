@@ -38,5 +38,6 @@ func InitMySQL() {
 		&model.Question{},
 		&model.Comment{},
 		&model.HighRiskArea{},
+		&model.DirectData{},
 	)
 }

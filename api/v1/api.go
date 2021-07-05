@@ -377,3 +377,19 @@ func ListHighRiskAreas(c *gin.Context) {
 	areas := service.QueryAllHighRiskAreas()
 	c.JSON(http.StatusOK, gin.H{"success": true, "message": "查询成功", "data": areas})
 }
+
+// FetchRequiredData doc
+// @description 获取在数据库中直接存的 Json File
+// @Tags 数据
+// @Success 200 {string} string "{"success":true, "message":"查询成功","data":"Json data""}"
+// @Failure 200 {string} string "{"success":true, "message":"查询失败，无所需数据"}"
+// @Router /data/query_data [POST]
+func FetchRequiredData(c *gin.Context) {
+	name := c.Request.FormValue("name")
+	directData, notFound := service.QueryDataByName(name)
+	if notFound {
+		c.JSON(http.StatusOK, gin.H{"success": false, "message": "查询失败，无所需数据"})
+	} else {
+		c.JSON(http.StatusOK, gin.H{"success": true, "message": "查询成功", "data": directData})
+	}
+}
