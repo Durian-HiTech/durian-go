@@ -167,7 +167,8 @@ paths:
             type: string
       tags:
       - 防控知识板块
-    post:
+  /notice/list_all_questions:
+    get:
       description: 列出全部问题
       responses:
         "200":

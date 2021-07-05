@@ -272,8 +272,10 @@ var doc = `{
                         }
                     }
                 }
-            },
-            "post": {
+            }
+        },
+        "/notice/list_all_questions": {
+            "get": {
                 "description": "列出全部问题",
                 "tags": [
                     "防控知识板块"
