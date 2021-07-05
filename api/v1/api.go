@@ -293,7 +293,7 @@ func ListAllComments(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"success": true, "message": "查看成功", "data": comments})
 }
 
-// ListAllComments doc
+// ListAllQuestions doc
 // @description 列出某个问题的全部评论
 // @Tags 防控知识板块
 // @Param question_id formData string true "问题ID"
