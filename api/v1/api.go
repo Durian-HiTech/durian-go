@@ -291,7 +291,7 @@ func ListAllQuestions(c *gin.Context) {
 // @Param question_id formData string true "问题ID"
 // @Success 200 {string} string "{"success": true, "message": "查看成功", "data": "某问题的所有评论"}"
 // @Failure 404 {string} string "{"success": false, "message": "问题ID不存在"}"
-// @Router /notice/list_all_comments [GET]
+// @Router /notice/list_all_comments [POST]
 func ListAllComments(c *gin.Context) {
 	questionID, _ := strconv.ParseUint(c.Request.FormValue("question_id"), 0, 64)
 	_, notFoundQuestionByID := service.QueryAQuestionByID(questionID)

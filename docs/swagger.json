@@ -231,7 +231,7 @@
             }
         },
         "/notice/list_all_comments": {
-            "get": {
+            "post": {
                 "description": "列出某个问题的全部评论",
                 "tags": [
                     "防控知识板块"
