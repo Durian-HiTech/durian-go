@@ -95,6 +95,24 @@ func QueryAllSubscriptions(userID uint64) (subscriptions []model.Subscription) {
 	return subscriptions
 }
 
+// 根据辟谣 ID 查询新闻详情
+func QueryARumorByID(rumorID uint64) (rumor model.Rumor, notFound bool) {
+	err := global.DB.Where("rumor_id = ?", rumorID).First(&rumor).Error
+	if err != nil && errors.Is(err, gorm.ErrRecordNotFound) {
+		return rumor, true
+	} else if err != nil && !errors.Is(err, gorm.ErrRecordNotFound) {
+		panic(err)
+	} else {
+		return rumor, false
+	}
+}
+
+// 查询所有辟谣
+func QueryAllRumor() (rumor []model.Rumor) {
+	global.DB.Find(&rumor)
+	return rumor
+}
+
 // 根据新闻 ID 查询新闻详情
 func QueryANewsByID(NewsID uint64) (news model.News, notFound bool) {
 	err := global.DB.Where("news_id = ?", NewsID).First(&news).Error

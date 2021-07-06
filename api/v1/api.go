@@ -291,7 +291,7 @@ func ListAllQuestions(c *gin.Context) {
 // @Param question_id formData string true "问题ID"
 // @Success 200 {string} string "{"success": true, "message": "查看成功", "data": "某问题的所有信息"}"
 // @Failure 404 {string} string "{"success": false, "message": "问题ID不存在"}"
-// @Router /notice/list_a_question [POST]
+// @Router /notice/question_detail [POST]
 func ListAQuestion(c *gin.Context) {
 	questionID, _ := strconv.ParseUint(c.Request.FormValue("question_id"), 0, 64)
 	question, notFoundQuestionByID := service.QueryAQuestionByID(questionID)
@@ -389,7 +389,7 @@ func ListAllNotice(c *gin.Context) {
 // @Param notice_id formData string true "公告ID"
 // @Success 200 {string} string "{"success":true, "message":"查询成功","data":"该条公告的详细信息"}"
 // @Failure 404 {string} string "{"success":true, "message":"查询失败，公告ID不存在"}"
-// @Router /notice/detail [POST]
+// @Router /notice/notice_detail [POST]
 func ViewNoticeDetail(c *gin.Context) {
 	noticeID, _ := strconv.ParseUint(c.Request.FormValue("notice_id"), 0, 64)
 	notice, notFound := service.QueryANoticeByID(noticeID)
@@ -397,6 +397,33 @@ func ViewNoticeDetail(c *gin.Context) {
 		c.JSON(http.StatusOK, gin.H{"success": true, "message": "查询成功", "data": notice})
 	} else {
 		c.JSON(404, gin.H{"success": false, "message": "查询失败，公告ID不存在"})
+	}
+}
+
+// ListAllRumor doc
+// @description 获取所有辟谣，返回列表
+// @Tags 公告
+// @Success 200 {string} string "{"success":true, "message":"查询成功","data":"所有辟谣""}"
+// @Router /notice/list_all_rumor [GET]
+func ListAllRumor(c *gin.Context) {
+	rumorList := service.QueryAllRumor()
+	c.JSON(http.StatusOK, gin.H{"success": true, "message": "查询成功", "data": rumorList})
+}
+
+// ViewRumorDetail doc
+// @description 查看单条辟谣
+// @Tags 公告
+// @Param rumor_id formData string true "辟谣ID"
+// @Success 200 {string} string "{"success":true, "message":"查询成功","data":"该条辟谣的详细信息"}"
+// @Failure 404 {string} string "{"success":true, "message":"查询失败，辟谣ID不存在"}"
+// @Router /notice/rumor_detail [POST]
+func ViewRumorDetail(c *gin.Context) {
+	rumorID, _ := strconv.ParseUint(c.Request.FormValue("rumor_id"), 0, 64)
+	rumor, notFound := service.QueryARumorByID(rumorID)
+	if !notFound {
+		c.JSON(http.StatusOK, gin.H{"success": true, "message": "查询成功", "data": rumor})
+	} else {
+		c.JSON(404, gin.H{"success": false, "message": "查询失败，辟谣ID不存在"})
 	}
 }
 
