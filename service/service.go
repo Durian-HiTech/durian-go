@@ -240,13 +240,13 @@ func QueryAllCovidCasesResponse() (response []model.CovidCasesResponse) {
 		for j := i; j < lenCases; j++ {
 			if cases[j].Date == curDate {
 				tmp = append(tmp, model.CovidCasesNoDate{CountryName: cases[j].CountryName, Info: cases[j].Info})
-				if j == lenCases-1 {
-					break
-				}
 			} else {
 				curDate = cases[j].Date
 				i = j
 				break
+			}
+			if j == lenCases-1 {
+				i = lenCases
 			}
 		}
 		response = append(response, model.CovidCasesResponse{Date: curDate, Value: tmp})
@@ -275,13 +275,13 @@ func QueryAllCovidDeathsResponse() (response []model.CovidDeathsResponse) {
 		for j := i; j < lenCases; j++ {
 			if cases[j].Date == curDate {
 				tmp = append(tmp, model.CovidDeathsNoDate{CountryName: cases[j].CountryName, Info: cases[j].Info})
-				if j == lenCases-1 {
-					break
-				}
 			} else {
 				curDate = cases[j].Date
 				i = j
 				break
+			}
+			if j == lenCases-1 {
+				i = lenCases
 			}
 		}
 		response = append(response, model.CovidDeathsResponse{Date: curDate, Value: tmp})
@@ -310,13 +310,13 @@ func QueryAllCovidRecoveredsResponse() (response []model.CovidRecoveredResponse)
 		for j := i; j < lenCases; j++ {
 			if cases[j].Date == curDate {
 				tmp = append(tmp, model.CovidRecoveredNoDate{CountryName: cases[j].CountryName, Info: cases[j].Info})
-				if j == lenCases-1 {
-					break
-				}
 			} else {
 				curDate = cases[j].Date
 				i = j
 				break
+			}
+			if j == lenCases-1 {
+				i = lenCases
 			}
 		}
 		response = append(response, model.CovidRecoveredResponse{Date: curDate, Value: tmp})
@@ -345,13 +345,13 @@ func QueryAllCovidVaccinesResponse() (response []model.CovidVaccineResponse) {
 		for j := i; j < lenCases; j++ {
 			if cases[j].Date == curDate {
 				tmp = append(tmp, model.CovidVaccineNoDate{CountryName: cases[j].CountryName, Info: cases[j].Info})
-				if j == lenCases-1 {
-					break
-				}
 			} else {
 				curDate = cases[j].Date
 				i = j
 				break
+			}
+			if j == lenCases-1 {
+				i = lenCases
 			}
 		}
 		response = append(response, model.CovidVaccineResponse{Date: curDate, Value: tmp})
