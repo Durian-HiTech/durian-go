@@ -86,3 +86,11 @@ type CovidVaccine struct {
 	CountryName string    `gorm:"size:255;" json:"name"`
 	Info        uint64    `json:"value"`
 }
+
+// 新冠感染/死亡/治愈/疫苗接种人数【信息综合】
+type CovidCDRV struct {
+	Case      []CovidCases     `json:"cases"`
+	Deaths    []CovidDeaths    `json:"deaths"`
+	Recovered []CovidRecovered `json:"recovered"`
+	Vaccine   []CovidVaccine   `json:"vaccine"`
+}

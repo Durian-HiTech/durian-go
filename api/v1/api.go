@@ -414,7 +414,7 @@ func FetchRequiredData(c *gin.Context) {
 	}
 }
 
-// ListAllNews doc
+// ListAllCovidCases doc
 // @description 获取所有地区的新冠感染人数，返回列表
 // @Tags 数据
 // @Success 200 {string} string "{"success":true, "message":"查询成功","data":"所有地区的新冠感染人数"}"
@@ -424,7 +424,7 @@ func ListAllCovidCases(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"success": true, "message": "查询成功", "data": covidList})
 }
 
-// ListAllNews doc
+// ListAllCovidDeaths doc
 // @description 获取所有地区的新冠死亡人数，返回列表
 // @Tags 数据
 // @Success 200 {string} string "{"success":true, "message":"查询成功","data":"所有地区的新冠死亡人数"}"
@@ -434,7 +434,7 @@ func ListAllCovidDeaths(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"success": true, "message": "查询成功", "data": covidList})
 }
 
-// ListAllNews doc
+// ListAllCovidRecovereds doc
 // @description 获取所有地区的新冠治愈人数，返回列表
 // @Tags 数据
 // @Success 200 {string} string "{"success":true, "message":"查询成功","data":"所有地区的新冠治愈人数""}"
@@ -444,7 +444,7 @@ func ListAllCovidRecovereds(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"success": true, "message": "查询成功", "data": covidList})
 }
 
-// ListAllNews doc
+// ListAllCovidVaccines doc
 // @description 获取所有地区的新冠疫苗接种人数，返回列表
 // @Tags 数据
 // @Success 200 {string} string "{"success":true, "message":"查询成功","data":"所有地区的新冠疫苗接种人数""}"
@@ -452,4 +452,18 @@ func ListAllCovidRecovereds(c *gin.Context) {
 func ListAllCovidVaccines(c *gin.Context) {
 	covidList := service.QueryAllCovidVaccines()
 	c.JSON(http.StatusOK, gin.H{"success": true, "message": "查询成功", "data": covidList})
+}
+
+// ListAllCovidCDRV doc
+// @description 获取所有地区的新冠感染/死亡/治愈/疫苗接种人数【信息综合】，返回列表
+// @Tags 数据
+// @Success 200 {string} string "{"success":true, "message":"查询成功","data":"所有地区的新冠感染/死亡/治愈/疫苗接种人数""}"
+// @Router /data/list_all_covid_cdrv [GET]
+func ListAllCovidCDRV(c *gin.Context) {
+	covidListC := service.QueryAllCovidCases()
+	covidListD := service.QueryAllCovidDeaths()
+	covidListR := service.QueryAllCovidRecovereds()
+	covidListV := service.QueryAllCovidVaccines()
+	Result := model.CovidCDRV{Case: covidListC, Deaths: covidListD, Recovered: covidListR, Vaccine: covidListV}
+	c.JSON(http.StatusOK, gin.H{"success": true, "message": "查询成功", "data": Result})
 }
