@@ -188,3 +188,21 @@ func QueryAllCovidCases() (cases []model.CovidCases) {
 	global.DB.Find(&cases)
 	return cases
 }
+
+// 查询所有地区的新冠死亡人数
+func QueryAllCovidDeaths() (deaths []model.CovidDeaths) {
+	global.DB.Find(&deaths)
+	return deaths
+}
+
+// 查询所有地区的新冠治愈人数
+func QueryAllCovidRecovered() (recovereds []model.CovidRecovered) {
+	global.DB.Find(&recovereds)
+	return recovereds
+}
+
+// 查询所有地区的新冠疫苗接种人数
+func QueryAllCovidVaccine() (vaccines []model.CovidVaccine) {
+	global.DB.Find(&vaccines)
+	return vaccines
+}

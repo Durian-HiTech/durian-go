@@ -79,3 +79,10 @@ type CovidRecovered struct {
 	CountryName string    `gorm:"size:255;" json:"name"`
 	Info        uint64    `json:"value"`
 }
+
+// 新冠疫苗接种人数
+type CovidVaccine struct {
+	Date        time.Time `json:"date"`
+	CountryName string    `gorm:"size:255;" json:"name"`
+	Info        uint64    `json:"value"`
+}
