@@ -285,6 +285,26 @@ func ListAllQuestions(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"success": true, "message": "查询成功", "data": questionList})
 }
 
+// ListAQuestion doc
+// @description 列出某个问题的详情
+// @Tags 防控知识板块
+// @Param question_id formData string true "问题ID"
+// @Success 200 {string} string "{"success": true, "message": "查看成功", "data": "某问题的所有信息"}"
+// @Failure 404 {string} string "{"success": false, "message": "问题ID不存在"}"
+// @Router /notice/list_a_question [POST]
+func ListAQuestion(c *gin.Context) {
+	questionID, _ := strconv.ParseUint(c.Request.FormValue("question_id"), 0, 64)
+	question, notFoundQuestionByID := service.QueryAQuestionByID(questionID)
+	if notFoundQuestionByID {
+		c.JSON(404, gin.H{
+			"success": false,
+			"message": "问题ID不存在",
+		})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{"success": true, "message": "查看成功", "data": question})
+}
+
 // ListAllComments doc
 // @description 列出某个问题的全部评论
 // @Tags 防控知识板块
@@ -351,6 +371,33 @@ func CreateAComment(c *gin.Context) {
 		return
 	}
 	c.JSON(http.StatusOK, gin.H{"success": true, "message": "用户评论成功"})
+}
+
+// ListAllNotice doc
+// @description 获取所有公告，返回列表
+// @Tags 公告
+// @Success 200 {string} string "{"success":true, "message":"查询成功","data":"所有公告""}"
+// @Router /notice/list_all_notice [GET]
+func ListAllNotice(c *gin.Context) {
+	noticeList := service.QueryAllNotice()
+	c.JSON(http.StatusOK, gin.H{"success": true, "message": "查询成功", "data": noticeList})
+}
+
+// ViewNewsDetail doc
+// @description 查看单条公告
+// @Tags 公告
+// @Param notice_id formData string true "公告ID"
+// @Success 200 {string} string "{"success":true, "message":"查询成功","data":"该条公告的详细信息"}"
+// @Failure 404 {string} string "{"success":true, "message":"查询失败，公告ID不存在"}"
+// @Router /notice/detail [POST]
+func ViewNoticeDetail(c *gin.Context) {
+	noticeID, _ := strconv.ParseUint(c.Request.FormValue("notice_id"), 0, 64)
+	notice, notFound := service.QueryANoticeByID(noticeID)
+	if !notFound {
+		c.JSON(http.StatusOK, gin.H{"success": true, "message": "查询成功", "data": notice})
+	} else {
+		c.JSON(404, gin.H{"success": false, "message": "查询失败，公告ID不存在"})
+	}
 }
 
 // ListAllNews doc

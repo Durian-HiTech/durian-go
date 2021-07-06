@@ -40,6 +40,7 @@ func InitMySQL() {
 		&model.User{},
 		&model.Subscription{},
 		&model.News{},
+		&model.Notice{},
 		&model.Question{},
 		&model.Comment{},
 		&model.HighRiskArea{},

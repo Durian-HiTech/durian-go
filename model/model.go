@@ -26,6 +26,14 @@ type News struct {
 	NewsCreatedTime time.Time `json:"news_created_time"`
 }
 
+// 公告
+type Notice struct {
+	NoticeID          uint64    `gorm:"primary_key;" json:"notice_id"`
+	NoticeTitle       string    `gorm:"size:55; not null" json:"notice_title"`
+	NoticeContent     string    `gorm:"size:2550; not null" json:"notice_content"`
+	NoticeCreatedTime time.Time `json:"notice_created_time"`
+}
+
 // 知识版块中的问题
 type Question struct {
 	QuestionID      uint64    `gorm:"primary_key;" json:"question_id"`
