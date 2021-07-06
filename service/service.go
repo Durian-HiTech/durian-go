@@ -215,20 +215,98 @@ func QueryAllCovidCasesResponse() (response []model.CovidCasesResponse) {
 	return response
 }
 
-// 查询所有地区的新冠死亡人数（根据日期汇总）
+// 查询所有地区的新冠死亡人数
 func QueryAllCovidDeaths() (deaths []model.CovidDeaths) {
 	global.DB.Find(&deaths)
 	return deaths
 }
 
-// 查询所有地区的新冠治愈人数（根据日期汇总）
+// 查询所有地区的新冠死亡人数（根据日期汇总）
+func QueryAllCovidDeathsResponse() (response []model.CovidDeathsResponse) {
+	var cases []model.CovidDeaths
+	global.DB.Order("date asc").Find(&cases)
+	lenCases := len(cases)
+	if lenCases == 0 {
+		return response
+	}
+	curDate := cases[0].Date
+
+	for i := 0; i < lenCases-1; i++ {
+		var tmp []model.CovidDeathsNoDate
+		for j := i; j < lenCases; j++ {
+			if cases[j].Date == curDate {
+				tmp = append(tmp, model.CovidDeathsNoDate{CountryName: cases[j].CountryName, Info: cases[j].Info})
+			} else {
+				curDate = cases[j].Date
+				i = j
+				break
+			}
+		}
+		response = append(response, model.CovidDeathsResponse{Date: curDate, Value: tmp})
+	}
+	return response
+}
+
+// 查询所有地区的新冠治愈人数
 func QueryAllCovidRecovereds() (recovereds []model.CovidRecovered) {
 	global.DB.Find(&recovereds)
 	return recovereds
 }
 
-// 查询所有地区的新冠疫苗接种人数（根据日期汇总）
+// 查询所有地区的新冠治愈人数（根据日期汇总）
+func QueryAllCovidRecoveredsResponse() (response []model.CovidRecoveredResponse) {
+	var cases []model.CovidRecovered
+	global.DB.Order("date asc").Find(&cases)
+	lenCases := len(cases)
+	if lenCases == 0 {
+		return response
+	}
+	curDate := cases[0].Date
+
+	for i := 0; i < lenCases-1; i++ {
+		var tmp []model.CovidRecoveredNoDate
+		for j := i; j < lenCases; j++ {
+			if cases[j].Date == curDate {
+				tmp = append(tmp, model.CovidRecoveredNoDate{CountryName: cases[j].CountryName, Info: cases[j].Info})
+			} else {
+				curDate = cases[j].Date
+				i = j
+				break
+			}
+		}
+		response = append(response, model.CovidRecoveredResponse{Date: curDate, Value: tmp})
+	}
+	return response
+}
+
+// 查询所有地区的新冠疫苗接种人数
 func QueryAllCovidVaccines() (vaccines []model.CovidVaccine) {
 	global.DB.Find(&vaccines)
 	return vaccines
+}
+
+// 查询所有地区的新冠疫苗接种人数（根据日期汇总）
+func QueryAllCovidVaccinesResponse() (response []model.CovidVaccineResponse) {
+	var cases []model.CovidVaccine
+	global.DB.Order("date asc").Find(&cases)
+	lenCases := len(cases)
+	if lenCases == 0 {
+		return response
+	}
+	curDate := cases[0].Date
+
+	for i := 0; i < lenCases-1; i++ {
+		var tmp []model.CovidVaccineNoDate
+		for j := i; j < lenCases; j++ {
+			if cases[j].Date == curDate {
+				tmp = append(tmp, model.CovidVaccineNoDate{CountryName: cases[j].CountryName, Info: cases[j].Info})
+			} else {
+				curDate = cases[j].Date
+				i = j
+				break
+			}
+		}
+		response = append(response, model.CovidVaccineResponse{Date: curDate, Value: tmp})
+	}
+	return response
 }
