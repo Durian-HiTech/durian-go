@@ -48,7 +48,71 @@ var doc = `{
                 ],
                 "responses": {
                     "200": {
-                        "description": "{\"success\":true, \"message\":\"查询成功\",\"data\":\"所有地区的新冠感染人数\"\"}",
+                        "description": "{\"success\":true, \"message\":\"查询成功\",\"data\":\"所有地区的新冠感染人数\"}",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/data/list_all_covid_cdrv": {
+            "get": {
+                "description": "获取所有地区的新冠感染/死亡/治愈/疫苗接种人数【信息综合】，返回列表",
+                "tags": [
+                    "数据"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "{\"success\":true, \"message\":\"查询成功\",\"data\":\"所有地区的新冠感染/死亡/治愈/疫苗接种人数\"\"}",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/data/list_all_covid_deaths": {
+            "get": {
+                "description": "获取所有地区的新冠死亡人数，返回列表",
+                "tags": [
+                    "数据"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "{\"success\":true, \"message\":\"查询成功\",\"data\":\"所有地区的新冠死亡人数\"}",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/data/list_all_covid_recovereds": {
+            "get": {
+                "description": "获取所有地区的新冠治愈人数，返回列表",
+                "tags": [
+                    "数据"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "{\"success\":true, \"message\":\"查询成功\",\"data\":\"所有地区的新冠治愈人数\"\"}",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/data/list_all_covid_vaccines": {
+            "get": {
+                "description": "获取所有地区的新冠疫苗接种人数，返回列表",
+                "tags": [
+                    "数据"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "{\"success\":true, \"message\":\"查询成功\",\"data\":\"所有地区的新冠疫苗接种人数\"\"}",
                         "schema": {
                             "type": "string"
                         }
@@ -64,7 +128,7 @@ var doc = `{
                 ],
                 "responses": {
                     "200": {
-                        "description": "{\"success\":true, \"message\":\"查询成功\",\"data\":\"所有中高风险地区\"\"}",
+                        "description": "{\"success\":true, \"message\":\"查询成功\",\"data\":\"所有中高风险地区\"}",
                         "schema": {
                             "type": "string"
                         }
@@ -239,7 +303,7 @@ var doc = `{
                 ],
                 "responses": {
                     "200": {
-                        "description": "{\"success\": true, \"message\": \"用户提问成功\", \"detail\": 提问的全部信息}",
+                        "description": "{\"success\": true, \"message\": \"用户提问成功\", \"detail\": \"提问的全部信息\"}",
                         "schema": {
                             "type": "string"
                         }
