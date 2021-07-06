@@ -13,6 +13,7 @@ func SetupRouter() *gin.Engine {
 	r := gin.Default()
 	r.Use(middleware.Cors())
 	r.GET("/", v1.Index)
+	r.GET("/test", v1.ListAllCovidCasesResponse)
 	Group := r.Group("api/v1/")
 	{
 		router.InitRouter(Group)

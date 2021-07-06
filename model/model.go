@@ -66,11 +66,31 @@ type CovidCases struct {
 	Info        uint64    `json:"value"`
 }
 
+type CovidCasesNoDate struct {
+	CountryName string `gorm:"size:255;" json:"name"`
+	Info        uint64 `json:"value"`
+}
+
+type CovidCasesResponse struct {
+	Date  time.Time          `json:"date"`
+	Value []CovidCasesNoDate `json:"value"`
+}
+
 // 新冠死亡人数
 type CovidDeaths struct {
 	Date        time.Time `json:"date"`
 	CountryName string    `gorm:"size:255;" json:"name"`
 	Info        uint64    `json:"value"`
+}
+
+type CovidDeathsNoDate struct {
+	CountryName string `gorm:"size:255;" json:"name"`
+	Info        uint64 `json:"value"`
+}
+
+type CovidDeathsResponse struct {
+	Date  time.Time          `json:"date"`
+	Value []CovidCasesNoDate `json:"value"`
 }
 
 // 新冠治愈人数
@@ -80,11 +100,31 @@ type CovidRecovered struct {
 	Info        uint64    `json:"value"`
 }
 
+type CovidRecoveredNoDate struct {
+	CountryName string `gorm:"size:255;" json:"name"`
+	Info        uint64 `json:"value"`
+}
+
+type CovidRecoveredResponse struct {
+	Date  time.Time          `json:"date"`
+	Value []CovidCasesNoDate `json:"value"`
+}
+
 // 新冠疫苗接种人数
 type CovidVaccine struct {
 	Date        time.Time `json:"date"`
 	CountryName string    `gorm:"size:255;" json:"name"`
 	Info        uint64    `json:"value"`
+}
+
+type CovidVaccineNoDate struct {
+	CountryName string `gorm:"size:255;" json:"name"`
+	Info        uint64 `json:"value"`
+}
+
+type CovidVaccineResponse struct {
+	Date  time.Time          `json:"date"`
+	Value []CovidCasesNoDate `json:"value"`
 }
 
 // 新冠感染/死亡/治愈/疫苗接种人数【信息综合】

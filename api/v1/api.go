@@ -424,6 +424,11 @@ func ListAllCovidCases(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"success": true, "message": "查询成功", "data": covidList})
 }
 
+func ListAllCovidCasesResponse(c *gin.Context) {
+	covidList := service.QueryAllCovidCasesResponse()
+	c.JSON(http.StatusOK, gin.H{"success": true, "message": "查询成功", "data": covidList})
+}
+
 // ListAllCovidDeaths doc
 // @description 获取所有地区的新冠死亡人数，返回列表
 // @Tags 数据
