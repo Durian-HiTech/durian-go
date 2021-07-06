@@ -18,6 +18,8 @@ func InitRouter(Router *gin.RouterGroup) {
 	}
 	NoticeRouter := Router.Group("/notice")
 	{
+		NoticeRouter.GET("/list_all_notice", v1.ListAllNotice)
+		NoticeRouter.POST("/detail", v1.ViewNoticeDetail)
 		NoticeRouter.POST("/create_question", v1.CreateAQuestion)
 		NoticeRouter.POST("/create_comment", v1.CreateAComment)
 		NoticeRouter.POST("/list_all_comments", v1.ListAllComments)

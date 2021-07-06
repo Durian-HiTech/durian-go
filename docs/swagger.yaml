@@ -197,6 +197,26 @@ paths:
             type: string
       tags:
       - 防控知识板块
+  /notice/detail:
+    post:
+      description: 查看单条公告
+      parameters:
+      - description: 公告ID
+        in: formData
+        name: notice_id
+        required: true
+        type: string
+      responses:
+        "200":
+          description: '{"success":true, "message":"查询成功","data":"该条公告的详细信息"}'
+          schema:
+            type: string
+        "404":
+          description: '{"success":true, "message":"查询失败，公告ID不存在"}'
+          schema:
+            type: string
+      tags:
+      - 公告
   /notice/list_all_comments:
     post:
       description: 列出某个问题的全部评论
@@ -217,6 +237,16 @@ paths:
             type: string
       tags:
       - 防控知识板块
+  /notice/list_all_notice:
+    get:
+      description: 获取所有公告，返回列表
+      responses:
+        "200":
+          description: '{"success":true, "message":"查询成功","data":"所有公告""}'
+          schema:
+            type: string
+      tags:
+      - 公告
   /notice/list_all_questions:
     get:
       description: 列出全部问题

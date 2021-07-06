@@ -353,6 +353,33 @@ func CreateAComment(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"success": true, "message": "用户评论成功"})
 }
 
+// ListAllNotice doc
+// @description 获取所有公告，返回列表
+// @Tags 公告
+// @Success 200 {string} string "{"success":true, "message":"查询成功","data":"所有公告""}"
+// @Router /notice/list_all_notice [GET]
+func ListAllNotice(c *gin.Context) {
+	noticeList := service.QueryAllNotice()
+	c.JSON(http.StatusOK, gin.H{"success": true, "message": "查询成功", "data": noticeList})
+}
+
+// ViewNewsDetail doc
+// @description 查看单条公告
+// @Tags 公告
+// @Param notice_id formData string true "公告ID"
+// @Success 200 {string} string "{"success":true, "message":"查询成功","data":"该条公告的详细信息"}"
+// @Failure 404 {string} string "{"success":true, "message":"查询失败，公告ID不存在"}"
+// @Router /notice/detail [POST]
+func ViewNoticeDetail(c *gin.Context) {
+	noticeID, _ := strconv.ParseUint(c.Request.FormValue("notice_id"), 0, 64)
+	notice, notFound := service.QueryANoticeByID(noticeID)
+	if !notFound {
+		c.JSON(http.StatusOK, gin.H{"success": true, "message": "查询成功", "data": notice})
+	} else {
+		c.JSON(404, gin.H{"success": false, "message": "查询失败，公告ID不存在"})
+	}
+}
+
 // ListAllNews doc
 // @description 获取所有新闻，返回列表
 // @Tags 新闻

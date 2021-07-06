@@ -113,6 +113,24 @@ func QueryAllNews() (news []model.News) {
 	return news
 }
 
+// 根据公告 ID 查询公告详情
+func QueryANoticeByID(NoticeID uint64) (notice model.Notice, notFound bool) {
+	err := global.DB.Where("notice_id = ?", NoticeID).First(&notice).Error
+	if err != nil && errors.Is(err, gorm.ErrRecordNotFound) {
+		return notice, true
+	} else if err != nil && !errors.Is(err, gorm.ErrRecordNotFound) {
+		panic(err)
+	} else {
+		return notice, false
+	}
+}
+
+// 查询所有公告
+func QueryAllNotice() (notice []model.Notice) {
+	global.DB.Find(&notice)
+	return notice
+}
+
 // 创建一个知识版块下的问题
 func CreateAQuestion(question *model.Question) (err error) {
 	if err = global.DB.Create(&question).Error; err != nil {
