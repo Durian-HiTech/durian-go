@@ -34,11 +34,12 @@ type Notice struct {
 	NoticeCreatedTime time.Time `json:"notice_created_time"`
 }
 
-// 公告
+// 谣言
 type Rumor struct {
 	RumorID          uint64    `gorm:"primary_key;" json:"rumor_id"`
 	RumorTitle       string    `gorm:"size:55; not null" json:"rumor_title"`
 	RumorContent     string    `gorm:"size:2550; not null" json:"rumor_content"`
+	RumorType        uint64    `gorm:"default:0; not null" json:"rumor_type"` // 0: 谣言, 1: 事实, 2: 辟谣, 3: 误区
 	RumorCreatedTime time.Time `json:"rumor_created_time"`
 }
 
