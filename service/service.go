@@ -196,13 +196,13 @@ func QueryAllCovidDeaths() (deaths []model.CovidDeaths) {
 }
 
 // 查询所有地区的新冠治愈人数
-func QueryAllCovidRecovered() (recovereds []model.CovidRecovered) {
+func QueryAllCovidRecovereds() (recovereds []model.CovidRecovered) {
 	global.DB.Find(&recovereds)
 	return recovereds
 }
 
 // 查询所有地区的新冠疫苗接种人数
-func QueryAllCovidVaccine() (vaccines []model.CovidVaccine) {
+func QueryAllCovidVaccines() (vaccines []model.CovidVaccine) {
 	global.DB.Find(&vaccines)
 	return vaccines
 }

@@ -244,7 +244,7 @@ func RemoveSubscription(c *gin.Context) {
 // @Param user_id formData string true "用户ID"
 // @Param question_title formData string true "提问标题"
 // @Param question_content formData string true "提问内容"
-// @Success 200 {string} string "{"success": true, "message": "用户提问成功", "detail": 提问的全部信息}"
+// @Success 200 {string} string "{"success": true, "message": "用户提问成功", "detail": "提问的全部信息"}"
 // @Failure 401 {string} string "{"success": false, "message": "数据库error, 一些其他错误"}"
 // @Failure 404 {string} string "{"success": false, "message": "用户ID不存在"}"
 // @Router /notice/create_question [POST]
@@ -383,7 +383,7 @@ func ViewNewsDetail(c *gin.Context) {
 // ListHighRiskAreas doc
 // @description 获取所有中高风险地区，返回列表
 // @Tags 数据
-// @Success 200 {string} string "{"success":true, "message":"查询成功","data":"所有中高风险地区""}"
+// @Success 200 {string} string "{"success":true, "message":"查询成功","data":"所有中高风险地区"}"
 // @Router /data/list_all_high_risk_areas [GET]
 func ListHighRiskAreas(c *gin.Context) {
 	areas := service.QueryAllHighRiskAreas()
@@ -394,7 +394,7 @@ func ListHighRiskAreas(c *gin.Context) {
 // @description 获取在数据库中直接存的 Json File
 // @Tags 数据
 // @Param name formData string true "数据文件名"
-// @Success 200 {string} string "{"success":true, "message":"查询成功","data":"Json data""}"
+// @Success 200 {string} string "{"success":true, "message":"查询成功","data":"Json data"}"
 // @Failure 200 {string} string "{"success":true, "message":"查询失败，无所需数据"}"
 // @Router /data/query_data [POST]
 func FetchRequiredData(c *gin.Context) {
@@ -417,9 +417,39 @@ func FetchRequiredData(c *gin.Context) {
 // ListAllNews doc
 // @description 获取所有地区的新冠感染人数，返回列表
 // @Tags 数据
-// @Success 200 {string} string "{"success":true, "message":"查询成功","data":"所有地区的新冠感染人数""}"
+// @Success 200 {string} string "{"success":true, "message":"查询成功","data":"所有地区的新冠感染人数"}"
 // @Router /data/list_all_covid_cases [GET]
 func ListAllCovidCases(c *gin.Context) {
 	covidList := service.QueryAllCovidCases()
+	c.JSON(http.StatusOK, gin.H{"success": true, "message": "查询成功", "data": covidList})
+}
+
+// ListAllNews doc
+// @description 获取所有地区的新冠死亡人数，返回列表
+// @Tags 数据
+// @Success 200 {string} string "{"success":true, "message":"查询成功","data":"所有地区的新冠死亡人数"}"
+// @Router /data/list_all_covid_deaths [GET]
+func ListAllCovidDeaths(c *gin.Context) {
+	covidList := service.QueryAllCovidDeaths()
+	c.JSON(http.StatusOK, gin.H{"success": true, "message": "查询成功", "data": covidList})
+}
+
+// ListAllNews doc
+// @description 获取所有地区的新冠治愈人数，返回列表
+// @Tags 数据
+// @Success 200 {string} string "{"success":true, "message":"查询成功","data":"所有地区的新冠治愈人数""}"
+// @Router /data/list_all_covid_recovereds [GET]
+func ListAllCovidRecovereds(c *gin.Context) {
+	covidList := service.QueryAllCovidRecovereds()
+	c.JSON(http.StatusOK, gin.H{"success": true, "message": "查询成功", "data": covidList})
+}
+
+// ListAllNews doc
+// @description 获取所有地区的新冠疫苗接种人数，返回列表
+// @Tags 数据
+// @Success 200 {string} string "{"success":true, "message":"查询成功","data":"所有地区的新冠疫苗接种人数""}"
+// @Router /data/list_all_covid_vaccines [GET]
+func ListAllCovidVaccines(c *gin.Context) {
+	covidList := service.QueryAllCovidVaccines()
 	c.JSON(http.StatusOK, gin.H{"success": true, "message": "查询成功", "data": covidList})
 }

@@ -39,5 +39,8 @@ func InitRouter(Router *gin.RouterGroup) {
 		DataRouter.GET("/list_all_high_risk_areas", v1.ListHighRiskAreas)
 		DataRouter.POST("/query_data", v1.FetchRequiredData)
 		DataRouter.GET("/list_all_covid_cases", v1.ListAllCovidCases)
+		DataRouter.GET("/list_all_covid_deaths", v1.ListAllCovidDeaths)
+		DataRouter.GET("/list_all_covid_recovereds", v1.ListAllCovidRecovereds)
+		DataRouter.GET("/list_all_covid_vaccines", v1.ListAllCovidVaccines)
 	}
 }
