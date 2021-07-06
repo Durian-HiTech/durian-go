@@ -235,7 +235,7 @@ func QueryAllCovidCasesResponse() (response []model.CovidCasesResponse) {
 	}
 	curDate := cases[0].Date
 
-	for i := 0; i < lenCases-1; i++ {
+	for i := 0; i < lenCases; i++ {
 		var tmp []model.CovidCasesNoDate
 		for j := i; j < lenCases; j++ {
 			if cases[j].Date == curDate {
@@ -267,7 +267,7 @@ func QueryAllCovidDeathsResponse() (response []model.CovidDeathsResponse) {
 	}
 	curDate := cases[0].Date
 
-	for i := 0; i < lenCases-1; i++ {
+	for i := 0; i < lenCases; i++ {
 		var tmp []model.CovidDeathsNoDate
 		for j := i; j < lenCases; j++ {
 			if cases[j].Date == curDate {
@@ -299,7 +299,7 @@ func QueryAllCovidRecoveredsResponse() (response []model.CovidRecoveredResponse)
 	}
 	curDate := cases[0].Date
 
-	for i := 0; i < lenCases-1; i++ {
+	for i := 0; i < lenCases; i++ {
 		var tmp []model.CovidRecoveredNoDate
 		for j := i; j < lenCases; j++ {
 			if cases[j].Date == curDate {
@@ -331,7 +331,7 @@ func QueryAllCovidVaccinesResponse() (response []model.CovidVaccineResponse) {
 	}
 	curDate := cases[0].Date
 
-	for i := 0; i < lenCases-1; i++ {
+	for i := 0; i < lenCases; i++ {
 		var tmp []model.CovidVaccineNoDate
 		for j := i; j < lenCases; j++ {
 			if cases[j].Date == curDate {
