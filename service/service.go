@@ -207,19 +207,45 @@ func QueryAllCovidCases() (cases []model.CovidCases) {
 	return cases
 }
 
-// 查询所有地区的新冠死亡人数
+// 查询所有地区的新冠感染人数（根据日期汇总）
+func QueryAllCovidCasesResponse() (response []model.CovidCasesResponse) {
+	var cases []model.CovidCases
+	global.DB.Order("date asc").Find(&cases)
+	lenCases := len(cases)
+	if lenCases == 0 {
+		return response
+	}
+	curDate := cases[0].Date
+
+	for i := 0; i < lenCases-1; i++ {
+		var tmp []model.CovidCasesNoDate
+		for j := i; j < lenCases; j++ {
+			if cases[j].Date == curDate {
+				tmp = append(tmp, model.CovidCasesNoDate{CountryName: cases[j].CountryName, Info: cases[j].Info})
+			} else {
+				curDate = cases[j].Date
+				i = j
+				break
+			}
+		}
+		response = append(response, model.CovidCasesResponse{Date: curDate, Value: tmp})
+	}
+	return response
+}
+
+// 查询所有地区的新冠死亡人数（根据日期汇总）
 func QueryAllCovidDeaths() (deaths []model.CovidDeaths) {
 	global.DB.Find(&deaths)
 	return deaths
 }
 
-// 查询所有地区的新冠治愈人数
+// 查询所有地区的新冠治愈人数（根据日期汇总）
 func QueryAllCovidRecovereds() (recovereds []model.CovidRecovered) {
 	global.DB.Find(&recovereds)
 	return recovereds
 }
 
-// 查询所有地区的新冠疫苗接种人数
+// 查询所有地区的新冠疫苗接种人数（根据日期汇总）
 func QueryAllCovidVaccines() (vaccines []model.CovidVaccine) {
 	global.DB.Find(&vaccines)
 	return vaccines
