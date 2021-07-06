@@ -21,6 +21,7 @@ func InitRouter(Router *gin.RouterGroup) {
 		NoticeRouter.GET("/list_all_notice", v1.ListAllNotice)
 		NoticeRouter.POST("/detail", v1.ViewNoticeDetail)
 		NoticeRouter.POST("/create_question", v1.CreateAQuestion)
+		NoticeRouter.POST("/list_a_question", v1.ListAQuestion)
 		NoticeRouter.POST("/create_comment", v1.CreateAComment)
 		NoticeRouter.POST("/list_all_comments", v1.ListAllComments)
 		NoticeRouter.GET("/list_all_questions", v1.ListAllQuestions)

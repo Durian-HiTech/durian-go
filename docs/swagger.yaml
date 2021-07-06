@@ -217,6 +217,26 @@ paths:
             type: string
       tags:
       - 公告
+  /notice/list_a_question:
+    post:
+      description: 列出某个问题的详情
+      parameters:
+      - description: 问题ID
+        in: formData
+        name: question_id
+        required: true
+        type: string
+      responses:
+        "200":
+          description: '{"success": true, "message": "查看成功", "data": "某问题的所有信息"}'
+          schema:
+            type: string
+        "404":
+          description: '{"success": false, "message": "问题ID不存在"}'
+          schema:
+            type: string
+      tags:
+      - 防控知识板块
   /notice/list_all_comments:
     post:
       description: 列出某个问题的全部评论
