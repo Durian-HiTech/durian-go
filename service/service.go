@@ -145,7 +145,7 @@ func QueryANoticeByID(NoticeID uint64) (notice model.Notice, notFound bool) {
 
 // 查询所有公告
 func QueryAllNotice() (notice []model.Notice) {
-	global.DB.Find(&notice)
+	global.DB.Order("notice_created_time desc").Find(&notice)
 	return notice
 }
 
