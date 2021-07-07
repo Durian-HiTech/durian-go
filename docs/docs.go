@@ -78,6 +78,15 @@ var doc = `{
                 "tags": [
                     "数据"
                 ],
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "区域名",
+                        "name": "province",
+                        "in": "formData",
+                        "required": true
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "{\"success\":true, \"message\":\"查询成功\",\"data\":\"所有地区的新冠感染人数 [Province]\"}",
@@ -125,6 +134,15 @@ var doc = `{
                 "description": "获取所有地区的新冠感染/死亡/治愈【信息综合】，返回列表 [根据时间分组] [Province]",
                 "tags": [
                     "数据"
+                ],
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "区域名",
+                        "name": "province",
+                        "in": "formData",
+                        "required": true
+                    }
                 ],
                 "responses": {
                     "200": {
@@ -174,6 +192,15 @@ var doc = `{
                 "tags": [
                     "数据"
                 ],
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "区域名",
+                        "name": "province",
+                        "in": "formData",
+                        "required": true
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "{\"success\":true, \"message\":\"查询成功\",\"data\":\"所有地区的新冠死亡人数 [Province]\"}",
@@ -221,6 +248,15 @@ var doc = `{
                 "description": "获取所有地区的新冠治愈人数，返回列表 [根据时间分组] [Province]",
                 "tags": [
                     "数据"
+                ],
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "区域名",
+                        "name": "province",
+                        "in": "formData",
+                        "required": true
+                    }
                 ],
                 "responses": {
                     "200": {
