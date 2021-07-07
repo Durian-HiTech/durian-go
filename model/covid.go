@@ -120,7 +120,7 @@ type CovidCDRVResponse struct {
 type CovidCasesProvince struct {
 	Date        time.Time `json:"date"`
 	CountryName string    `gorm:"size:255;" json:"name"`
-	Info        uint64    `json:"value"`
+	Info        string    `gorm:"size:2555550;" json:"value"`
 }
 
 // 新冠感染人数 [临时表] [Province]
@@ -171,4 +171,12 @@ type CovidRecoveredNoDateProvince struct {
 type CovidRecoveredResponseProvince struct {
 	Date  time.Time                      `json:"date"`
 	Value []CovidRecoveredNoDateProvince `json:"value"`
+}
+
+// 新冠感染/死亡/治愈/疫苗接种人数【信息综合】 [根据时间分组]
+type CovidCDRVResponseProvince struct {
+	Case      []CovidCasesResponseProvince     `json:"cases"`
+	Deaths    []CovidDeathsResponseProvince    `json:"deaths"`
+	Recovered []CovidRecoveredResponseProvince `json:"recovered"`
+	Vaccine   []CovidRecoveredResponseProvince `json:"vaccine"` // 其实是全空
 }

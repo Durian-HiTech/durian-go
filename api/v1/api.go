@@ -595,3 +595,52 @@ func ListAllCovidCDRVResponse(c *gin.Context) {
 	result := model.CovidCDRVResponse{Case: covidListC, Deaths: covidListD, Recovered: covidListR, Vaccine: covidListV}
 	c.JSON(http.StatusOK, gin.H{"success": true, "message": "查询成功", "data": result})
 }
+
+// ListAllCovidCasesResponseProvince doc
+// @description 获取所有地区的新冠感染人数，返回列表 [根据时间分组] [Province]
+// @Tags 数据
+// @Success 200 {string} string "{"success":true, "message":"查询成功","data":"所有地区的新冠感染人数 [Province]"}"
+// @Router /data/list_all_covid_cases_response_province [GET]
+func ListAllCovidCasesResponseProvince(c *gin.Context) {
+	covidList := service.QueryAllCovidCasesResponseProvince()
+	c.JSON(http.StatusOK, gin.H{"success": true, "message": "查询成功", "data": covidList})
+}
+
+// ListAllCovidDeathsResponseProvince doc
+// @description 获取所有地区的新冠死亡人数，返回列表 [根据时间分组] [Province]
+// @Tags 数据
+// @Success 200 {string} string "{"success":true, "message":"查询成功","data":"所有地区的新冠死亡人数 [Province]"}"
+// @Router /data/list_all_covid_deaths_response_province [GET]
+func ListAllCovidDeathsResponseProvince(c *gin.Context) {
+	covidList := service.QueryAllCovidDeathsResponseProvince()
+	c.JSON(http.StatusOK, gin.H{"success": true, "message": "查询成功", "data": covidList})
+}
+
+// ListAllCovidCasesResponseProvince doc
+// @description 获取所有地区的新冠治愈人数，返回列表 [根据时间分组] [Province]
+// @Tags 数据
+// @Success 200 {string} string "{"success":true, "message":"查询成功","data":"所有地区的新冠治愈人数 [Province]"}"
+// @Router /data/list_all_covid_recovereds_response_province [GET]
+func ListAllCovidRecoveredsResponseProvince(c *gin.Context) {
+	covidList := service.QueryAllCovidRecoveredsResponseProvince()
+	c.JSON(http.StatusOK, gin.H{"success": true, "message": "查询成功", "data": covidList})
+}
+
+// ListAllCovidCDRVProvince doc
+// @description 获取所有地区的新冠感染/死亡/治愈【信息综合】，返回列表 [根据时间分组] [Province]
+// @Tags 数据
+// @Success 200 {string} string "{"success":true, "message":"查询成功","data":"所有地区的新冠感染/死亡/治愈/疫苗接种人数 [Province]"}"
+// @Router /data/list_all_covid_cdrv_response_province [GET]
+func ListAllCovidCDRVResponseProvince(c *gin.Context) {
+	covidListC := service.QueryAllCovidCasesResponseProvince()
+	covidListD := service.QueryAllCovidDeathsResponseProvince()
+	covidListR := service.QueryAllCovidRecoveredsResponseProvince()
+	covidListV := covidListR
+	for _, covid := range covidListV {
+		for _, v := range covid.Value {
+			v.Info = "{}"
+		}
+	}
+	result := model.CovidCDRVResponseProvince{Case: covidListC, Deaths: covidListD, Recovered: covidListR, Vaccine: covidListV}
+	c.JSON(http.StatusOK, gin.H{"success": true, "message": "查询成功", "data": result})
+}

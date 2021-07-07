@@ -52,5 +52,6 @@ func InitRouter(Router *gin.RouterGroup) {
 		DataRouter.GET("/list_all_covid_vaccines_response", v1.ListAllCovidVaccinesResponse)
 		DataRouter.GET("/list_all_covid_cdrv", v1.ListAllCovidCDRV)
 		DataRouter.GET("/list_all_covid_cdrv_response", v1.ListAllCovidCDRVResponse)
+		DataRouter.GET("/list_all_covid_cdrv_response_province", v1.ListAllCovidCDRVResponseProvince)
 	}
 }
