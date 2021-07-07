@@ -359,89 +359,38 @@ func QueryAllCovidVaccinesResponse() (response []model.CovidVaccineResponse) {
 	return response
 }
 
-// 查询所有地区的新冠感染人数（根据日期汇总） [Province]
-func QueryAllCovidCasesResponseProvince() (response []model.CovidCasesResponseProvince) {
-	var cases []model.CovidCasesProvince
-	global.DB.Order("date asc").Find(&cases)
-	lenCases := len(cases)
-	if lenCases == 0 {
-		return response
+// 查询某地区的新冠感染人数（根据日期汇总） [Province]
+func QueryAllCovidCasesResponseProvince(province string) (response []model.CovidCasesProvince, notFound bool) {
+	err := global.DB.Where("country_name = ?", province).Order("date asc").Find(&response).Error
+	if err != nil && errors.Is(err, gorm.ErrRecordNotFound) {
+		return response, true
+	} else if err != nil && !errors.Is(err, gorm.ErrRecordNotFound) {
+		panic(err)
+	} else {
+		return response, false
 	}
-	curDate := cases[0].Date
-
-	for i := 0; i < lenCases; i++ {
-		var tmp []model.CovidCasesNoDateProvince
-		for j := i; j < lenCases; j++ {
-			if cases[j].Date == curDate {
-				tmp = append(tmp, model.CovidCasesNoDateProvince{CountryName: cases[j].CountryName, Info: cases[j].Info})
-			} else {
-				curDate = cases[j].Date
-				i = j
-				break
-			}
-			if j == lenCases-1 {
-				i = lenCases
-			}
-		}
-		response = append(response, model.CovidCasesResponseProvince{Date: curDate, Value: tmp})
-	}
-	return response
 }
 
-// 查询所有地区的新冠死亡人数（根据日期汇总） [Province]
-func QueryAllCovidDeathsResponseProvince() (response []model.CovidDeathsResponseProvince) {
-	var cases []model.CovidDeathsProvince
-	global.DB.Order("date asc").Find(&cases)
-	lenCases := len(cases)
-	if lenCases == 0 {
-		return response
+// 查询某地区的新冠死亡人数（根据日期汇总） [Province]
+func QueryAllCovidDeathsResponseProvince(province string) (response []model.CovidDeathsProvince, notFound bool) {
+	err := global.DB.Where("country_name = ?", province).Order("date asc").Find(&response).Error
+	if err != nil && errors.Is(err, gorm.ErrRecordNotFound) {
+		return response, true
+	} else if err != nil && !errors.Is(err, gorm.ErrRecordNotFound) {
+		panic(err)
+	} else {
+		return response, false
 	}
-	curDate := cases[0].Date
-
-	for i := 0; i < lenCases; i++ {
-		var tmp []model.CovidDeathsNoDateProvince
-		for j := i; j < lenCases; j++ {
-			if cases[j].Date == curDate {
-				tmp = append(tmp, model.CovidDeathsNoDateProvince{CountryName: cases[j].CountryName, Info: cases[j].Info})
-			} else {
-				curDate = cases[j].Date
-				i = j
-				break
-			}
-			if j == lenCases-1 {
-				i = lenCases
-			}
-		}
-		response = append(response, model.CovidDeathsResponseProvince{Date: curDate, Value: tmp})
-	}
-	return response
 }
 
-// 查询所有地区的新冠治愈人数（根据日期汇总） [Province]
-func QueryAllCovidRecoveredsResponseProvince() (response []model.CovidRecoveredResponseProvince) {
-	var cases []model.CovidRecoveredProvince
-	global.DB.Order("date asc").Find(&cases)
-	lenCases := len(cases)
-	if lenCases == 0 {
-		return response
+// 查询某地区的新冠治愈人数（根据日期汇总） [Province]
+func QueryAllCovidRecoveredsResponseProvince(province string) (response []model.CovidRecoveredProvince, notFound bool) {
+	err := global.DB.Where("country_name = ?", province).Order("date asc").Find(&response).Error
+	if err != nil && errors.Is(err, gorm.ErrRecordNotFound) {
+		return response, true
+	} else if err != nil && !errors.Is(err, gorm.ErrRecordNotFound) {
+		panic(err)
+	} else {
+		return response, false
 	}
-	curDate := cases[0].Date
-
-	for i := 0; i < lenCases; i++ {
-		var tmp []model.CovidRecoveredNoDateProvince
-		for j := i; j < lenCases; j++ {
-			if cases[j].Date == curDate {
-				tmp = append(tmp, model.CovidRecoveredNoDateProvince{CountryName: cases[j].CountryName, Info: cases[j].Info})
-			} else {
-				curDate = cases[j].Date
-				i = j
-				break
-			}
-			if j == lenCases-1 {
-				i = lenCases
-			}
-		}
-		response = append(response, model.CovidRecoveredResponseProvince{Date: curDate, Value: tmp})
-	}
-	return response
 }

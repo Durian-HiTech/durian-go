@@ -52,6 +52,10 @@ func InitRouter(Router *gin.RouterGroup) {
 		DataRouter.GET("/list_all_covid_vaccines_response", v1.ListAllCovidVaccinesResponse)
 		DataRouter.GET("/list_all_covid_cdrv", v1.ListAllCovidCDRV)
 		DataRouter.GET("/list_all_covid_cdrv_response", v1.ListAllCovidCDRVResponse)
-		DataRouter.GET("/list_all_covid_cdrv_response_province", v1.ListAllCovidCDRVResponseProvince)
+
+		DataRouter.POST("/list_all_covid_cases_response_province", v1.ListAllCovidCasesResponseProvince)
+		DataRouter.POST("/list_all_covid_deaths_response_province", v1.ListAllCovidDeathsResponseProvince)
+		DataRouter.POST("/list_all_covid_recovereds_response_province", v1.ListAllCovidRecoveredsResponseProvince)
+		DataRouter.POST("/list_all_covid_cdrv_response_province", v1.ListAllCovidCDRVResponseProvince)
 	}
 }

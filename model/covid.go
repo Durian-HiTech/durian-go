@@ -123,35 +123,11 @@ type CovidCasesProvince struct {
 	Info        string    `gorm:"size:2555550;" json:"value"`
 }
 
-// 新冠感染人数 [临时表] [Province]
-type CovidCasesNoDateProvince struct {
-	CountryName string `gorm:"size:255;" json:"name"`
-	Info        string `gorm:"size:2555550;" json:"value"`
-}
-
-// 新冠感染人数 [根据时间分组] [Province]
-type CovidCasesResponseProvince struct {
-	Date  time.Time                  `json:"date"`
-	Value []CovidCasesNoDateProvince `json:"value"`
-}
-
 // 新冠死亡人数 [Province]
 type CovidDeathsProvince struct {
 	Date        time.Time `json:"date"`
 	CountryName string    `gorm:"size:255;" json:"name"`
 	Info        string    `gorm:"size:2555550;" json:"value"`
-}
-
-// 新冠死亡人数 [临时表] [Province]
-type CovidDeathsNoDateProvince struct {
-	CountryName string `gorm:"size:255;" json:"name"`
-	Info        string `gorm:"size:2555550;" json:"value"`
-}
-
-// 新冠死亡人数 [根据时间分组] [Province]
-type CovidDeathsResponseProvince struct {
-	Date  time.Time                   `json:"date"`
-	Value []CovidDeathsNoDateProvince `json:"value"`
 }
 
 // 新冠治愈人数 [Province]
@@ -161,22 +137,10 @@ type CovidRecoveredProvince struct {
 	Info        string    `gorm:"size:2555550;" json:"value"`
 }
 
-// 新冠治愈人数 [临时表] [Province]
-type CovidRecoveredNoDateProvince struct {
-	CountryName string `gorm:"size:255;" json:"name"`
-	Info        string `gorm:"size:2555550;" json:"value"`
-}
-
-// 新冠治愈人数 [根据时间分组] [Province]
-type CovidRecoveredResponseProvince struct {
-	Date  time.Time                      `json:"date"`
-	Value []CovidRecoveredNoDateProvince `json:"value"`
-}
-
 // 新冠感染/死亡/治愈/疫苗接种人数【信息综合】 [根据时间分组]
 type CovidCDRVResponseProvince struct {
-	Case      []CovidCasesResponseProvince     `json:"cases"`
-	Deaths    []CovidDeathsResponseProvince    `json:"deaths"`
-	Recovered []CovidRecoveredResponseProvince `json:"recovered"`
-	Vaccine   []CovidRecoveredResponseProvince `json:"vaccine"` // 其实是全空
+	Case      []CovidCasesProvince     `json:"cases"`
+	Deaths    []CovidDeathsProvince    `json:"deaths"`
+	Recovered []CovidRecoveredProvince `json:"recovered"`
+	Vaccine   []CovidRecoveredProvince `json:"vaccine"` // 其实是全空
 }

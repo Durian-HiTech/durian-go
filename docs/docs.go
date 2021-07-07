@@ -73,7 +73,7 @@ var doc = `{
             }
         },
         "/data/list_all_covid_cases_response_province": {
-            "get": {
+            "post": {
                 "description": "获取所有地区的新冠感染人数，返回列表 [根据时间分组] [Province]",
                 "tags": [
                     "数据"
@@ -169,7 +169,7 @@ var doc = `{
             }
         },
         "/data/list_all_covid_deaths_response_province": {
-            "get": {
+            "post": {
                 "description": "获取所有地区的新冠死亡人数，返回列表 [根据时间分组] [Province]",
                 "tags": [
                     "数据"
@@ -217,7 +217,7 @@ var doc = `{
             }
         },
         "/data/list_all_covid_recovereds_response_province": {
-            "get": {
+            "post": {
                 "description": "获取所有地区的新冠治愈人数，返回列表 [根据时间分组] [Province]",
                 "tags": [
                     "数据"
