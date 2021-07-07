@@ -111,57 +111,64 @@ type CovidCDRVResponse struct {
 // ----------------------------------------------------------------------------
 // ----------------------------------------------------------------------------
 // ----------------------------------------------------------------------------
-// ---------------------------表更新数据后--------------------------------
+// ---------------------------省份数据--------------------------------
 // ----------------------------------------------------------------------------
 // ----------------------------------------------------------------------------
 // ----------------------------------------------------------------------------
 
-// // 新冠感染人数 [临时表] [new]
-// type CovidCasesNoDateNew struct {
-// 	CountryName string `gorm:"size:255;" json:"name"`
-// 	Info        uint64 `json:"value"`
-// }
+// 新冠感染人数
+type CovidCasesProvince struct {
+	Date        time.Time `json:"date"`
+	CountryName string    `gorm:"size:255;" json:"name"`
+	Info        uint64    `json:"value"`
+}
 
-// // 新冠感染人数 [根据时间分组] [new]
-// type CovidCasesResponseNew struct {
-// 	Date  time.Time             `json:"date"`
-// 	Value []CovidCasesNoDateNew `json:"value"`
-// }
+// 新冠感染人数 [临时表] [Province]
+type CovidCasesNoDateProvince struct {
+	CountryName string `gorm:"size:255;" json:"name"`
+	Info        string `gorm:"size:2555550;" json:"value"`
+}
 
-// // 新冠死亡人数 [new]
-// type CovidDeathsNew struct {
-// 	Date        time.Time `json:"date"`
-// 	CountryName string    `gorm:"size:255;" json:"name"`
-// 	Info        uint64    `json:"value"`
-// }
+// 新冠感染人数 [根据时间分组] [Province]
+type CovidCasesResponseProvince struct {
+	Date  time.Time                  `json:"date"`
+	Value []CovidCasesNoDateProvince `json:"value"`
+}
 
-// // 新冠死亡人数 [临时表] [new]
-// type CovidDeathsNoDateNew struct {
-// 	CountryName string `gorm:"size:255;" json:"name"`
-// 	Info        uint64 `json:"value"`
-// }
+// 新冠死亡人数 [Province]
+type CovidDeathsProvince struct {
+	Date        time.Time `json:"date"`
+	CountryName string    `gorm:"size:255;" json:"name"`
+	Info        string    `gorm:"size:2555550;" json:"value"`
+}
 
-// // 新冠死亡人数 [根据时间分组] [new]
-// type CovidDeathsResponseNew struct {
-// 	Date  time.Time              `json:"date"`
-// 	Value []CovidDeathsNoDateNew `json:"value"`
-// }
+// 新冠死亡人数 [临时表] [Province]
+type CovidDeathsNoDateProvince struct {
+	CountryName string `gorm:"size:255;" json:"name"`
+	Info        string `gorm:"size:2555550;" json:"value"`
+}
 
-// // 新冠治愈人数 [new]
-// type CovidRecoveredNew struct {
-// 	Date        time.Time `json:"date"`
-// 	CountryName string    `gorm:"size:255;" json:"name"`
-// 	Info        uint64    `json:"value"`
-// }
+// 新冠死亡人数 [根据时间分组] [Province]
+type CovidDeathsResponseProvince struct {
+	Date  time.Time                   `json:"date"`
+	Value []CovidDeathsNoDateProvince `json:"value"`
+}
 
-// // 新冠治愈人数 [临时表] [new]
-// type CovidRecoveredNoDateNew struct {
-// 	CountryName string `gorm:"size:255;" json:"name"`
-// 	Info        uint64 `json:"value"`
-// }
+// 新冠治愈人数 [Province]
+type CovidRecoveredProvince struct {
+	Date        time.Time `json:"date"`
+	CountryName string    `gorm:"size:255;" json:"name"`
+	Info        string    `gorm:"size:2555550;" json:"value"`
+}
 
-// // 新冠治愈人数 [根据时间分组] [new]
-// type CovidRecoveredResponseNew struct {
-// 	Date  time.Time                 `json:"date"`
-// 	Value []CovidRecoveredNoDateNew `json:"value"`
-// }
+// 新冠治愈人数 [临时表] [Province]
+type CovidRecoveredNoDateProvince struct {
+	CountryName string `gorm:"size:255;" json:"name"`
+	Info        string `gorm:"size:2555550;" json:"value"`
+}
+
+// 新冠治愈人数 [根据时间分组] [Province]
+type CovidRecoveredResponseProvince struct {
+	Date  time.Time                      `json:"date"`
+	Value []CovidRecoveredNoDateProvince `json:"value"`
+}
