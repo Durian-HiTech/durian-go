@@ -65,7 +65,7 @@ paths:
       tags:
       - 数据
   /data/list_all_covid_cdrv_response_province:
-    get:
+    post:
       description: 获取所有地区的新冠感染/死亡/治愈【信息综合】，返回列表 [根据时间分组] [Province]
       responses:
         "200":

@@ -633,7 +633,7 @@ func ListAllCovidRecoveredsResponseProvince(c *gin.Context) {
 // @description 获取所有地区的新冠感染/死亡/治愈【信息综合】，返回列表 [根据时间分组] [Province]
 // @Tags 数据
 // @Success 200 {string} string "{"success":true, "message":"查询成功","data":"所有地区的新冠感染/死亡/治愈/疫苗接种人数 [Province]"}"
-// @Router /data/list_all_covid_cdrv_response_province [GET]
+// @Router /data/list_all_covid_cdrv_response_province [POST]
 func ListAllCovidCDRVResponseProvince(c *gin.Context) {
 	provinceName := c.Request.FormValue("province")
 	covidListC, _ := service.QueryAllCovidCasesResponseProvince(provinceName)
