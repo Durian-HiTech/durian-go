@@ -72,6 +72,22 @@ var doc = `{
                 }
             }
         },
+        "/data/list_all_covid_cases_response_province": {
+            "get": {
+                "description": "获取所有地区的新冠感染人数，返回列表 [根据时间分组] [Province]",
+                "tags": [
+                    "数据"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "{\"success\":true, \"message\":\"查询成功\",\"data\":\"所有地区的新冠感染人数 [Province]\"}",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
         "/data/list_all_covid_cdrv": {
             "get": {
                 "description": "获取所有地区的新冠感染/死亡/治愈/疫苗接种人数【信息综合】，返回列表",
@@ -97,6 +113,22 @@ var doc = `{
                 "responses": {
                     "200": {
                         "description": "{\"success\":true, \"message\":\"查询成功\",\"data\":\"所有地区的新冠感染/死亡/治愈/疫苗接种人数\"\"}",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/data/list_all_covid_cdrv_response_province": {
+            "get": {
+                "description": "获取所有地区的新冠感染/死亡/治愈【信息综合】，返回列表 [根据时间分组] [Province]",
+                "tags": [
+                    "数据"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "{\"success\":true, \"message\":\"查询成功\",\"data\":\"所有地区的新冠感染/死亡/治愈/疫苗接种人数 [Province]\"}",
                         "schema": {
                             "type": "string"
                         }
@@ -136,6 +168,22 @@ var doc = `{
                 }
             }
         },
+        "/data/list_all_covid_deaths_response_province": {
+            "get": {
+                "description": "获取所有地区的新冠死亡人数，返回列表 [根据时间分组] [Province]",
+                "tags": [
+                    "数据"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "{\"success\":true, \"message\":\"查询成功\",\"data\":\"所有地区的新冠死亡人数 [Province]\"}",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
         "/data/list_all_covid_recovereds": {
             "get": {
                 "description": "获取所有地区的新冠治愈人数，返回列表",
@@ -161,6 +209,22 @@ var doc = `{
                 "responses": {
                     "200": {
                         "description": "{\"success\":true, \"message\":\"查询成功\",\"data\":\"所有地区的新冠治愈人数\"}",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/data/list_all_covid_recovereds_response_province": {
+            "get": {
+                "description": "获取所有地区的新冠治愈人数，返回列表 [根据时间分组] [Province]",
+                "tags": [
+                    "数据"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "{\"success\":true, \"message\":\"查询成功\",\"data\":\"所有地区的新冠治愈人数 [Province]\"}",
                         "schema": {
                             "type": "string"
                         }
