@@ -657,14 +657,95 @@ func ListAllCovidCDRVResponseProvince(c *gin.Context) {
 // @Success 200 {string} string "{"success":true, "message":"查询成功","nowcases":{"nownum": 123, "newnum": 123}等数据}"
 // @Router /data/list_overview [GET]
 func ListOverviewData(c *gin.Context) {
-	// accumulative_deaths, new_deaths, num_deaths, _ := service.QueryDeathOverview()
-	//accumulative_recovered, new_recovered, num_recovered, _ := service.QueryRecoveredOverview()
-	accumulative_vaccine, new_vaccine, num_vaccine, _ := service.QueryVaccineOverview()
+	accumulativeDeaths, newDeaths, numDeaths, _ := service.QueryDeathOverview()
+	accumulativeRecovered, newRecovered, numRecovered, _ := service.QueryRecoveredOverview()
+	accumulativeVaccine, newVaccine, numVaccine, _ := service.QueryVaccineOverview()
+	accumulativeCases, newCases, numCases, _ := service.QueryCasesOverview()
 
-	// c.JSON(http.StatusOK, gin.H{"success": true, "message": "查询成功", "accumulativedeaths": accumulative_deaths, "len1": len(accumulative_deaths),
-	// 	"len2": len(new_deaths), "testcountry": accumulative_deaths[50], "testcountry2": new_deaths[50], "nums": nums})
-	// c.JSON(http.StatusOK, gin.H{"success": true, "message": "查询成功", "accumulativerecovered": accumulative_recovered, "len1": len(accumulative_recovered),
-	// 	"len2": len(new_recovered), "testcountry": accumulative_recovered[50], "testcountry2": new_recovered[50], "nums": num_recovered})
-	c.JSON(http.StatusOK, gin.H{"success": true, "message": "查询成功", "accumulativevaccine": accumulative_vaccine, "len1": len(accumulative_vaccine),
-		"len2": len(new_vaccine), "testcountry": accumulative_vaccine[100], "testcountry2": new_vaccine[100], "nums": num_vaccine})
+	// Global的overview部分
+	globalOverviewCases = numCases[0]                                     // 全球总确诊
+	globalOverviewNowCases = numCases[0] - numDeaths[0] - numRecovered[0] // 全球现存确诊=全球总确诊-全球总死亡-全球总治愈
+	globalOverviewNewCases = numCases[1]                                  // 全球新增确诊
+
+	globalOverviewDeathsNownum = numDeaths[0]       // 全球累计死亡数
+	globalOverviewDeathsNewnum = numDeaths[1]       // 全球新增死亡数
+	globalOverviewRecoveredNownum = numRecovered[0] // 全球累计治愈数
+	globalOverviewRecoveredNewnum = numRecovered[1] // 全球新增治愈数
+	globalOverviewVaccineNownum = numVaccine[0]     // 全球累计疫苗接种数
+	globalOverviewVaccineNewnum = numVaccine[1]     // 全球新增疫苗接种数
+
+	// Global的detail部分
+	i := 0
+	var detail []map[string]string
+
+	for ; i < 197; i++ {
+		m := make(map[string]string)
+		m["name"] = accumulativeCases[i].CountryName
+
+		m["cases"] = accumulativeCases[i].Info
+		m["nowcases"] = accumulativeCases[i].Info - accumulativeDeaths[i].Info - accumulativeRecovered[i] // 现存确诊=累计确诊-累计死亡-累计治愈
+		m["newcases"] = newCases[i].Info
+
+		m["vaccine"] = accumulativeVaccine[i].Info
+		m["newvaccine"] = newVaccine[i].Info
+		m["recovered"] = accumulativeRecovered[i].Info
+		m["newrecovered"] = newRecovered[i].Info
+		m["deaths"] = accumulativeDeaths[i].Info
+		m["newdeaths"] = newDeaths[i].Info
+
+		detail = append(detail, m)
+	}
+	// 中国部分
+
+	c.JSON(http.StatusOK, gin.H{"success": true, "message": "查询成功", 
+		"data": {
+			"Global": {
+				"overview": {
+					"nowcases": {
+						"nownum": globalOverviewNowCases,
+						"newnum": globalOverviewNewCases,
+					},
+					"cases": {
+						"nownum": globalOverviewCases,
+					},
+					"deaths": {
+						"nownum": globalOverviewDeathsNownum,
+						"newnum": globalOverviewDeathsNewnum,
+					},
+					"recovered": {
+						"nownum": globalOverviewRecoveredNownum,
+						"newnum": globalOverviewRecoveredNewnum,
+					},
+					"vaccine": {
+						"nownum": globalOverviewVaccineNownum,
+						"newnum": globalOverviewVaccineNewnum,
+					},
+				},
+				"detailed": detail,
+			},
+			"China": {
+				"overview": {
+					"nowcases": {
+						"nownum": numCases[2],
+						"newnum": numCases[2] - numDeaths[2] - numRecovered[2],
+					},
+					"cases": {
+						"nownum": numCases[3],
+					},
+					"deaths": {
+						"nownum": numDeaths[2],
+						"newnum": numDeaths[3],
+					},
+					"recovered": {
+						"nownum": numRecovered[2],
+						"newnum": numRecovered[3],
+					},
+					"vaccine": {
+						"nownum": numVaccine[2],
+						"newnum": numVaccine[3],
+					},
+				},
+			}
+		}
+	})
 }
