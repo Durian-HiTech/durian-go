@@ -10,7 +10,7 @@ import (
 // @title Durian Covid-19 Golang Backend
 // @version 1.0
 // @description Durian HiTech
-// @schemes http https
+// @schemes https
 func main() {
 	docs.SwaggerInfo.Title = "Durian HiTech"
 	docs.SwaggerInfo.Description = "This is Durian's Covid-19 Golang Backend"
