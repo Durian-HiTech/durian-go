@@ -394,3 +394,210 @@ func QueryAllCovidRecoveredsResponseProvince(province string) (response []model.
 		return response, false
 	}
 }
+
+// 查询中国或世界的累计死亡数和新增死亡数
+func QueryDeathOverview() (accumulative_deaths []model.CovidDeathsNoDate, new_deaths []model.CovidDeathsNoDate, nums []int64, notFound bool) {
+	var deaths []model.CovidDeaths
+	err := global.DB.Order("date desc, country_name asc").Find(&deaths).Error
+	if err != nil && errors.Is(err, gorm.ErrRecordNotFound) {
+		return accumulative_deaths, new_deaths, nums, true
+	} else if err != nil && !errors.Is(err, gorm.ErrRecordNotFound) {
+		panic(err)
+	} else {
+		var global_death_today int64
+		var global_death_yesterday int64
+		var china_death_today int64
+		var china_death_yesterday int64
+
+		length := len(deaths)
+		cur_date := deaths[0].Date
+		i := 0
+		flag := 0
+
+		global_death_today = 0
+		global_death_yesterday = 0
+		china_death_today = 0
+		china_death_yesterday = 0
+
+		for i = 0; i < length; i++ {
+			if deaths[i].Date == cur_date {
+				if flag == 0 && deaths[i].CountryName == "Global" {
+					global_death_today = int64(deaths[i].Info)
+					flag += 1
+					continue
+				}
+				accumulative_deaths = append(accumulative_deaths, model.CovidDeathsNoDate{CountryName: deaths[i].CountryName, Info: deaths[i].Info})
+				if deaths[i].CountryName == "China" {
+					china_death_today = int64(deaths[i].Info)
+				}
+
+			} else {
+				cur_date = deaths[i].Date
+				break
+			}
+		}
+		len_acc := len(accumulative_deaths)
+		for ; i < length; i++ {
+			if deaths[i].Date == cur_date {
+				if flag == 1 && deaths[i].CountryName == "Global" {
+					global_death_yesterday = int64(deaths[i].Info)
+					flag += 1
+					continue
+				}
+				j := 0
+				for j = 0; j < len_acc; j++ {
+					if accumulative_deaths[j].CountryName == deaths[i].CountryName {
+						new_deaths = append(new_deaths, model.CovidDeathsNoDate{CountryName: deaths[i].CountryName, Info: accumulative_deaths[j].Info - deaths[i].Info})
+						break
+					}
+				}
+				if j == len_acc { // 说明没找到这个国家在最新一天的累计死亡数，用0x3f3f3f3f标记
+					new_deaths = append(new_deaths, model.CovidDeathsNoDate{CountryName: deaths[i].CountryName, Info: 0x3f3f3f3f})
+				}
+				if deaths[i].CountryName == "China" {
+					china_death_yesterday = int64(deaths[i].Info)
+				}
+			} else {
+				break
+			}
+		}
+		nums = append(nums, global_death_today)
+		nums = append(nums, global_death_today-global_death_yesterday)
+		nums = append(nums, china_death_today)
+		nums = append(nums, china_death_today-china_death_yesterday)
+		return accumulative_deaths, new_deaths, nums, false
+	}
+}
+
+// 查询中国或世界的累计治愈数和新增治愈数
+func QueryRecoveredOverview() (accumulative_recovered []model.CovidRecoveredNoDate, new_recovered []model.CovidRecoveredNoDate, nums []int64, notFound bool) {
+	var recovered []model.CovidRecovered
+	err := global.DB.Order("date desc, country_name asc").Find(&recovered).Error
+	if err != nil && errors.Is(err, gorm.ErrRecordNotFound) {
+		return accumulative_recovered, new_recovered, nums, true
+	} else if err != nil && !errors.Is(err, gorm.ErrRecordNotFound) {
+		panic(err)
+	} else {
+		var global_recovered_today int64
+		var global_recovered_yesterday int64
+		var china_recovered_today int64
+		var china_recovered_yesterday int64
+
+		length := len(recovered)
+		cur_date := recovered[0].Date
+		i := 0
+		flag := 0
+
+		global_recovered_today = 0
+		global_recovered_yesterday = 0
+		china_recovered_today = 0
+		china_recovered_yesterday = 0
+
+		for i = 0; i < length; i++ {
+			if recovered[i].Date == cur_date {
+				if flag == 0 && recovered[i].CountryName == "Global" {
+					global_recovered_today = int64(recovered[i].Info)
+					flag += 1
+					continue
+				}
+				accumulative_recovered = append(accumulative_recovered, model.CovidRecoveredNoDate{CountryName: recovered[i].CountryName, Info: recovered[i].Info})
+				if recovered[i].CountryName == "China" {
+					china_recovered_today = int64(recovered[i].Info)
+				}
+
+			} else {
+				cur_date = recovered[i].Date
+				break
+			}
+		}
+		for ; i < length; i++ {
+			if recovered[i].Date == cur_date {
+				if flag == 1 && recovered[i].CountryName == "Global" {
+					global_recovered_yesterday = int64(recovered[i].Info)
+					flag += 1
+					continue
+				}
+				if i > 196 && recovered[i-197].CountryName == recovered[i].CountryName {
+					new_recovered = append(new_recovered, model.CovidRecoveredNoDate{CountryName: recovered[i].CountryName, Info: recovered[i-197].Info - recovered[i].Info})
+				} else { // 说明没找到这个国家在最新一天的累计治愈数，用0x3f3f3f3f标记
+					new_recovered = append(new_recovered, model.CovidRecoveredNoDate{CountryName: recovered[i].CountryName, Info: 0x3f3f3f3f})
+				}
+				if recovered[i].CountryName == "China" {
+					china_recovered_yesterday = int64(recovered[i].Info)
+				}
+			} else {
+				break
+			}
+		}
+		nums = append(nums, global_recovered_today)
+		nums = append(nums, global_recovered_today-global_recovered_yesterday)
+		nums = append(nums, china_recovered_today)
+		nums = append(nums, china_recovered_today-china_recovered_yesterday)
+		return accumulative_recovered, new_recovered, nums, false
+	}
+}
+
+// 查询中国或世界的累计接种数和新增接种数
+func QueryVaccineOverview() (accumulative_vaccine []model.CovidVaccineNoDate, new_vaccine []model.CovidVaccineNoDate, nums []int64, notFound bool) {
+	var vaccine []model.CovidVaccine
+	err := global.DB.Order("date desc, country_name asc").Find(&vaccine).Error
+	if err != nil && errors.Is(err, gorm.ErrRecordNotFound) {
+		return accumulative_vaccine, new_vaccine, nums, true
+	} else if err != nil && !errors.Is(err, gorm.ErrRecordNotFound) {
+		panic(err)
+	} else {
+		var global_vaccine_today int64
+		var global_vaccine_yesterday int64
+		var china_vaccine_today int64
+		var china_vaccine_yesterday int64
+
+		length := len(vaccine)
+		cur_date := vaccine[0].Date
+		i := 0
+
+		global_vaccine_today = 0
+		global_vaccine_yesterday = 0
+		china_vaccine_today = 0
+		china_vaccine_yesterday = 0
+
+		for i = 0; i < length; i++ {
+			if vaccine[i].Date == cur_date {
+				if vaccine[i].CountryName == "Global" {
+					global_vaccine_today = int64(vaccine[i].Info)
+					continue
+				}
+				accumulative_vaccine = append(accumulative_vaccine, model.CovidVaccineNoDate{CountryName: vaccine[i].CountryName, Info: vaccine[i].Info})
+				if vaccine[i].CountryName == "China" {
+					china_vaccine_today = int64(vaccine[i].Info)
+				}
+
+			} else {
+				cur_date = vaccine[i].Date
+				break
+			}
+		}
+		for ; i < length; i++ {
+			if vaccine[i].Date == cur_date {
+				if vaccine[i].CountryName == "Global" {
+					global_vaccine_yesterday = int64(vaccine[i].Info)
+					continue
+				}
+				if i > 196 && vaccine[i-197].CountryName == vaccine[i].CountryName {
+					new_vaccine = append(new_vaccine, model.CovidVaccineNoDate{CountryName: vaccine[i].CountryName, Info: vaccine[i-197].Info - vaccine[i].Info})
+				} else { // 说明没找到这个国家在最新一天的累计治愈数，用0x3f3f3f3f标记
+					new_vaccine = append(new_vaccine, model.CovidVaccineNoDate{CountryName: vaccine[i].CountryName, Info: 0x3f3f3f3f})
+				}
+				if vaccine[i].CountryName == "China" {
+					china_vaccine_yesterday = int64(vaccine[i].Info)
+				}
+			} else {
+				break
+			}
+		}
+		nums = append(nums, global_vaccine_today)
+		nums = append(nums, global_vaccine_today-global_vaccine_yesterday)
+		nums = append(nums, china_vaccine_today)
+		nums = append(nums, china_vaccine_today-china_vaccine_yesterday)
+		return accumulative_vaccine, new_vaccine, nums, false
+	}
+}

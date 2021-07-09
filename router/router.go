@@ -57,5 +57,7 @@ func InitRouter(Router *gin.RouterGroup) {
 		DataRouter.POST("/list_all_covid_deaths_response_province", v1.ListAllCovidDeathsResponseProvince)
 		DataRouter.POST("/list_all_covid_recovereds_response_province", v1.ListAllCovidRecoveredsResponseProvince)
 		DataRouter.POST("/list_all_covid_cdrv_response_province", v1.ListAllCovidCDRVResponseProvince)
+
+		DataRouter.GET("/list_overview", v1.ListOverviewData)
 	}
 }

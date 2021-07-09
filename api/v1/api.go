@@ -650,3 +650,21 @@ func ListAllCovidCDRVResponseProvince(c *gin.Context) {
 	result := model.CovidCDRVResponseProvince{Case: covidListC, Deaths: covidListD, Recovered: covidListR, Vaccine: covidListV}
 	c.JSON(http.StatusOK, gin.H{"success": true, "message": "查询成功", "data": result})
 }
+
+// ListOverviewData doc
+// @description 获取世界或中国的现存确诊、新增确诊、累积确诊、累计及新增新冠感染/死亡/治愈【信息综合】，返回列表 [根据时间分组] [Province]
+// @Tags 数据
+// @Success 200 {string} string "{"success":true, "message":"查询成功","nowcases":{"nownum": 123, "newnum": 123}等数据}"
+// @Router /data/list_overview [GET]
+func ListOverviewData(c *gin.Context) {
+	// accumulative_deaths, new_deaths, num_deaths, _ := service.QueryDeathOverview()
+	//accumulative_recovered, new_recovered, num_recovered, _ := service.QueryRecoveredOverview()
+	accumulative_vaccine, new_vaccine, num_vaccine, _ := service.QueryVaccineOverview()
+
+	// c.JSON(http.StatusOK, gin.H{"success": true, "message": "查询成功", "accumulativedeaths": accumulative_deaths, "len1": len(accumulative_deaths),
+	// 	"len2": len(new_deaths), "testcountry": accumulative_deaths[50], "testcountry2": new_deaths[50], "nums": nums})
+	// c.JSON(http.StatusOK, gin.H{"success": true, "message": "查询成功", "accumulativerecovered": accumulative_recovered, "len1": len(accumulative_recovered),
+	// 	"len2": len(new_recovered), "testcountry": accumulative_recovered[50], "testcountry2": new_recovered[50], "nums": num_recovered})
+	c.JSON(http.StatusOK, gin.H{"success": true, "message": "查询成功", "accumulativevaccine": accumulative_vaccine, "len1": len(accumulative_vaccine),
+		"len2": len(new_vaccine), "testcountry": accumulative_vaccine[100], "testcountry2": new_vaccine[100], "nums": num_vaccine})
+}

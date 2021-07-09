@@ -189,6 +189,17 @@ paths:
             type: string
       tags:
       - 数据
+  /data/list_overview:
+    get:
+      description: 获取世界或中国的现存确诊、新增确诊、累积确诊、累计及新增新冠感染/死亡/治愈【信息综合】，返回列表 [根据时间分组] [Province]
+      responses:
+        "200":
+          description: '{"success":true, "message":"查询成功","nowcases":{"nownum": 123,
+            "newnum": 123}等数据}'
+          schema:
+            type: string
+      tags:
+      - 数据
   /data/query_data:
     post:
       description: 获取在数据库中直接存的 Json File
