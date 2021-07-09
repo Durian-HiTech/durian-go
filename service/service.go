@@ -69,7 +69,7 @@ func QueryASubscriptionByID(subscriptionID uint64) (subscription model.Subscript
 	}
 }
 
-// 根据用户名和其订阅城市名查询某个订阅情况
+// 根据用户 ID 和其订阅城市名查询某个订阅情况
 func QueryASubscriptionByUserIDAndCityName(userID uint64, cityName string) (subscription model.Subscription, notFound bool) {
 	err := global.DB.Where("user_id = ? AND city_name = ?", userID, cityName).First(&subscription).Error
 	if err != nil && errors.Is(err, gorm.ErrRecordNotFound) {
@@ -81,10 +81,10 @@ func QueryASubscriptionByUserIDAndCityName(userID uint64, cityName string) (subs
 	}
 }
 
-// 删除订阅城市
-func DeleteASubscription(subscriptionID uint64) (err error) {
+// 根据用户 ID 和其订阅城市名删除订阅城市
+func DeleteASubscription(userID uint64, cityName string) (err error) {
 	var subscription model.Subscription
-	err = global.DB.First(&subscription, subscriptionID).Error
+	err = global.DB.Where("user_id = ? AND city_name = ?", userID, cityName).First(&subscription).Error
 	_ = global.DB.Delete(&subscription).Error
 	return err
 }

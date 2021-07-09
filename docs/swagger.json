@@ -1,6 +1,5 @@
 {
     "schemes": [
-        "http",
         "https"
     ],
     "swagger": "2.0",
@@ -671,6 +670,13 @@
                 "parameters": [
                     {
                         "type": "string",
+                        "description": "用户ID",
+                        "name": "user_id",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
                         "description": "订阅ID",
                         "name": "subscription_id",
                         "in": "formData",
@@ -710,6 +716,13 @@
                         "type": "string",
                         "description": "用户ID",
                         "name": "user_id",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "城市名字",
+                        "name": "city_name",
                         "in": "formData",
                         "required": true
                     }

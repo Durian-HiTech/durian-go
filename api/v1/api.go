@@ -194,6 +194,7 @@ func Subscribe(c *gin.Context) {
 // @description 获取订阅列表
 // @Tags 订阅城市
 // @Param user_id formData string true "用户ID"
+// @Param city_name formData string true "城市名字"
 // @Success 200 {string} string "{"success":true, "message":"查询成功","data":"user的所有订阅"}"
 // @Failure 404 {string} string "{"success": false, "message": "用户ID不存在"}"
 // @Router /sub/list_all_subs [POST]
@@ -214,24 +215,16 @@ func ListAllSubscriptions(c *gin.Context) {
 // RemoveSubscription doc
 // @description 删除订阅
 // @Tags 订阅城市
+// @Param user_id formData string true "用户ID"
 // @Param subscription_id formData string true "订阅ID"
 // @Success 200 {string} string "{"success":true, "message":"删除成功"}"
 // @Failure 401 {string} string "{"success": false, "message": "数据库error, 一些其他错误"}"
 // @Failure 404 {string} string "{"success": false, "message": "用户ID不存在"}"
 // @Router /sub/del_sub [POST]
 func RemoveSubscription(c *gin.Context) {
-	subscriptionID, _ := strconv.ParseUint(c.Request.FormValue("subscription_id"), 0, 64)
-
-	_, notFoundSubscription := service.QueryASubscriptionByID(subscriptionID)
-	if notFoundSubscription {
-		c.JSON(404, gin.H{
-			"success": false,
-			"message": "这一订阅ID不存在",
-		})
-		return
-	}
-
-	if err := service.DeleteASubscription(subscriptionID); err != nil {
+	userID, _ := strconv.ParseUint(c.Request.FormValue("user_id"), 0, 64)
+	cityName := c.Request.FormValue("city_name")
+	if err := service.DeleteASubscription(userID, cityName); err != nil {
 		c.JSON(401, gin.H{"success": false, "message": err.Error()})
 	} else {
 		c.JSON(http.StatusOK, gin.H{"success": true, "message": "删除成功"})
