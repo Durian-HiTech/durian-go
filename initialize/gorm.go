@@ -50,8 +50,8 @@ func InitMySQL() {
 		&model.CovidDeaths{},
 		&model.CovidRecovered{},
 		&model.CovidVaccine{},
-		&model.CovidCasesProvince{},
-		&model.CovidDeathsProvince{},
-		&model.CovidRecoveredProvince{},
+		&model.CovidProvinceCases{},
+		&model.CovidProvinceDeaths{},
+		&model.CovidProvinceRecovered{},
 	)
 }

@@ -360,7 +360,7 @@ func QueryAllCovidVaccinesResponse() (response []model.CovidVaccineResponse) {
 }
 
 // 查询某地区的新冠感染人数（根据日期汇总） [Province]
-func QueryAllCovidCasesResponseProvince(province string) (response []model.CovidCasesProvince, notFound bool) {
+func QueryAllCovidCasesResponseProvince(province string) (response []model.CovidProvinceCases, notFound bool) {
 	err := global.DB.Where("country_name = ?", province).Order("date asc").Find(&response).Error
 	if err != nil && errors.Is(err, gorm.ErrRecordNotFound) {
 		return response, true
@@ -372,7 +372,7 @@ func QueryAllCovidCasesResponseProvince(province string) (response []model.Covid
 }
 
 // 查询某地区的新冠死亡人数（根据日期汇总） [Province]
-func QueryAllCovidDeathsResponseProvince(province string) (response []model.CovidDeathsProvince, notFound bool) {
+func QueryAllCovidDeathsResponseProvince(province string) (response []model.CovidProvinceDeaths, notFound bool) {
 	err := global.DB.Where("country_name = ?", province).Order("date asc").Find(&response).Error
 	if err != nil && errors.Is(err, gorm.ErrRecordNotFound) {
 		return response, true
@@ -384,7 +384,7 @@ func QueryAllCovidDeathsResponseProvince(province string) (response []model.Covi
 }
 
 // 查询某地区的新冠治愈人数（根据日期汇总） [Province]
-func QueryAllCovidRecoveredsResponseProvince(province string) (response []model.CovidRecoveredProvince, notFound bool) {
+func QueryAllCovidRecoveredsResponseProvince(province string) (response []model.CovidProvinceRecovered, notFound bool) {
 	err := global.DB.Where("country_name = ?", province).Order("date asc").Find(&response).Error
 	if err != nil && errors.Is(err, gorm.ErrRecordNotFound) {
 		return response, true
