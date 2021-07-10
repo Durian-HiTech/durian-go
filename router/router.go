@@ -26,6 +26,8 @@ func InitRouter(Router *gin.RouterGroup) {
 		NoticeRouter.GET("/list_all_questions", v1.ListAllQuestions)
 		NoticeRouter.GET("/list_all_rumor", v1.ListAllRumor)
 		NoticeRouter.POST("/rumor_detail", v1.ViewRumorDetail)
+		NoticeRouter.GET("/list_all_knowledge", v1.ListAllKnowledge)
+		NoticeRouter.POST("/knowledge_detail", v1.ViewKnowledgeDetail)
 	}
 	SubRouter := Router.Group("/sub")
 	{
