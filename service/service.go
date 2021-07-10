@@ -159,14 +159,17 @@ func CreateAQuestion(question *model.Question) (err error) {
 }
 
 // 根据问题 ID 查询一个问题
-func QueryAQuestionByID(questionID uint64) (question model.Question, notFound bool) {
+func QueryAQuestionByID(questionID uint64) (questionWithUsername model.QuestionWithUsername, notFound bool) {
+	var question model.Question
 	err := global.DB.Where("question_id = ?", questionID).First(&question).Error
 	if err != nil && errors.Is(err, gorm.ErrRecordNotFound) {
-		return question, true
+		return questionWithUsername, true
 	} else if err != nil && !errors.Is(err, gorm.ErrRecordNotFound) {
 		panic(err)
 	} else {
-		return question, false
+		user, _ := QueryAUserByID(question.UserID)
+		questionWithUsername = model.QuestionWithUsername{Question: question, Username: user.Username}
+		return questionWithUsername, false
 	}
 }
 
