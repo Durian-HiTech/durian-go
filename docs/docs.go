@@ -700,6 +700,13 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "string",
+                        "description": "用户ID",
+                        "name": "user_id",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
                         "description": "订阅ID",
                         "name": "subscription_id",
                         "in": "formData",
@@ -739,6 +746,13 @@ var doc = `{
                         "type": "string",
                         "description": "用户ID",
                         "name": "user_id",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "城市名字",
+                        "name": "city_name",
                         "in": "formData",
                         "required": true
                     }
@@ -980,7 +994,7 @@ var SwaggerInfo = swaggerInfo{
 	Version:     "1.0",
 	Host:        "",
 	BasePath:    "",
-	Schemes:     []string{"http", "https"},
+	Schemes:     []string{"https"},
 	Title:       "Durian Covid-19 Golang Backend",
 	Description: "Durian HiTech",
 }
