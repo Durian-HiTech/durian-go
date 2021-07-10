@@ -505,6 +505,37 @@
                 }
             }
         },
+        "/notice/knowledge_detail": {
+            "post": {
+                "description": "查看单条防疫知识",
+                "tags": [
+                    "防疫知识"
+                ],
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "公告ID",
+                        "name": "notice_id",
+                        "in": "formData",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "{\"success\":true, \"message\":\"查询成功\",\"data\":\"该条防疫知识的详细信息\"}",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "404": {
+                        "description": "{\"success\":true, \"message\":\"查询失败，防疫知识ID不存在\"}",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
         "/notice/list_all_comments": {
             "post": {
                 "description": "列出某个问题的全部评论",
@@ -536,7 +567,7 @@
                 }
             }
         },
-        "/notice/list_all_notice": {
+        "/notice/list_all_knowledge": {
             "get": {
                 "description": "获取所有防疫知识，返回列表",
                 "tags": [
@@ -545,6 +576,22 @@
                 "responses": {
                     "200": {
                         "description": "{\"success\":true, \"message\":\"查询成功\",\"data\":\"所有防疫知识\"\"}",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/notice/list_all_notice": {
+            "get": {
+                "description": "获取所有公告，返回列表",
+                "tags": [
+                    "公告"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "{\"success\":true, \"message\":\"查询成功\",\"data\":\"所有公告\"\"}",
                         "schema": {
                             "type": "string"
                         }
@@ -586,9 +633,9 @@
         },
         "/notice/notice_detail": {
             "post": {
-                "description": "查看单条防疫知识",
+                "description": "查看单条公告",
                 "tags": [
-                    "防疫知识"
+                    "公告"
                 ],
                 "parameters": [
                     {
@@ -601,13 +648,13 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "{\"success\":true, \"message\":\"查询成功\",\"data\":\"该条防疫知识的详细信息\"}",
+                        "description": "{\"success\":true, \"message\":\"查询成功\",\"data\":\"该条公告的详细信息\"}",
                         "schema": {
                             "type": "string"
                         }
                     },
                     "404": {
-                        "description": "{\"success\":true, \"message\":\"查询失败，防疫知识ID不存在\"}",
+                        "description": "{\"success\":true, \"message\":\"查询失败，公告ID不存在\"}",
                         "schema": {
                             "type": "string"
                         }

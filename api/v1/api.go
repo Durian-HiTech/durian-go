@@ -401,7 +401,7 @@ func ViewNoticeDetail(c *gin.Context) {
 // @description 获取所有防疫知识，返回列表
 // @Tags 防疫知识
 // @Success 200 {string} string "{"success":true, "message":"查询成功","data":"所有防疫知识""}"
-// @Router /notice/list_all_notice [GET]
+// @Router /notice/list_all_knowledge [GET]
 func ListAllKnowledge(c *gin.Context) {
 	knowledgeList := service.QueryAllKnowledge()
 	c.JSON(http.StatusOK, gin.H{"success": true, "message": "查询成功", "data": knowledgeList})
@@ -413,7 +413,7 @@ func ListAllKnowledge(c *gin.Context) {
 // @Param notice_id formData string true "公告ID"
 // @Success 200 {string} string "{"success":true, "message":"查询成功","data":"该条防疫知识的详细信息"}"
 // @Failure 404 {string} string "{"success":true, "message":"查询失败，防疫知识ID不存在"}"
-// @Router /notice/notice_detail [POST]
+// @Router /notice/knowledge_detail [POST]
 func ViewKnowledgeDetail(c *gin.Context) {
 	knowledgeID, _ := strconv.ParseUint(c.Request.FormValue("knowledge_id"), 0, 64)
 	knowledge, notFound := service.QueryAKnowledgeByID(knowledgeID)
