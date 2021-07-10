@@ -428,36 +428,36 @@ func QueryAllCovidRecoveredsResponseProvince(province string) (response []model.
 	}
 }
 
-//
-func QueryChinaTest() (detail []model.CovidChinaCases) {
-	// var cases []model.CovidChinaCases
+// 仅用于接口测试，测试二维数组
+func QueryChinaTest() (detail [][]model.CovidChinaCasesNoDate) {
+	var cases []model.CovidChinaCases
 
-	_ = global.DB.Order("date desc, province_name asc").Find(&detail).Error
-	// lenCases := len(cases)
+	_ = global.DB.Order("date desc, province_name asc").Find(&cases).Error
+	lenCases := len(cases)
 
-	// days := lenCases / 34         // 现共有534天
-	// for i := 0; i < days-1; i++ { // 最前一天（2020.1.22）没有新增，先不要了
-	// 	var temp []model.CovidChinaCasesNoDate
-	// 	for j := 0; j < 34; j++ {
-	// 		temp = append(temp, model.CovidChinaCasesNoDate{ProvinceName: cases[i*34+j].ProvinceName, Info: cases[i*34+j].Info})
-	// 	}
-	// 	detail = append(detail, temp)
-	// }
+	days := lenCases / 34         // 现共有534天
+	for i := 0; i < days-1; i++ { // 最前一天（2020.1.22）没有新增，先不要了
+		var temp []model.CovidChinaCasesNoDate
+		for j := 0; j < 34; j++ {
+			temp = append(temp, model.CovidChinaCasesNoDate{ProvinceName: cases[i*34+j].ProvinceName, Info: cases[i*34+j].Info})
+		}
+		detail = append(detail, temp)
+	}
 	return detail
 }
 
-//
-func QueryChinaOverviewAndDetails() (detail [][]model.CovidCDRProvince, notFound bool) {
+// 获取中国按日期构成的数据，每日数据下包含中国整体数据、各省数据
+func QueryChinaOverviewAndDetails() (data []model.CountryOverviewAndDetails, notFound bool) {
 	var cases []model.CovidChinaCases
 	var deaths []model.CovidChinaDeaths
 	var recovered []model.CovidChinaRecovered
 
-	err1 := global.DB.Order("date desc, province_name asc").Find(&cases).Error
-	err2 := global.DB.Order("date desc, province_name asc").Find(&deaths).Error
-	err3 := global.DB.Order("date desc, province_name asc").Find(&recovered).Error
+	err1 := global.DB.Order("date asc, province_name asc").Find(&cases).Error
+	err2 := global.DB.Order("date asc, province_name asc").Find(&deaths).Error
+	err3 := global.DB.Order("date asc, province_name asc").Find(&recovered).Error
 
 	if (err1 != nil && errors.Is(err1, gorm.ErrRecordNotFound)) || (err2 != nil && errors.Is(err2, gorm.ErrRecordNotFound)) || (err3 != nil && errors.Is(err3, gorm.ErrRecordNotFound)) {
-		return detail, true
+		return data, true
 	} else if err1 != nil && !errors.Is(err1, gorm.ErrRecordNotFound) {
 		panic(err1)
 	} else if err2 != nil && !errors.Is(err2, gorm.ErrRecordNotFound) {
@@ -468,23 +468,67 @@ func QueryChinaOverviewAndDetails() (detail [][]model.CovidCDRProvince, notFound
 		lenCases := len(cases)
 		lenDeaths := len(deaths)
 		lenRecovered := len(recovered)
-		fmt.Print(lenCases)
 		if (lenCases != lenDeaths) || (lenCases != lenRecovered) || (lenDeaths != lenRecovered) {
-			return detail, true
+			fmt.Print(lenCases)
+			return data, true
 		}
-		days := lenCases / 34         // 现共有534天
-		for i := 0; i < days-1; i++ { // 最前一天（2020.1.22）没有新增，先不要了
-			var temp []model.CovidCDRProvince
+		days := lenCases / 34 // 现共有535天
+		for i := 0; i < days; i++ {
+			var detail []model.CovidCDRProvince
+			var casesNum uint64
+			var casesNewNum uint64
+			var casesNowNum uint64
+			var deathsNum uint64
+			var deathsNewNum uint64
+			var recoveredNum uint64
+			var recoveredNewNum uint64
+			var vaccineNum uint64
+			var vaccineNewNum uint64
 			for j := 0; j < 34; j++ {
-				temp = append(temp, model.CovidCDRProvince{ProvinceName: cases[i*34+j].ProvinceName,
+				detail = append(detail, model.CovidCDRProvince{ProvinceName: cases[i*34+j].ProvinceName,
 					NowCases:  cases[i*34+j].Info - deaths[i*34+j].Info - recovered[i*34+j].Info,
 					Cases:     cases[i*34+j].Info,
 					Deaths:    deaths[i*34+j].Info,
 					Recovered: recovered[i*34+j].Info})
+				casesNum += cases[i*34+j].Info
+				deathsNum += deaths[i*34+j].Info
+				recoveredNum += recovered[i*34+j].Info
 			}
-			detail = append(detail, temp)
+
+			casesNowNum = casesNum - deathsNum - recoveredNum
+			curDate := cases[i*34].Date
+			var chinaVaccineToday model.CovidVaccine
+			err := global.DB.Where("country_name = ? AND date = ?", "China", curDate).First(&chinaVaccineToday).Error
+			if i != 0 { // 第二天及以后
+				casesNewNum = casesNum - data[i-1].Overview.Cases.NowNum
+				deathsNewNum = deathsNum - data[i-1].Overview.Deaths.NowNum
+				recoveredNewNum = recoveredNum - data[i-1].Overview.Recovered.NowNum
+				if err != nil && errors.Is(err, gorm.ErrRecordNotFound) { // covid_vaccine最新一天(7.9)的一定查不到，用前一天(7.8)的代替
+					fmt.Println(curDate)
+					fmt.Println(data[i-1].Overview.Vaccine.NowNum)
+					vaccineNum = data[i-1].Overview.Vaccine.NowNum
+					vaccineNewNum = data[i-1].Overview.Vaccine.NewNum
+				} else {
+					vaccineNum = chinaVaccineToday.Info
+					vaccineNewNum = chinaVaccineToday.Info - data[i-1].Overview.Vaccine.NowNum
+				}
+			} else {
+				casesNewNum = 0
+				deathsNewNum = 0
+				recoveredNewNum = 0
+				vaccineNewNum = 0
+			}
+
+			nowCasesItem := model.NowCases{NowNum: casesNowNum, NewNum: casesNewNum}
+			casesItem := model.Cases{NowNum: casesNum}
+			deathItem := model.Deaths{NowNum: deathsNum, NewNum: deathsNewNum}
+			recoveredItem := model.Recovered{NowNum: recoveredNum, NewNum: recoveredNewNum}
+			vaccineItem := model.Vaccine{NowNum: vaccineNum, NewNum: vaccineNewNum}
+			overviewItem := model.Overview{NowCases: nowCasesItem, Cases: casesItem, Deaths: deathItem, Vaccine: vaccineItem, Recovered: recoveredItem}
+			countryOverviewAndDetailsItem := model.CountryOverviewAndDetails{Date: curDate, Overview: overviewItem, Detailed: detail}
+			data = append(data, countryOverviewAndDetailsItem)
 		}
-		return detail, false
+		return data, false
 	}
 }
 
