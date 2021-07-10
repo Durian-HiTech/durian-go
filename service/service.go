@@ -150,6 +150,24 @@ func QueryAllNotice() (notice []model.Notice) {
 	return notice
 }
 
+// 根据防疫小知识 ID 查询知识详情
+func QueryAKnowledgeByID(KnowledgeID uint64) (knowledge model.Knowledge, notFound bool) {
+	err := global.DB.Where("knowledge_id = ?", KnowledgeID).First(&knowledge).Error
+	if err != nil && errors.Is(err, gorm.ErrRecordNotFound) {
+		return knowledge, true
+	} else if err != nil && !errors.Is(err, gorm.ErrRecordNotFound) {
+		panic(err)
+	} else {
+		return knowledge, false
+	}
+}
+
+// 查询所有防疫小知识
+func QueryAllKnowledge() (knowledge []model.Knowledge) {
+	global.DB.Find(&knowledge)
+	return knowledge
+}
+
 // 创建一个知识版块下的问题
 func CreateAQuestion(question *model.Question) (err error) {
 	if err = global.DB.Create(&question).Error; err != nil {

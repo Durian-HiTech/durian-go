@@ -44,6 +44,13 @@ type Rumor struct {
 	RumorCreatedTime time.Time `json:"rumor_created_time"`
 }
 
+// 防疫小知识
+type Knowledge struct {
+	KnowledgeID      uint64 `gorm:"primary_key;" json:"knowledge_id"`
+	KnowledgeTitle   string `gorm:"size:55; not null" json:"knowledge_title"`
+	KnowledgeContent string `gorm:"size:2550; not null" json:"knowledge_content"`
+}
+
 // 知识版块中的问题
 type Question struct {
 	QuestionID      uint64    `gorm:"primary_key;" json:"question_id"`

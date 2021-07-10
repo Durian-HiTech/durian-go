@@ -552,13 +552,13 @@ var doc = `{
         },
         "/notice/list_all_notice": {
             "get": {
-                "description": "获取所有公告，返回列表",
+                "description": "获取所有防疫知识，返回列表",
                 "tags": [
-                    "公告"
+                    "防疫知识"
                 ],
                 "responses": {
                     "200": {
-                        "description": "{\"success\":true, \"message\":\"查询成功\",\"data\":\"所有公告\"\"}",
+                        "description": "{\"success\":true, \"message\":\"查询成功\",\"data\":\"所有防疫知识\"\"}",
                         "schema": {
                             "type": "string"
                         }
@@ -600,9 +600,9 @@ var doc = `{
         },
         "/notice/notice_detail": {
             "post": {
-                "description": "查看单条公告",
+                "description": "查看单条防疫知识",
                 "tags": [
-                    "公告"
+                    "防疫知识"
                 ],
                 "parameters": [
                     {
@@ -615,13 +615,13 @@ var doc = `{
                 ],
                 "responses": {
                     "200": {
-                        "description": "{\"success\":true, \"message\":\"查询成功\",\"data\":\"该条公告的详细信息\"}",
+                        "description": "{\"success\":true, \"message\":\"查询成功\",\"data\":\"该条防疫知识的详细信息\"}",
                         "schema": {
                             "type": "string"
                         }
                     },
                     "404": {
-                        "description": "{\"success\":true, \"message\":\"查询失败，公告ID不存在\"}",
+                        "description": "{\"success\":true, \"message\":\"查询失败，防疫知识ID不存在\"}",
                         "schema": {
                             "type": "string"
                         }
