@@ -56,5 +56,6 @@ func InitMySQL() {
 		&model.CovidProvinceCases{},
 		&model.CovidProvinceDeaths{},
 		&model.CovidProvinceRecovered{},
+		&model.FlightDomestic{},
 	)
 }

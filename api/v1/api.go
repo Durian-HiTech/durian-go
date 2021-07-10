@@ -478,6 +478,22 @@ func ViewNewsDetail(c *gin.Context) {
 	}
 }
 
+// ListAllFlights doc
+// @description 获取所有航班信息，返回列表
+// @Tags 出行
+// @Success 200 {string} string "{"success":true, "message":"查询成功","data":"所有航班信息""}"
+// @Router /travel/list_all_flights [GET]
+func ListAllFlights(c *gin.Context) {
+	flightList := service.QueryAllFlights()
+	c.JSON(http.StatusOK, gin.H{"success": true, "message": "查询成功", "data": flightList})
+}
+
+//----------------------------------------------------
+//----------------------------------------------------
+//------------------------新冠-------------------------
+//----------------------------------------------------
+//----------------------------------------------------
+
 // ListHighRiskAreas doc
 // @description 获取所有中高风险地区，返回列表
 // @Tags 数据

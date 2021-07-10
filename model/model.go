@@ -70,7 +70,7 @@ type Comment struct {
 	CommentID      uint64    `gorm:"primary_key;" json:"comment_id"`
 	UserID         uint64    `gorm:"not null" json:"user_id"`
 	QuestionID     uint64    `gorm:"not null" json:"question_id"`
-	CommentContent string    `gorm:"size:200;not null" json:"comment_content"`
+	CommentContent string    `gorm:"size:255;not null" json:"comment_content"`
 	CommentTime    time.Time `json:"comment_time"`
 	UserType       uint64    `gorm:"default:0" json:"user_type"`
 }
@@ -78,4 +78,20 @@ type Comment struct {
 type CommentWithUsername struct {
 	Comment
 	Username string `json:"username"`
+}
+
+type FlightDomestic struct {
+	AirlineName          string `gorm:"size:255;" json:"airline_name"`
+	FlightNumber         string `gorm:"size:255;" json:"flight_number"`
+	DepartureDate        string `gorm:"size:255;" json:"departure_date"`
+	ArrivalDate          string `gorm:"size:255;" json:"arrival_date"`
+	DepartureCityName    string `gorm:"size:255;" json:"departure_city_name"`
+	DepartureAirportName string `gorm:"size:255;" json:"departure_airport_name"`
+	ArrivalCityName      string `gorm:"size:255;" json:"arrival_city_name"`
+	ArrivalAirportName   string `gorm:"size:255;" json:"arrival_airport_name"`
+}
+
+type FlightDomesticWithStatus struct {
+	FlightDomestic
+	Status string `gorm:"size:255;" json:"status"`
 }

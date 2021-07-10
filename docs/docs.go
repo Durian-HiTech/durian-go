@@ -889,6 +889,22 @@ var doc = `{
                 }
             }
         },
+        "/travel/list_all_flights": {
+            "get": {
+                "description": "获取所有航班信息，返回列表",
+                "tags": [
+                    "出行"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "{\"success\":true, \"message\":\"查询成功\",\"data\":\"所有航班信息\"\"}",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
         "/user/info": {
             "post": {
                 "description": "查看用户个人信息",
