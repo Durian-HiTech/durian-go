@@ -35,7 +35,7 @@ func Index(c *gin.Context) {
 func Register(c *gin.Context) {
 	username := c.Request.FormValue("username")
 	password := c.Request.FormValue("password")
-	// info := c.Request.FormValue("info")
+	info := c.Request.FormValue("info")
 	userType, _ := strconv.ParseUint(c.Request.FormValue("user_type"), 0, 64)
 	affiliation := c.Request.FormValue("affiliation")
 	user := model.User{Username: username, Password: password, Info: info, UserType: userType, Affiliation: affiliation}
