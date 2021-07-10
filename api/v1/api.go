@@ -38,7 +38,7 @@ func Register(c *gin.Context) {
 	// info := c.Request.FormValue("info")
 	userType, _ := strconv.ParseUint(c.Request.FormValue("user_type"), 0, 64)
 	affiliation := c.Request.FormValue("affiliation")
-	user := model.User{Username: username, Password: password, Info: info, UserType: userType, Affiliation: affiliation}
+	user := model.User{Username: username, Password: password, UserType: userType, Affiliation: affiliation}
 	_, notFound := service.QueryAUserByUsername(username)
 	if notFound {
 		service.CreateAUser(&user)
@@ -648,8 +648,26 @@ func ListAllCovidCDRVResponseProvince(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"success": true, "message": "查询成功", "data": result})
 }
 
+// ListCountryOverviewData doc
+// @description 获取中国或其它某个国家的各类整体数据，以及国家二级行政单位的现存确诊、新增确诊、累积确诊、累计及新增新冠感染/死亡/治愈【信息综合】，返回列表 [根据省份分组] [Province]
+// @Tags 数据
+// @Param country formData string true "国家名"
+// @Success 200 {string} string "{"success":true, "message":"查询成功","data":{本部分格式见ChinaAnalysisSample.json}"
+// @Router /data/list_country_overview [POST]
+func ListCountryOverviewData(c *gin.Context) {
+	countryName := c.Request.FormValue("country")
+	var data []model.CovidChinaCases
+	if countryName == "China" {
+		data = service.QueryChinaTest()
+	}
+	//else {
+	// 	data = service.QueryOtherCountryOverviewAndDetails(countryName)
+	// }
+	c.JSON(http.StatusOK, gin.H{"success": true, "message": "查询成功", "data": data})
+}
+
 // ListOverviewData doc
-// @description 获取世界或中国的现存确诊、新增确诊、累积确诊、累计及新增新冠感染/死亡/治愈【信息综合】，返回列表 [根据时间分组] [Province]
+// @description 获取世界或中国的现存确诊、新增确诊、累积确诊、累计及新增新冠感染/死亡/治愈【信息综合】，返回列表 [根据国家分组] [Province]
 // @Tags 数据
 // @Success 200 {string} string "{"success":true, "message":"查询成功","nowcases":{"nownum": 123, "newnum": 123}等数据}"
 // @Router /data/list_overview [GET]

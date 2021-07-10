@@ -180,6 +180,68 @@ type CovidProvinceRecovered struct {
 	Info        string    `gorm:"size:2555550;" json:"value"`
 }
 
+// ----------------------------------------------------------------------------
+// ----------------------------------------------------------------------------
+// ----------------------------------------------------------------------------
+// ---------------------------某个国家的overview数据-----------------------------
+// ----------------------------------------------------------------------------
+// ----------------------------------------------------------------------------
+// ----------------------------------------------------------------------------
+
+// 某国家的overvie+detail列表 [临时表]
+type CountryOverviewAndDetails struct {
+	Date     time.Time          `json:"date"`
+	Overview Overview           `json:"overview"`
+	Detailed []CovidCDRProvince `json:"detailed"`
+}
+
+// 某国家的overview数据 [临时表]
+type Overview struct {
+	NowCases  NowCases  `json:"now_cases"`
+	Cases     Cases     `json:"cases"`
+	Deaths    Deaths    `json:"deaths"`
+	Vaccine   Vaccine   `json:"vaccine"`
+	Recovered Recovered `json:"recovered"`
+}
+
+// 某一天的确诊数（现存确诊、新增确诊） 【临时表】
+type NowCases struct {
+	NowNum uint64 `json:"now_num"`
+	NewNum uint64 `json:"new_num"`
+}
+
+// 某一天的累积确诊数 [临时表]
+type Cases struct {
+	NowNum uint64 `json:"now_num"`
+}
+
+// 某一天的死亡数（累计死亡、新增死亡） [临时表]
+type Deaths struct {
+	NowNum uint64 `json:"now_num"`
+	NewNum uint64 `json:"new_num"`
+}
+
+// 某一天的接种数（累计接种、新增接种） [临时表]
+type Vaccine struct {
+	NowNum uint64 `json:"now_num"`
+	NewNum uint64 `json:"new_num"`
+}
+
+// 某一天的治愈数（累计死亡、新增死亡） [临时表]
+type Recovered struct {
+	NowNum uint64 `json:"now_num"`
+	NewNum uint64 `json:"new_num"`
+}
+
+// 省份某一天的信息 [临时表]
+type CovidCDRProvince struct {
+	ProvinceName string `gorm:"size:255;" json:"name"`
+	NowCases     uint64 `json:"now_cases"`
+	Cases        uint64 `json:"cases"`
+	Deaths       uint64 `json:"deaths"`
+	Recovered    uint64 `json:"recovered"`
+}
+
 // 新冠感染/死亡/治愈/疫苗接种人数【信息综合】 [根据时间分组]
 type CovidCDRVResponseProvince struct {
 	Case      []CovidProvinceCases     `json:"cases"`

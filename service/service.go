@@ -2,6 +2,7 @@ package service
 
 import (
 	"errors"
+	"fmt"
 
 	"github.com/TualatinX/durian-go/global"
 	"github.com/TualatinX/durian-go/model"
@@ -403,6 +404,66 @@ func QueryAllCovidRecoveredsResponseProvince(province string) (response []model.
 		panic(err)
 	} else {
 		return response, false
+	}
+}
+
+//
+func QueryChinaTest() (detail []model.CovidChinaCases) {
+	// var cases []model.CovidChinaCases
+
+	_ = global.DB.Order("date desc, province_name asc").Find(&detail).Error
+	// lenCases := len(cases)
+
+	// days := lenCases / 34         // 现共有534天
+	// for i := 0; i < days-1; i++ { // 最前一天（2020.1.22）没有新增，先不要了
+	// 	var temp []model.CovidChinaCasesNoDate
+	// 	for j := 0; j < 34; j++ {
+	// 		temp = append(temp, model.CovidChinaCasesNoDate{ProvinceName: cases[i*34+j].ProvinceName, Info: cases[i*34+j].Info})
+	// 	}
+	// 	detail = append(detail, temp)
+	// }
+	return detail
+}
+
+//
+func QueryChinaOverviewAndDetails() (detail [][]model.CovidCDRProvince, notFound bool) {
+	var cases []model.CovidChinaCases
+	var deaths []model.CovidChinaDeaths
+	var recovered []model.CovidChinaRecovered
+
+	err1 := global.DB.Order("date desc, province_name asc").Find(&cases).Error
+	err2 := global.DB.Order("date desc, province_name asc").Find(&deaths).Error
+	err3 := global.DB.Order("date desc, province_name asc").Find(&recovered).Error
+
+	if (err1 != nil && errors.Is(err1, gorm.ErrRecordNotFound)) || (err2 != nil && errors.Is(err2, gorm.ErrRecordNotFound)) || (err3 != nil && errors.Is(err3, gorm.ErrRecordNotFound)) {
+		return detail, true
+	} else if err1 != nil && !errors.Is(err1, gorm.ErrRecordNotFound) {
+		panic(err1)
+	} else if err2 != nil && !errors.Is(err2, gorm.ErrRecordNotFound) {
+		panic(err2)
+	} else if err3 != nil && !errors.Is(err3, gorm.ErrRecordNotFound) {
+		panic(err3)
+	} else {
+		lenCases := len(cases)
+		lenDeaths := len(deaths)
+		lenRecovered := len(recovered)
+		fmt.Print(lenCases)
+		if (lenCases != lenDeaths) || (lenCases != lenRecovered) || (lenDeaths != lenRecovered) {
+			return detail, true
+		}
+		days := lenCases / 34         // 现共有534天
+		for i := 0; i < days-1; i++ { // 最前一天（2020.1.22）没有新增，先不要了
+			var temp []model.CovidCDRProvince
+			for j := 0; j < 34; j++ {
+				temp = append(temp, model.CovidCDRProvince{ProvinceName: cases[i*34+j].ProvinceName,
+					NowCases:  cases[i*34+j].Info - deaths[i*34+j].Info - recovered[i*34+j].Info,
+					Cases:     cases[i*34+j].Info,
+					Deaths:    deaths[i*34+j].Info,
+					Recovered: recovered[i*34+j].Info})
+			}
+			detail = append(detail, temp)
+		}
+		return detail, false
 	}
 }
 
