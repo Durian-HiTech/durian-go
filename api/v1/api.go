@@ -38,7 +38,7 @@ func Register(c *gin.Context) {
 	info := c.Request.FormValue("info")
 	userType, _ := strconv.ParseUint(c.Request.FormValue("user_type"), 0, 64)
 	affiliation := c.Request.FormValue("affiliation")
-	user := model.User{Username: username, Password: password, UserType: userType, Affiliation: affiliation}
+	user := model.User{Username: username, Password: password, Info: info, UserType: userType, Affiliation: affiliation}
 	_, notFound := service.QueryAUserByUsername(username)
 	if notFound {
 		service.CreateAUser(&user)
