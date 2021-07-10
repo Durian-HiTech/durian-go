@@ -35,7 +35,7 @@ func Index(c *gin.Context) {
 func Register(c *gin.Context) {
 	username := c.Request.FormValue("username")
 	password := c.Request.FormValue("password")
-	// info := c.Request.FormValue("info")
+	info := c.Request.FormValue("info")
 	userType, _ := strconv.ParseUint(c.Request.FormValue("user_type"), 0, 64)
 	affiliation := c.Request.FormValue("affiliation")
 	user := model.User{Username: username, Password: password, Info: info, UserType: userType, Affiliation: affiliation}
@@ -693,11 +693,16 @@ func ListCountryOverviewData(c *gin.Context) {
 		}
 		c.JSON(http.StatusOK, gin.H{"success": true, "message": "查询成功", "data": dataRevert})
 		return
+	} else {
+		data = service.QueryOtherCountryOverviewAndDetails(countryName)
+		var dataRevert []model.CountryOverviewAndDetails
+		length := len(data)
+		for i := (length - 1); i >= 0; i-- {
+			dataRevert = append(dataRevert, data[i])
+		}
+		c.JSON(http.StatusOK, gin.H{"success": true, "message": "查询成功", "data": dataRevert})
+		return
 	}
-	//else {
-	// 	data = service.QueryOtherCountryOverviewAndDetails(countryName)
-	// }
-	c.JSON(http.StatusOK, gin.H{"success": true, "message": "查询失败", "data": data[1]})
 }
 
 // ListOverviewData doc

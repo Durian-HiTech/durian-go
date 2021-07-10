@@ -1,6 +1,7 @@
 package service
 
 import (
+	"encoding/json"
 	"errors"
 	"fmt"
 
@@ -446,6 +447,106 @@ func QueryChinaTest() (detail [][]model.CovidChinaCasesNoDate) {
 	return detail
 }
 
+// 获取某个外国国家按日期构成的数据，每日数据下包含整体数据、各省数据
+func QueryOtherCountryOverviewAndDetails(countryName string) (data []model.CountryOverviewAndDetails) {
+	var countryCases []model.CovidProvinceCases
+	var countryDeaths []model.CovidProvinceDeaths
+	var countryRecovered []model.CovidProvinceRecovered
+	// 获取各个省份的信息
+	_ = global.DB.Where("country_name = ?", countryName).Order("date asc").Find(&countryCases).Error
+	_ = global.DB.Where("country_name = ?", countryName).Order("date asc").Find(&countryDeaths).Error
+	_ = global.DB.Where("country_name = ?", countryName).Order("date asc").Find(&countryRecovered).Error
+	lenCases := len(countryCases)
+	lenDeaths := len(countryDeaths)
+	lenRecovered := len(countryRecovered)
+	if (lenCases != lenDeaths) || (lenCases != lenRecovered) || (lenDeaths != lenRecovered) {
+		fmt.Print(lenCases)
+		return data
+	}
+
+	// 获取国家每天的整体信息：累计死亡、累计确诊、累计治愈
+	var caseCountry []model.CovidCases
+	var deathsCountry []model.CovidDeaths
+	var recoveredCountry []model.CovidRecovered
+	_ = global.DB.Where("country_name = ?", countryName).Order("date asc").Find(&caseCountry).Error
+	_ = global.DB.Where("country_name = ?", countryName).Order("date asc").Find(&deathsCountry).Error
+	_ = global.DB.Where("country_name = ?", countryName).Order("date asc").Find(&recoveredCountry).Error
+	dateLength := len(caseCountry)
+	fmt.Println(lenCases)
+	fmt.Println(dateLength)
+
+	for i := 0; i < lenCases; i++ { // 相当于日期
+		var detail []model.CovidCDRProvince
+		var casesNum uint64    // 今日累计确诊
+		var casesNewNum uint64 // 今日新增确诊
+		var casesNowNum uint64 // 今日现存确诊
+		var deathsNum uint64
+		var deathsNewNum uint64
+		var recoveredNum uint64
+		var recoveredNewNum uint64
+
+		// 解析第i天的数据
+		var casesMap map[string]uint64
+		var deathsMap map[string]uint64
+		var recoveredMap map[string]uint64
+		json.Unmarshal([]byte(countryCases[i].Info), &casesMap)
+		json.Unmarshal([]byte(countryDeaths[i].Info), &deathsMap)
+		json.Unmarshal([]byte(countryRecovered[i].Info), &recoveredMap)
+
+		for provinceName, casesProvinceNum := range casesMap {
+			deathsProvinceNum := deathsMap[provinceName]
+			recoveredProvinceNum := recoveredMap[provinceName]
+			casesProvinceNowNum := casesProvinceNum - deathsProvinceNum - recoveredProvinceNum
+			detail = append(detail, model.CovidCDRProvince{ProvinceName: provinceName, NowCases: casesProvinceNowNum,
+				Cases: casesProvinceNum, Deaths: deathsProvinceNum, Recovered: recoveredProvinceNum})
+
+		}
+		curDate := countryCases[i].Date
+		// _ = global.DB.Where("country_name = ? AND date = ?", countryName, curDate).First(&caseCountry).Error
+		// _ = global.DB.Where("country_name = ? AND date = ?", countryName, curDate).First(&deathsCountry).Error
+		// _ = global.DB.Where("country_name = ? AND date = ?", countryName, curDate).First(&recoveredCountry).Error
+		k := 0
+		for k = 0; k < dateLength; k++ { // 查找这一天的全国累计确诊、累计死亡、累计治愈
+			if caseCountry[k].Date == curDate {
+				casesNum = caseCountry[k].Info
+				deathsNum = deathsCountry[k].Info
+				recoveredNum = recoveredCountry[k].Info
+				break
+			}
+		}
+		if k == dateLength { // 没查到
+			casesNum = 0
+			deathsNum = 0
+			recoveredNum = 0
+		}
+
+		casesNowNum = casesNum - deathsNum - recoveredNum // 现存确诊=今日累计确诊-今日累计死亡-今日累计治愈
+		if i != 0 {                                       // 第二天及以后
+			casesNewNum = casesNum - data[i-1].Overview.Cases.NowNum // 新增确诊=今日累计确诊-昨日累计确诊
+			deathsNewNum = deathsNum - data[i-1].Overview.Deaths.NowNum
+			recoveredNewNum = recoveredNum - data[i-1].Overview.Recovered.NowNum
+		} else { // 第一天就认为全是0了
+			casesNewNum = 0
+			deathsNewNum = 0
+			recoveredNewNum = 0
+		}
+
+		nowCasesItem := model.NowCases{NowNum: casesNowNum, NewNum: casesNewNum}
+		casesItem := model.Cases{NowNum: casesNum}
+		deathItem := model.Deaths{NowNum: deathsNum, NewNum: deathsNewNum}
+		recoveredItem := model.Recovered{NowNum: recoveredNum, NewNum: recoveredNewNum}
+		vaccineItem := model.Vaccine{NowNum: 0, NewNum: 0} // 先填0，后续有需求再添加
+		overviewItem := model.Overview{NowCases: nowCasesItem, Cases: casesItem, Deaths: deathItem, Vaccine: vaccineItem, Recovered: recoveredItem}
+		countryOverviewAndDetailsItem := model.CountryOverviewAndDetails{Date: curDate, Overview: overviewItem, Detailed: detail}
+		data = append(data, countryOverviewAndDetailsItem)
+	}
+
+	return data
+	// err2 := global.DB.Order("date asc, country_name asc").Find(&countryDeaths).Error
+	// err3 := global.DB.Order("date asc, country_name asc").Find(&countryRecovered).Error
+
+}
+
 // 获取中国按日期构成的数据，每日数据下包含中国整体数据、各省数据
 func QueryChinaOverviewAndDetails() (data []model.CountryOverviewAndDetails, notFound bool) {
 	var cases []model.CovidChinaCases
@@ -482,8 +583,8 @@ func QueryChinaOverviewAndDetails() (data []model.CountryOverviewAndDetails, not
 			var deathsNewNum uint64
 			var recoveredNum uint64
 			var recoveredNewNum uint64
-			var vaccineNum uint64
-			var vaccineNewNum uint64
+			// var vaccineNum uint64
+			// var vaccineNewNum uint64
 			for j := 0; j < 34; j++ {
 				detail = append(detail, model.CovidCDRProvince{ProvinceName: cases[i*34+j].ProvinceName,
 					NowCases:  cases[i*34+j].Info - deaths[i*34+j].Info - recovered[i*34+j].Info,
@@ -497,33 +598,33 @@ func QueryChinaOverviewAndDetails() (data []model.CountryOverviewAndDetails, not
 
 			casesNowNum = casesNum - deathsNum - recoveredNum
 			curDate := cases[i*34].Date
-			var chinaVaccineToday model.CovidVaccine
-			err := global.DB.Where("country_name = ? AND date = ?", "China", curDate).First(&chinaVaccineToday).Error
+			// var chinaVaccineToday model.CovidVaccine
+			// err := global.DB.Where("country_name = ? AND date = ?", "China", curDate).First(&chinaVaccineToday).Error
 			if i != 0 { // 第二天及以后
 				casesNewNum = casesNum - data[i-1].Overview.Cases.NowNum
 				deathsNewNum = deathsNum - data[i-1].Overview.Deaths.NowNum
 				recoveredNewNum = recoveredNum - data[i-1].Overview.Recovered.NowNum
-				if err != nil && errors.Is(err, gorm.ErrRecordNotFound) { // covid_vaccine最新一天(7.9)的一定查不到，用前一天(7.8)的代替
-					fmt.Println(curDate)
-					fmt.Println(data[i-1].Overview.Vaccine.NowNum)
-					vaccineNum = data[i-1].Overview.Vaccine.NowNum
-					vaccineNewNum = data[i-1].Overview.Vaccine.NewNum
-				} else {
-					vaccineNum = chinaVaccineToday.Info
-					vaccineNewNum = chinaVaccineToday.Info - data[i-1].Overview.Vaccine.NowNum
-				}
+				// if err != nil && errors.Is(err, gorm.ErrRecordNotFound) { // covid_vaccine最新一天(7.9)的一定查不到，用前一天(7.8)的代替
+				// 	fmt.Println(curDate)
+				// 	fmt.Println(data[i-1].Overview.Vaccine.NowNum)
+				// 	vaccineNum = data[i-1].Overview.Vaccine.NowNum
+				// 	vaccineNewNum = data[i-1].Overview.Vaccine.NewNum
+				// } else {
+				// 	vaccineNum = chinaVaccineToday.Info
+				// 	vaccineNewNum = chinaVaccineToday.Info - data[i-1].Overview.Vaccine.NowNum
+				// }
 			} else {
 				casesNewNum = 0
 				deathsNewNum = 0
 				recoveredNewNum = 0
-				vaccineNewNum = 0
+				// vaccineNewNum = 0
 			}
 
 			nowCasesItem := model.NowCases{NowNum: casesNowNum, NewNum: casesNewNum}
 			casesItem := model.Cases{NowNum: casesNum}
 			deathItem := model.Deaths{NowNum: deathsNum, NewNum: deathsNewNum}
 			recoveredItem := model.Recovered{NowNum: recoveredNum, NewNum: recoveredNewNum}
-			vaccineItem := model.Vaccine{NowNum: vaccineNum, NewNum: vaccineNewNum}
+			vaccineItem := model.Vaccine{NowNum: 0, NewNum: 0}
 			overviewItem := model.Overview{NowCases: nowCasesItem, Cases: casesItem, Deaths: deathItem, Vaccine: vaccineItem, Recovered: recoveredItem}
 			countryOverviewAndDetailsItem := model.CountryOverviewAndDetails{Date: curDate, Overview: overviewItem, Detailed: detail}
 			data = append(data, countryOverviewAndDetailsItem)
@@ -705,6 +806,7 @@ func QueryVaccineOverview() (accumulativeVaccine []model.CovidVaccineNoDate, new
 
 		for i = 0; i < length; i++ {
 			if vaccine[i].Date == curDate {
+				// todo: 疫苗没有global数据
 				if vaccine[i].CountryName == "Global" {
 					globalVaccineToday = int64(vaccine[i].Info)
 					continue
