@@ -99,7 +99,7 @@ var doc = `{
         },
         "/data/list_all_covid_cdrv": {
             "get": {
-                "description": "获取所有地区的新冠感染/死亡/治愈/疫苗接种人数【信息综合】，返回列表",
+                "description": "获取所有地区的新冠感染/死亡/治愈/疫苗接种人数 [信息综合]，返回列表",
                 "tags": [
                     "数据"
                 ],
@@ -115,7 +115,7 @@ var doc = `{
         },
         "/data/list_all_covid_cdrv_response": {
             "get": {
-                "description": "获取所有地区的新冠感染/死亡/治愈/疫苗接种人数【信息综合】，返回列表 [根据时间分组]",
+                "description": "获取所有地区的新冠感染/死亡/治愈/疫苗接种人数 [信息综合]，返回列表 [根据时间分组]",
                 "tags": [
                     "数据"
                 ],
@@ -131,7 +131,7 @@ var doc = `{
         },
         "/data/list_all_covid_cdrv_response_province": {
             "post": {
-                "description": "获取所有地区的新冠感染/死亡/治愈【信息综合】，返回列表 [根据时间分组] [Province]",
+                "description": "获取所有地区的新冠感染/死亡/治愈 [信息综合]，返回列表 [根据时间分组] [Province]",
                 "tags": [
                     "数据"
                 ],
@@ -318,7 +318,7 @@ var doc = `{
         },
         "/data/list_country_overview": {
             "post": {
-                "description": "获取中国或其它某个国家的各类整体数据，以及国家二级行政单位的现存确诊、新增确诊、累积确诊、累计及新增新冠感染/死亡/治愈【信息综合】，返回列表 [根据省份分组] [Province]",
+                "description": "获取中国或其它某个国家的各类整体数据，以及国家二级行政单位的现存确诊、新增确诊、累积确诊、累计及新增新冠感染/死亡/治愈 [信息综合]，返回列表 [根据省份分组] [Province]",
                 "tags": [
                     "数据"
                 ],
@@ -343,7 +343,7 @@ var doc = `{
         },
         "/data/list_overview": {
             "get": {
-                "description": "获取世界或中国的现存确诊、新增确诊、累积确诊、累计及新增新冠感染/死亡/治愈【信息综合】，返回列表 [根据国家分组] [Province]",
+                "description": "获取世界或中国的现存确诊、新增确诊、累积确诊、累计及新增新冠感染/死亡/治愈 [信息综合]，返回列表 [根据国家分组] [Province]",
                 "tags": [
                     "数据"
                 ],

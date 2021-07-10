@@ -92,7 +92,7 @@ type CovidVaccineResponse struct {
 	Value []CovidVaccineNoDate `json:"value"`
 }
 
-// 新冠感染/死亡/治愈/疫苗接种人数【信息综合】
+// 新冠感染/死亡/治愈/疫苗接种人数 [信息综合]
 type CovidCDRV struct {
 	Case      []CovidCases     `json:"cases"`
 	Deaths    []CovidDeaths    `json:"deaths"`
@@ -100,7 +100,7 @@ type CovidCDRV struct {
 	Vaccine   []CovidVaccine   `json:"vaccine"`
 }
 
-// 新冠感染/死亡/治愈/疫苗接种人数【信息综合】 [根据时间分组]
+// 新冠感染/死亡/治愈/疫苗接种人数 [信息综合] [根据时间分组]
 type CovidCDRVResponse struct {
 	Case      []CovidCasesResponse     `json:"cases"`
 	Deaths    []CovidDeathsResponse    `json:"deaths"`
@@ -204,7 +204,7 @@ type Overview struct {
 	Recovered Recovered `json:"recovered"`
 }
 
-// 某一天的确诊数（现存确诊、新增确诊） 【临时表】
+// 某一天的确诊数（现存确诊、新增确诊） [临时表]
 type NowCases struct {
 	NowNum uint64 `json:"now_num"`
 	NewNum uint64 `json:"new_num"`
@@ -242,7 +242,7 @@ type CovidCDRProvince struct {
 	Recovered    uint64 `json:"recovered"`
 }
 
-// 新冠感染/死亡/治愈/疫苗接种人数【信息综合】 [根据时间分组]
+// 新冠感染/死亡/治愈/疫苗接种人数 [信息综合] [根据时间分组]
 type CovidCDRVResponseProvince struct {
 	Case      []CovidProvinceCases     `json:"cases"`
 	Deaths    []CovidProvinceDeaths    `json:"deaths"`

@@ -593,7 +593,7 @@ func ListAllCovidVaccinesResponse(c *gin.Context) {
 }
 
 // ListAllCovidCDRV doc
-// @description 获取所有地区的新冠感染/死亡/治愈/疫苗接种人数【信息综合】，返回列表
+// @description 获取所有地区的新冠感染/死亡/治愈/疫苗接种人数 [信息综合]，返回列表
 // @Tags 数据
 // @Success 200 {string} string "{"success":true, "message":"查询成功","data":"所有地区的新冠感染/死亡/治愈/疫苗接种人数""}"
 // @Router /data/list_all_covid_cdrv [GET]
@@ -607,7 +607,7 @@ func ListAllCovidCDRV(c *gin.Context) {
 }
 
 // ListAllCovidCDRV doc
-// @description 获取所有地区的新冠感染/死亡/治愈/疫苗接种人数【信息综合】，返回列表 [根据时间分组]
+// @description 获取所有地区的新冠感染/死亡/治愈/疫苗接种人数 [信息综合]，返回列表 [根据时间分组]
 // @Tags 数据
 // @Success 200 {string} string "{"success":true, "message":"查询成功","data":"所有地区的新冠感染/死亡/治愈/疫苗接种人数""}"
 // @Router /data/list_all_covid_cdrv_response [GET]
@@ -657,7 +657,7 @@ func ListAllCovidRecoveredsResponseProvince(c *gin.Context) {
 }
 
 // ListAllCovidCDRVProvince doc
-// @description 获取所有地区的新冠感染/死亡/治愈【信息综合】，返回列表 [根据时间分组] [Province]
+// @description 获取所有地区的新冠感染/死亡/治愈 [信息综合]，返回列表 [根据时间分组] [Province]
 // @Tags 数据
 // @Param province formData string true "区域名"
 // @Success 200 {string} string "{"success":true, "message":"查询成功","data":"所有地区的新冠感染/死亡/治愈/疫苗接种人数 [Province]"}"
@@ -676,7 +676,7 @@ func ListAllCovidCDRVResponseProvince(c *gin.Context) {
 }
 
 // ListCountryOverviewData doc
-// @description 获取中国或其它某个国家的各类整体数据，以及国家二级行政单位的现存确诊、新增确诊、累积确诊、累计及新增新冠感染/死亡/治愈【信息综合】，返回列表 [根据省份分组] [Province]
+// @description 获取中国或其它某个国家的各类整体数据，以及国家二级行政单位的现存确诊、新增确诊、累积确诊、累计及新增新冠感染/死亡/治愈 [信息综合]，返回列表 [根据省份分组] [Province]
 // @Tags 数据
 // @Param country formData string true "国家名"
 // @Success 200 {string} string "{"success":true, "message":"查询成功","data":{本部分格式见ChinaAnalysisSample.json}"
@@ -694,7 +694,7 @@ func ListCountryOverviewData(c *gin.Context) {
 }
 
 // ListOverviewData doc
-// @description 获取世界或中国的现存确诊、新增确诊、累积确诊、累计及新增新冠感染/死亡/治愈【信息综合】，返回列表 [根据国家分组] [Province]
+// @description 获取世界或中国的现存确诊、新增确诊、累积确诊、累计及新增新冠感染/死亡/治愈 [信息综合]，返回列表 [根据国家分组] [Province]
 // @Tags 数据
 // @Success 200 {string} string "{"success":true, "message":"查询成功","nowcases":{"nownum": 123, "newnum": 123}等数据}"
 // @Router /data/list_overview [GET]
