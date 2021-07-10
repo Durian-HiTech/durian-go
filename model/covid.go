@@ -111,6 +111,49 @@ type CovidCDRVResponse struct {
 // ----------------------------------------------------------------------------
 // ----------------------------------------------------------------------------
 // ----------------------------------------------------------------------------
+// ---------------------------中国各省份数据--------------------------------
+// ----------------------------------------------------------------------------
+// ----------------------------------------------------------------------------
+// ----------------------------------------------------------------------------
+type CovidChinaCases struct {
+	Date         time.Time `json:"date"`
+	ProvinceName string    `gorm:"size:255;" json:"name"`
+	Info         uint64    `json:"value"`
+}
+
+type CovidChinaDeaths struct {
+	Date         time.Time `json:"date"`
+	ProvinceName string    `gorm:"size:255;" json:"name"`
+	Info         uint64    `json:"value"`
+}
+
+type CovidChinaRecovered struct {
+	Date         time.Time `json:"date"`
+	ProvinceName string    `gorm:"size:255;" json:"name"`
+	Info         uint64    `json:"value"`
+}
+
+// [临时表]
+type CovidChinaCasesNoDate struct {
+	ProvinceName string `gorm:"size:255;" json:"name"`
+	Info         uint64 `json:"value"`
+}
+
+// [临时表]
+type CovidChinaDeathsNoDate struct {
+	ProvinceName string `gorm:"size:255;" json:"name"`
+	Info         uint64 `json:"value"`
+}
+
+// [临时表]
+type CovidChinaRecoveredNoDate struct {
+	ProvinceName string `gorm:"size:255;" json:"name"`
+	Info         uint64 `json:"value"`
+}
+
+// ----------------------------------------------------------------------------
+// ----------------------------------------------------------------------------
+// ----------------------------------------------------------------------------
 // ---------------------------省份数据--------------------------------
 // ----------------------------------------------------------------------------
 // ----------------------------------------------------------------------------
