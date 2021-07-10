@@ -40,6 +40,13 @@ func InitRouter(Router *gin.RouterGroup) {
 		NewsRouter.GET("/list_all_news", v1.ListAllNews)
 		NewsRouter.POST("/detail", v1.ViewNewsDetail)
 	}
+
+	TravelRouter := Router.Group("/travel")
+	{
+		TravelRouter.GET("/list_all_flights", v1.ListAllFlights)
+		TravelRouter.GET("/list_all_trains", v1.ListAllTrains)
+	}
+
 	DataRouter := Router.Group("/data")
 	{
 		DataRouter.GET("/list_all_high_risk_areas", v1.ListHighRiskAreas)

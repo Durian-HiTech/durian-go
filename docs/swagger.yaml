@@ -52,7 +52,7 @@ paths:
       - 数据
   /data/list_all_covid_cdrv:
     get:
-      description: 获取所有地区的新冠感染/死亡/治愈/疫苗接种人数【信息综合】，返回列表
+      description: 获取所有地区的新冠感染/死亡/治愈/疫苗接种人数 [信息综合]，返回列表
       responses:
         "200":
           description: '{"success":true, "message":"查询成功","data":"所有地区的新冠感染/死亡/治愈/疫苗接种人数""}'
@@ -62,7 +62,7 @@ paths:
       - 数据
   /data/list_all_covid_cdrv_response:
     get:
-      description: 获取所有地区的新冠感染/死亡/治愈/疫苗接种人数【信息综合】，返回列表 [根据时间分组]
+      description: 获取所有地区的新冠感染/死亡/治愈/疫苗接种人数 [信息综合]，返回列表 [根据时间分组]
       responses:
         "200":
           description: '{"success":true, "message":"查询成功","data":"所有地区的新冠感染/死亡/治愈/疫苗接种人数""}'
@@ -72,7 +72,7 @@ paths:
       - 数据
   /data/list_all_covid_cdrv_response_province:
     post:
-      description: 获取所有地区的新冠感染/死亡/治愈【信息综合】，返回列表 [根据时间分组] [Province]
+      description: 获取所有地区的新冠感染/死亡/治愈 [信息综合]，返回列表 [根据时间分组] [Province]
       parameters:
       - description: 区域名
         in: formData
@@ -191,7 +191,7 @@ paths:
       - 数据
   /data/list_country_overview:
     post:
-      description: 获取中国或其它某个国家的各类整体数据，以及国家二级行政单位的现存确诊、新增确诊、累积确诊、累计及新增新冠感染/死亡/治愈【信息综合】，返回列表
+      description: 获取中国或其它某个国家的各类整体数据，以及国家二级行政单位的现存确诊、新增确诊、累积确诊、累计及新增新冠感染/死亡/治愈 [信息综合]，返回列表
         [根据省份分组] [Province]
       parameters:
       - description: 国家名
@@ -208,7 +208,7 @@ paths:
       - 数据
   /data/list_overview:
     get:
-      description: 获取世界或中国的现存确诊、新增确诊、累积确诊、累计及新增新冠感染/死亡/治愈【信息综合】，返回列表 [根据国家分组] [Province]
+      description: 获取世界或中国的现存确诊、新增确诊、累积确诊、累计及新增新冠感染/死亡/治愈 [信息综合]，返回列表 [根据国家分组] [Province]
       responses:
         "200":
           description: '{"success":true, "message":"查询成功","nowcases":{"nownum": 123,
@@ -563,6 +563,26 @@ paths:
             type: string
       tags:
       - 订阅城市
+  /travel/list_all_flights:
+    get:
+      description: 获取所有航班信息，返回列表
+      responses:
+        "200":
+          description: '{"success":true, "message":"查询成功","data":"所有航班信息""}'
+          schema:
+            type: string
+      tags:
+      - 出行
+  /travel/list_all_trains:
+    get:
+      description: 获取所有火车信息，返回列表
+      responses:
+        "200":
+          description: '{"success":true, "message":"查询成功","data":"所有火车信息""}'
+          schema:
+            type: string
+      tags:
+      - 出行
   /user/info:
     post:
       description: 查看用户个人信息

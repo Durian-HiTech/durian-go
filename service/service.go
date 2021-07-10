@@ -235,6 +235,32 @@ func QueryAllComments(questionID uint64) (resWithUsername []model.CommentWithUse
 	return resWithUsername
 }
 
+// 查看所有国内航班
+func QueryAllFlights() (flightDomesticWithStatus []model.FlightDomesticWithStatus) {
+	var flights []model.FlightDomestic
+	global.DB.Find(&flights)
+	for _, v := range flights {
+		flightDomesticWithStatus = append(flightDomesticWithStatus, model.FlightDomesticWithStatus{FlightDomestic: v, Status: "已取消"})
+	}
+	return flightDomesticWithStatus
+}
+
+// 查看所有国内列车
+func QueryAllTrains() (trainDomesticWithStatus []model.TrainDomesticWithStatus) {
+	var trains []model.TrainDomestic
+	global.DB.Find(&trains)
+	for _, v := range trains {
+		trainDomesticWithStatus = append(trainDomesticWithStatus, model.TrainDomesticWithStatus{TrainDomestic: v, Status: "预计准点"})
+	}
+	return trainDomesticWithStatus
+}
+
+//----------------------------------------------------
+//----------------------------------------------------
+//------------------------新冠数据---------------------
+//----------------------------------------------------
+//----------------------------------------------------
+
 // 查询所有高风险地区
 func QueryAllHighRiskAreas() (areas []model.HighRiskArea) {
 	global.DB.Find(&areas)
