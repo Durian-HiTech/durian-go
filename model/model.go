@@ -62,3 +62,8 @@ type Comment struct {
 	CommentTime    time.Time `json:"comment_time"`
 	UserType       uint64    `gorm:"default:0" json:"user_type"`
 }
+
+type CommentWithUsername struct {
+	Comment  Comment
+	Username string `json:"username"`
+}

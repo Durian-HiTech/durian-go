@@ -185,8 +185,9 @@ func CreateAComment(comment *model.Comment) (err error) {
 }
 
 // 列出某个问题的所有评论
-func QueryAllComments(questionID uint64) (res []model.Comment) {
+func QueryAllComments(questionID uint64) (resWithUsername []model.CommentWithUsername) {
 	var comments []model.Comment
+	var res []model.Comment
 	global.DB.Where("question_id = ?", questionID).Order("comment_time desc").Find(&comments)
 	// 将置顶的评论提前，存入res
 	for _, e := range comments {
@@ -199,7 +200,11 @@ func QueryAllComments(questionID uint64) (res []model.Comment) {
 			res = append(res, e)
 		}
 	}
-	return res
+	for _, e := range res {
+		user, _ := QueryAUserByID(e.UserID)
+		resWithUsername = append(resWithUsername, model.CommentWithUsername{Comment: e, Username: user.Username})
+	}
+	return resWithUsername
 }
 
 // 查询所有高风险地区
