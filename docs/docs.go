@@ -868,6 +868,13 @@ var doc = `{
                         "name": "password",
                         "in": "formData",
                         "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "用户个人信息",
+                        "name": "info",
+                        "in": "formData",
+                        "required": true
                     }
                 ],
                 "responses": {
@@ -950,6 +957,13 @@ var doc = `{
                         "type": "string",
                         "description": "密码",
                         "name": "password",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "用户个人信息",
+                        "name": "info",
                         "in": "formData",
                         "required": true
                     },

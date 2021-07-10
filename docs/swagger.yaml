@@ -550,6 +550,11 @@ paths:
         name: password
         required: true
         type: string
+      - description: 用户个人信息
+        in: formData
+        name: info
+        required: true
+        type: string
       responses:
         "200":
           description: '{"success": false, "message": "没有该用户"}'
@@ -604,6 +609,11 @@ paths:
       - description: 密码
         in: formData
         name: password
+        required: true
+        type: string
+      - description: 用户个人信息
+        in: formData
+        name: info
         required: true
         type: string
       - description: '用户类型（0: 普通用户，1: 认证机构用户）'

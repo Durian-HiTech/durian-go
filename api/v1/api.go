@@ -35,7 +35,7 @@ func Index(c *gin.Context) {
 func Register(c *gin.Context) {
 	username := c.Request.FormValue("username")
 	password := c.Request.FormValue("password")
-	info := c.Request.FormValue("info")
+	// info := c.Request.FormValue("info")
 	userType, _ := strconv.ParseUint(c.Request.FormValue("user_type"), 0, 64)
 	affiliation := c.Request.FormValue("affiliation")
 	user := model.User{Username: username, Password: password, Info: info, UserType: userType, Affiliation: affiliation}
@@ -674,49 +674,58 @@ func ListOverviewData(c *gin.Context) {
 	// Global的detail部分
 	i := 0
 	var detail []map[string]string
-	lengCases := len(accumulativeCases)
+	lenCases := len(accumulativeCases)
 	lenDeaths := len(accumulativeDeaths)
 	lenVaccine := len(accumulativeVaccine)
-	// lenRecovered := len(accumulativeRecovered)
+	lenRecovered := len(accumulativeRecovered)
 
 	j := 0
 	k := 0
 	l := 0
-	for ; i < lengCases; i++ {
+	for ; i < lenCases; i++ {
 		m := make(map[string]string)
 		m["name"] = accumulativeCases[i].CountryName
-		m["cases"] = string(rune(accumulativeCases[i].Info))
-		m["newcases"] = string(rune(newCases[i].Info))
+		m["cases"] = strconv.FormatUint(accumulativeCases[i].Info, 10)
+		m["newcases"] = strconv.FormatUint(newCases[i].Info, 10)
 
 		for j = 0; j < lenDeaths; j++ {
 			if accumulativeDeaths[j].CountryName == accumulativeCases[i].CountryName {
-				m["deaths"] = string(rune(accumulativeDeaths[j].Info))
-				m["newdeaths"] = string(rune(newDeaths[j].Info))
+				m["deaths"] = strconv.FormatUint(accumulativeDeaths[j].Info, 10)
+				m["newdeaths"] = strconv.FormatUint(newDeaths[j].Info, 10)
 				break
 			}
 		}
 		for k = 0; k < lenVaccine; k++ {
-			if accumulativeRecovered[k].CountryName == accumulativeCases[i].CountryName {
-				m["vaccine"] = string(rune(accumulativeVaccine[k].Info))
-				m["newvaccine"] = string(rune(newVaccine[k].Info))
-				break
-			}
-		}
-		for l = 0; l < lenVaccine; l++ {
 			if accumulativeVaccine[k].CountryName == accumulativeCases[i].CountryName {
-				m["vaccine"] = string(rune(accumulativeVaccine[k].Info))
-				m["newvaccine"] = string(rune(newVaccine[k].Info))
+				m["vaccine"] = strconv.FormatUint(accumulativeVaccine[k].Info, 10)
+				m["newvaccine"] = strconv.FormatUint(newVaccine[k].Info, 10)
 				break
 			}
 		}
-		// if j < lenDeaths {
-
-		// }
-
-		m["nowcases"] = string(rune(int64(accumulativeCases[i].Info) - int64(accumulativeDeaths[i].Info) - int64(accumulativeRecovered[i].Info))) // 现存确诊=累计确诊-累计死亡-累计治愈
-
-		m["recovered"] = string(rune(accumulativeRecovered[i].Info))
-		m["newrecovered"] = string(rune(newRecovered[i].Info))
+		for l = 0; l < lenRecovered; l++ {
+			if accumulativeRecovered[l].CountryName == accumulativeCases[i].CountryName {
+				m["recovered"] = strconv.FormatUint(accumulativeRecovered[l].Info, 10)
+				m["newrecovered"] = strconv.FormatUint(newRecovered[l].Info, 10)
+				break
+			}
+		}
+		if j == lenDeaths {
+			m["deaths"] = "0"
+			m["newdeaths"] = "0"
+		}
+		if k == lenVaccine {
+			m["vaccine"] = "0"
+			m["newvaccine"] = "0"
+		}
+		if l == lenRecovered {
+			m["recovered"] = "0"
+			m["newrecovered"] = "0"
+		}
+		if j < lenDeaths && l < lenRecovered {
+			m["nowcases"] = strconv.FormatInt(int64(accumulativeCases[i].Info)-int64(accumulativeDeaths[j].Info)-int64(accumulativeRecovered[l].Info), 10) // 现存确诊=累计确诊-累计死亡-累计治愈
+		} else {
+			m["nowcases"] = "0"
+		}
 
 		detail = append(detail, m)
 	}
@@ -731,14 +740,14 @@ func ListOverviewData(c *gin.Context) {
 		m := make(map[string]string)
 		m["name"] = chinaAccumulativeCases[i].ProvinceName
 
-		m["cases"] = string(rune(chinaAccumulativeCases[i].Info))
-		m["nowcases"] = string(rune(int64(chinaAccumulativeCases[i].Info) - int64(chinaAccumulativeDeaths[i].Info) - int64(chinaAccumulativeRecovered[i].Info))) // 现存确诊=累计确诊-累计死亡-累计治愈
-		m["newcases"] = string(rune(chinaNewCases[i].Info))
+		m["cases"] = strconv.FormatUint(chinaAccumulativeCases[i].Info, 10)
+		m["nowcases"] = strconv.FormatInt(int64(chinaAccumulativeCases[i].Info)-int64(chinaAccumulativeDeaths[i].Info)-int64(chinaAccumulativeRecovered[i].Info), 10) // 现存确诊=累计确诊-累计死亡-累计治愈
+		m["newcases"] = strconv.FormatUint(chinaNewCases[i].Info, 10)
 
-		m["recovered"] = string(rune(chinaAccumulativeRecovered[i].Info))
-		m["newrecovered"] = string(rune(chinaNewRecovered[i].Info))
-		m["deaths"] = string(rune(chinaAccumulativeDeaths[i].Info))
-		m["newdeaths"] = string(rune(chinaNewDeaths[i].Info))
+		m["recovered"] = strconv.FormatUint(chinaAccumulativeRecovered[i].Info, 10)
+		m["newrecovered"] = strconv.FormatUint(chinaNewRecovered[i].Info, 10)
+		m["deaths"] = strconv.FormatUint(chinaAccumulativeDeaths[i].Info, 10)
+		m["newdeaths"] = strconv.FormatUint(chinaNewDeaths[i].Info, 10)
 
 		chinaDetail = append(chinaDetail, m)
 	}
@@ -748,6 +757,12 @@ func ListOverviewData(c *gin.Context) {
 		"data": gin.H{
 			"Global": gin.H{
 				"overview": gin.H{
+					// "len": gin.H{
+					// 	"lendeaths": lenDeaths,
+					// 	"lencases":  lenCases,
+					// 	"lenvac":    lenVaccine,
+					// 	"lenrec":    lenRecovered,
+					// },
 					"nowcases": gin.H{
 						"nownum": globalOverviewNowCases,
 						"newnum": globalOverviewNewCases,
