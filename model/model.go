@@ -53,6 +53,11 @@ type Question struct {
 	QuestionTime    time.Time `json:"question_time"`
 }
 
+type QuestionWithUsername struct {
+	Question
+	Username string `json:"username"`
+}
+
 // 知识版块中对问题的评论
 type Comment struct {
 	CommentID      uint64    `gorm:"primary_key;" json:"comment_id"`

@@ -171,9 +171,14 @@ func QueryAQuestionByID(questionID uint64) (question model.Question, notFound bo
 }
 
 // 查询所有问题
-func QueryAllQuestions() (questions []model.Question) {
+func QueryAllQuestions() (res []model.QuestionWithUsername) {
+	var questions []model.Question
 	global.DB.Order("question_time desc").Find(&questions)
-	return questions
+	for _, e := range questions {
+		user, _ := QueryAUserByID(e.UserID)
+		res = append(res, model.QuestionWithUsername{Question: e, Username: user.Username})
+	}
+	return res
 }
 
 // 创建一个对问题的评论
