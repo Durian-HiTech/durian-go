@@ -656,89 +656,140 @@ func ListOverviewData(c *gin.Context) {
 	accumulativeCases, newCases, numCases, _ := service.QueryCasesOverview()
 
 	// Global的overview部分
-	globalOverviewCases = numCases[0]                                     // 全球总确诊
-	globalOverviewNowCases = numCases[0] - numDeaths[0] - numRecovered[0] // 全球现存确诊=全球总确诊-全球总死亡-全球总治愈
-	globalOverviewNewCases = numCases[1]                                  // 全球新增确诊
+	globalOverviewCases := numCases[0]                                     // 全球总确诊
+	globalOverviewNowCases := numCases[0] - numDeaths[0] - numRecovered[0] // 全球现存确诊=全球总确诊-全球总死亡-全球总治愈
+	globalOverviewNewCases := numCases[1]                                  // 全球新增确诊
 
-	globalOverviewDeathsNownum = numDeaths[0]       // 全球累计死亡数
-	globalOverviewDeathsNewnum = numDeaths[1]       // 全球新增死亡数
-	globalOverviewRecoveredNownum = numRecovered[0] // 全球累计治愈数
-	globalOverviewRecoveredNewnum = numRecovered[1] // 全球新增治愈数
-	globalOverviewVaccineNownum = numVaccine[0]     // 全球累计疫苗接种数
-	globalOverviewVaccineNewnum = numVaccine[1]     // 全球新增疫苗接种数
+	globalOverviewDeathsNownum := numDeaths[0]       // 全球累计死亡数
+	globalOverviewDeathsNewnum := numDeaths[1]       // 全球新增死亡数
+	globalOverviewRecoveredNownum := numRecovered[0] // 全球累计治愈数
+	globalOverviewRecoveredNewnum := numRecovered[1] // 全球新增治愈数
+	globalOverviewVaccineNownum := numVaccine[0]     // 全球累计疫苗接种数
+	globalOverviewVaccineNewnum := numVaccine[1]     // 全球新增疫苗接种数
 
 	// Global的detail部分
 	i := 0
 	var detail []map[string]string
+	lengCases := len(accumulativeCases)
+	lenDeaths := len(accumulativeDeaths)
+	lenVaccine := len(accumulativeVaccine)
+	// lenRecovered := len(accumulativeRecovered)
 
-	for ; i < 197; i++ {
+	j := 0
+	k := 0
+	l := 0
+	for ; i < lengCases; i++ {
 		m := make(map[string]string)
 		m["name"] = accumulativeCases[i].CountryName
+		m["cases"] = string(rune(accumulativeCases[i].Info))
+		m["newcases"] = string(rune(newCases[i].Info))
 
-		m["cases"] = accumulativeCases[i].Info
-		m["nowcases"] = accumulativeCases[i].Info - accumulativeDeaths[i].Info - accumulativeRecovered[i] // 现存确诊=累计确诊-累计死亡-累计治愈
-		m["newcases"] = newCases[i].Info
+		for j = 0; j < lenDeaths; j++ {
+			if accumulativeDeaths[j].CountryName == accumulativeCases[i].CountryName {
+				m["deaths"] = string(rune(accumulativeDeaths[j].Info))
+				m["newdeaths"] = string(rune(newDeaths[j].Info))
+				break
+			}
+		}
+		for k = 0; k < lenVaccine; k++ {
+			if accumulativeRecovered[k].CountryName == accumulativeCases[i].CountryName {
+				m["vaccine"] = string(rune(accumulativeVaccine[k].Info))
+				m["newvaccine"] = string(rune(newVaccine[k].Info))
+				break
+			}
+		}
+		for l = 0; l < lenVaccine; l++ {
+			if accumulativeVaccine[k].CountryName == accumulativeCases[i].CountryName {
+				m["vaccine"] = string(rune(accumulativeVaccine[k].Info))
+				m["newvaccine"] = string(rune(newVaccine[k].Info))
+				break
+			}
+		}
+		// if j < lenDeaths {
 
-		m["vaccine"] = accumulativeVaccine[i].Info
-		m["newvaccine"] = newVaccine[i].Info
-		m["recovered"] = accumulativeRecovered[i].Info
-		m["newrecovered"] = newRecovered[i].Info
-		m["deaths"] = accumulativeDeaths[i].Info
-		m["newdeaths"] = newDeaths[i].Info
+		// }
+
+		m["nowcases"] = string(rune(int64(accumulativeCases[i].Info) - int64(accumulativeDeaths[i].Info) - int64(accumulativeRecovered[i].Info))) // 现存确诊=累计确诊-累计死亡-累计治愈
+
+		m["recovered"] = string(rune(accumulativeRecovered[i].Info))
+		m["newrecovered"] = string(rune(newRecovered[i].Info))
 
 		detail = append(detail, m)
 	}
 	// 中国部分
+	chinaAccumulativeDeaths, chinaNewDeaths, _ := service.QueryChinaProvinceDetailDeaths()
+	chinaAccumulativeRecovered, chinaNewRecovered, _ := service.QueryChinaProvinceDetailRecovered()
+	chinaAccumulativeCases, chinaNewCases, _ := service.QueryChinaProvinceDetailCases()
 
-	c.JSON(http.StatusOK, gin.H{"success": true, "message": "查询成功", 
-		"data": {
-			"Global": {
-				"overview": {
-					"nowcases": {
+	var chinaDetail []map[string]string
+
+	for i = 0; i < 34; i++ {
+		m := make(map[string]string)
+		m["name"] = chinaAccumulativeCases[i].ProvinceName
+
+		m["cases"] = string(rune(chinaAccumulativeCases[i].Info))
+		m["nowcases"] = string(rune(int64(chinaAccumulativeCases[i].Info) - int64(chinaAccumulativeDeaths[i].Info) - int64(chinaAccumulativeRecovered[i].Info))) // 现存确诊=累计确诊-累计死亡-累计治愈
+		m["newcases"] = string(rune(chinaNewCases[i].Info))
+
+		m["recovered"] = string(rune(chinaAccumulativeRecovered[i].Info))
+		m["newrecovered"] = string(rune(chinaNewRecovered[i].Info))
+		m["deaths"] = string(rune(chinaAccumulativeDeaths[i].Info))
+		m["newdeaths"] = string(rune(chinaNewDeaths[i].Info))
+
+		chinaDetail = append(chinaDetail, m)
+	}
+
+	// 输出
+	c.JSON(http.StatusOK, gin.H{"success": true, "message": "查询成功",
+		"data": gin.H{
+			"Global": gin.H{
+				"overview": gin.H{
+					"nowcases": gin.H{
 						"nownum": globalOverviewNowCases,
 						"newnum": globalOverviewNewCases,
 					},
-					"cases": {
+					"cases": gin.H{
 						"nownum": globalOverviewCases,
 					},
-					"deaths": {
+					"deaths": gin.H{
 						"nownum": globalOverviewDeathsNownum,
 						"newnum": globalOverviewDeathsNewnum,
 					},
-					"recovered": {
+					"recovered": gin.H{
 						"nownum": globalOverviewRecoveredNownum,
 						"newnum": globalOverviewRecoveredNewnum,
 					},
-					"vaccine": {
+					"vaccine": gin.H{
 						"nownum": globalOverviewVaccineNownum,
 						"newnum": globalOverviewVaccineNewnum,
 					},
 				},
 				"detailed": detail,
 			},
-			"China": {
-				"overview": {
-					"nowcases": {
+			"China": gin.H{
+				"overview": gin.H{
+					"nowcases": gin.H{
 						"nownum": numCases[2],
 						"newnum": numCases[2] - numDeaths[2] - numRecovered[2],
 					},
-					"cases": {
+					"cases": gin.H{
 						"nownum": numCases[3],
 					},
-					"deaths": {
+					"deaths": gin.H{
 						"nownum": numDeaths[2],
 						"newnum": numDeaths[3],
 					},
-					"recovered": {
+					"recovered": gin.H{
 						"nownum": numRecovered[2],
 						"newnum": numRecovered[3],
 					},
-					"vaccine": {
+					"vaccine": gin.H{
 						"nownum": numVaccine[2],
 						"newnum": numVaccine[3],
 					},
 				},
-			}
-		}
+				"detailed": chinaDetail,
+			},
+		},
 	})
 }
