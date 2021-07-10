@@ -40,10 +40,11 @@ func QueryAUserByUsername(username string) (user model.User, notFound bool) {
 	}
 }
 
-// 更新用户的用户名、密码信息
-func UpdateAUser(user *model.User, username string, password string) error {
+// 更新用户的用户名、密码、个人信息
+func UpdateAUser(user *model.User, username string, password string, info string) error {
 	user.Username = username
 	user.Password = password
+	user.Info = info
 	err := global.DB.Save(user).Error
 	return err
 }
