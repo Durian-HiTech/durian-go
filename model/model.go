@@ -64,6 +64,6 @@ type Comment struct {
 }
 
 type CommentWithUsername struct {
-	Comment  Comment
+	Comment
 	Username string `json:"username"`
 }
