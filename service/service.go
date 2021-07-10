@@ -171,9 +171,14 @@ func QueryAQuestionByID(questionID uint64) (question model.Question, notFound bo
 }
 
 // 查询所有问题
-func QueryAllQuestions() (questions []model.Question) {
+func QueryAllQuestions() (res []model.QuestionWithUsername) {
+	var questions []model.Question
 	global.DB.Order("question_time desc").Find(&questions)
-	return questions
+	for _, e := range questions {
+		user, _ := QueryAUserByID(e.UserID)
+		res = append(res, model.QuestionWithUsername{Question: e, Username: user.Username})
+	}
+	return res
 }
 
 // 创建一个对问题的评论
@@ -185,8 +190,9 @@ func CreateAComment(comment *model.Comment) (err error) {
 }
 
 // 列出某个问题的所有评论
-func QueryAllComments(questionID uint64) (res []model.Comment) {
+func QueryAllComments(questionID uint64) (resWithUsername []model.CommentWithUsername) {
 	var comments []model.Comment
+	var res []model.Comment
 	global.DB.Where("question_id = ?", questionID).Order("comment_time desc").Find(&comments)
 	// 将置顶的评论提前，存入res
 	for _, e := range comments {
@@ -199,7 +205,11 @@ func QueryAllComments(questionID uint64) (res []model.Comment) {
 			res = append(res, e)
 		}
 	}
-	return res
+	for _, e := range res {
+		user, _ := QueryAUserByID(e.UserID)
+		resWithUsername = append(resWithUsername, model.CommentWithUsername{Comment: e, Username: user.Username})
+	}
+	return resWithUsername
 }
 
 // 查询所有高风险地区
