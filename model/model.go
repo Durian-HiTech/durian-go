@@ -95,3 +95,18 @@ type FlightDomesticWithStatus struct {
 	FlightDomestic
 	Status string `gorm:"size:255;" json:"status"`
 }
+
+type TrainDomestic struct {
+	DepartureCity    string `gorm:"size:255;" json:"departure_city"`
+	DepartureTime    string `gorm:"size:255;" json:"departure_time"`
+	ArrivalCity      string `gorm:"size:255;" json:"arrival_city"`
+	ArrivalTime      string `gorm:"size:255;" json:"arrival_time"`
+	TrainNumber      string `gorm:"size:255;" json:"train_number"`
+	DepartureStation string `gorm:"size:255;" json:"departure_station"`
+	ArrivalStation   string `gorm:"size:255;" json:"arrival_station"`
+}
+
+type TrainDomesticWithStatus struct {
+	TrainDomestic
+	Status string `gorm:"size:255;" json:"status"`
+}

@@ -891,6 +891,22 @@
                 }
             }
         },
+        "/travel/list_all_trains": {
+            "get": {
+                "description": "获取所有火车信息，返回列表",
+                "tags": [
+                    "出行"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "{\"success\":true, \"message\":\"查询成功\",\"data\":\"所有火车信息\"\"}",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
         "/user/info": {
             "post": {
                 "description": "查看用户个人信息",

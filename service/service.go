@@ -244,6 +244,16 @@ func QueryAllFlights() (flightDomesticWithStatus []model.FlightDomesticWithStatu
 	return flightDomesticWithStatus
 }
 
+// 查看所有国内列车
+func QueryAllTrains() (trainDomesticWithStatus []model.TrainDomesticWithStatus) {
+	var trains []model.TrainDomestic
+	global.DB.Find(&trains)
+	for _, v := range trains {
+		trainDomesticWithStatus = append(trainDomesticWithStatus, model.TrainDomesticWithStatus{TrainDomestic: v, Status: "预计准点"})
+	}
+	return trainDomesticWithStatus
+}
+
 //----------------------------------------------------
 //----------------------------------------------------
 //------------------------新冠数据---------------------
