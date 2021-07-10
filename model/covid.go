@@ -242,6 +242,46 @@ type CovidCDRProvince struct {
 	Recovered    uint64 `json:"recovered"`
 }
 
+// 世界的overvie+detail列表 用于HomeData.json[临时表]
+type GlobalOverviewAndDetails struct {
+	Overview Overview                `json:"overview"`
+	Detailed []CovidDetailCDRCountry `json:"detailed"`
+}
+
+// 中国的overvie+detail列表 用于HomeData.json[临时表]
+type ChinaOverviewAndDetails struct {
+	Overview Overview                 `json:"overview"`
+	Detailed []CovidDetailCDRProvince `json:"detailed"`
+}
+
+// 某省份某一天的详细信息（多了新增死亡、新增治愈这几个数据） [临时表]
+type CovidDetailCDRProvince struct {
+	ProvinceName string `gorm:"size:255;" json:"name"`
+	Cases        uint64 `json:"cases"`
+	NowCases     uint64 `json:"now_cases"`
+	NewCases     uint64 `json:"new_cases"`
+	Vaccine      uint64 `json:"vaccine"`     // 其实是全空
+	NewVaccine   uint64 `json:"new_vaccine"` // 其实是全空
+	Recovered    uint64 `json:"recovered"`
+	NewRecovered uint64 `json:"new_recovered"`
+	Deaths       uint64 `json:"deaths"`
+	NewDeaths    uint64 `json:"new_deaths"`
+}
+
+// 某国家某一天的详细信息（多了新增死亡、新增治愈这几个数据） [临时表]
+type CovidDetailCDRCountry struct {
+	CountryName  string `gorm:"size:255;" json:"name"`
+	Cases        uint64 `json:"cases"`
+	NowCases     uint64 `json:"now_cases"`
+	NewCases     uint64 `json:"new_cases"`
+	Vaccine      uint64 `json:"vaccine"`     // 其实是全空
+	NewVaccine   uint64 `json:"new_vaccine"` // 其实是全空
+	Recovered    uint64 `json:"recovered"`
+	NewRecovered uint64 `json:"new_recovered"`
+	Deaths       uint64 `json:"deaths"`
+	NewDeaths    uint64 `json:"new_deaths"`
+}
+
 // 新冠感染/死亡/治愈/疫苗接种人数 [信息综合] [根据时间分组]
 type CovidCDRVResponseProvince struct {
 	Case      []CovidProvinceCases     `json:"cases"`
