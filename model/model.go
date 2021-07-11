@@ -46,9 +46,9 @@ type Rumor struct {
 
 // 防疫小知识
 type Knowledge struct {
-	KnowledgeID      uint64 `gorm:"primary_key;" json:"knowledge_id"`
-	KnowledgeTitle   string `gorm:"size:55; not null" json:"knowledge_title"`
-	KnowledgeContent string `gorm:"size:2550; not null" json:"knowledge_content"`
+	KnowledgeID    uint64 `gorm:"primary_key;" json:"knowledge_id"`
+	KnowledgeTitle string `gorm:"size:55; not null" json:"knowledge_title"`
+	KnowledgeLink  string `gorm:"size:2550; not null" json:"knowledge_link"`
 }
 
 // 知识版块中的问题
