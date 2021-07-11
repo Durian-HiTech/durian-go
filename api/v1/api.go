@@ -259,7 +259,7 @@ func ListSubscriptionsData(c *gin.Context) {
 	var information string
 	for i := 0; i < length; i++ {
 		if subscriptionsData[i].NewCases != 0 {
-			information += fmt.Sprintf("%s有%d个新增确诊,", subscriptionsData[i].ProvinceName, subscriptionsData[i].NewCases)
+			information += fmt.Sprintf("%s有 %d 个新增确诊病例\n", subscriptionsData[i].ProvinceName, subscriptionsData[i].NewCases)
 		}
 	}
 	informationLength := len(information)
