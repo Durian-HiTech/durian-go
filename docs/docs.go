@@ -703,7 +703,7 @@ var doc = `{
                 ],
                 "responses": {
                     "200": {
-                        "description": "{\"success\": true, \"message\": \"查看成功\", \"data\": \"全部问题\"}",
+                        "description": "{\"success\": true, \"message\": \"查看成功\", \"data\": \"全部问题列表\", \"recommend_questions\":\"推荐问题列表\"}",
                         "schema": {
                             "type": "string"
                         }

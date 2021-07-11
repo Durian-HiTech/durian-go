@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"math/rand"
 
 	"github.com/TualatinX/durian-go/global"
 	"github.com/TualatinX/durian-go/model"
@@ -239,14 +240,22 @@ func QueryAQuestionByID(questionID uint64) (QuestionWithUserInfo model.QuestionW
 }
 
 // 查询所有问题
-func QueryAllQuestions() (res []model.QuestionWithUserInfo) {
+func QueryAllQuestions() (res []model.QuestionWithUserInfo, recommendQuestions []model.QuestionWithUserInfo) {
 	var questions []model.Question
 	global.DB.Order("question_time desc").Find(&questions)
 	for _, e := range questions {
 		user, _ := QueryAUserByID(e.UserID)
 		res = append(res, model.QuestionWithUserInfo{Question: e, Username: user.Username, UserInfo: user.UserInfo})
 	}
-	return res
+	mapSelected := make(map[int]bool)
+	lenQuestions := len(questions)
+	for i := 0; i < 7; i++ {
+		mapSelected[int(rand.Intn(lenQuestions))] = true
+	}
+	for i, _ := range mapSelected {
+		recommendQuestions = append(recommendQuestions, res[i])
+	}
+	return res, recommendQuestions
 }
 
 // 创建一个对问题的评论

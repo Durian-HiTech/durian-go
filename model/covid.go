@@ -4,10 +4,11 @@ import "time"
 
 // 中高风险地区
 type HighRiskArea struct {
-	Type     string `gorm:"size:15;" json:"type"`
-	Province string `gorm:"size:25;" json:"province"`
-	District string `gorm:"size:25;" json:"district"`
-	Name     string `gorm:"size:105;" json:"name"`
+	Type       string `gorm:"size:15;" json:"type"`
+	Province   string `gorm:"size:25;" json:"province"`
+	District   string `gorm:"size:25;" json:"district"`
+	Name       string `gorm:"size:105;" json:"name"`
+	Coordinate string `gorm:"size:255;" json:"coordinate"`
 }
 
 // 直接传输数据
