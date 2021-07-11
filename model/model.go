@@ -49,6 +49,7 @@ type Knowledge struct {
 	KnowledgeID    uint64 `gorm:"primary_key;" json:"knowledge_id"`
 	KnowledgeTitle string `gorm:"size:55; not null" json:"knowledge_title"`
 	KnowledgeLink  string `gorm:"size:2550; not null" json:"knowledge_link"`
+	KnowledgeDate  string `gorm:"size:2550; not null" json:"knowledge_date"`
 }
 
 // 知识版块中的问题
