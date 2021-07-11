@@ -183,12 +183,46 @@ type CovidProvinceRecovered struct {
 // ----------------------------------------------------------------------------
 // ----------------------------------------------------------------------------
 // ----------------------------------------------------------------------------
+// ---------------------------区级行政单位的overview数据--------------------------
+// ----------------------------------------------------------------------------
+// ----------------------------------------------------------------------------
+// ----------------------------------------------------------------------------
+type CovidHangzhouCases struct {
+	Date         time.Time `json:"date"`
+	CityName     string    `gorm:"size:255;" json:"city_name"`
+	ProvinceName string    `gorm:"size:255;" json:"province_name"`
+	Info         uint64    `json:"value"`
+}
+
+type CovidHangzhouDeaths struct {
+	Date         time.Time `json:"date"`
+	CityName     string    `gorm:"size:255;" json:"city_name"`
+	ProvinceName string    `gorm:"size:255;" json:"province_name"`
+	Info         uint64    `json:"value"`
+}
+
+type CovidHangzhouRecovered struct {
+	Date         time.Time `json:"date"`
+	CityName     string    `gorm:"size:255;" json:"city_name"`
+	ProvinceName string    `gorm:"size:255;" json:"province_name"`
+	Info         uint64    `json:"value"`
+}
+
+// 某区级行政单位的overview列表 [临时表]
+type DistrictOverview struct {
+	Date     time.Time `json:"date"`
+	Overview Overview  `json:"overview"`
+}
+
+// ----------------------------------------------------------------------------
+// ----------------------------------------------------------------------------
+// ----------------------------------------------------------------------------
 // ---------------------------某个国家的overview数据-----------------------------
 // ----------------------------------------------------------------------------
 // ----------------------------------------------------------------------------
 // ----------------------------------------------------------------------------
 
-// 某国家的overvie+detail列表 [临时表]
+// 某国家的overview+detail列表 [临时表]
 type CountryOverviewAndDetails struct {
 	Date     time.Time          `json:"date"`
 	Overview Overview           `json:"overview"`
@@ -213,6 +247,7 @@ type NowCases struct {
 // 某一天的累积确诊数 [临时表]
 type Cases struct {
 	NowNum uint64 `json:"now_num"`
+	NewNum uint64 `json:"new_num"`
 }
 
 // 某一天的死亡数（累计死亡、新增死亡） [临时表]
@@ -242,13 +277,13 @@ type CovidCDRProvince struct {
 	Recovered    uint64 `json:"recovered"`
 }
 
-// 世界的overvie+detail列表 用于HomeData.json[临时表]
+// 世界的overview+detail列表 用于HomeData.json[临时表]
 type GlobalOverviewAndDetails struct {
 	Overview Overview                `json:"overview"`
 	Detailed []CovidDetailCDRCountry `json:"detailed"`
 }
 
-// 中国的overvie+detail列表 用于HomeData.json[临时表]
+// 中国的overview+detail列表 用于HomeData.json[临时表]
 type ChinaOverviewAndDetails struct {
 	Overview Overview                 `json:"overview"`
 	Detailed []CovidDetailCDRProvince `json:"detailed"`
