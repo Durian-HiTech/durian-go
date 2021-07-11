@@ -33,6 +33,7 @@ func InitRouter(Router *gin.RouterGroup) {
 	{
 		SubRouter.POST("/subscribe", v1.Subscribe)
 		SubRouter.POST("/list_all_subs", v1.ListAllSubscriptions)
+		SubRouter.POST("/list_subs_data", v1.ListSubscriptionsData)
 		SubRouter.POST("/del_sub", v1.RemoveSubscription)
 	}
 	NewsRouter := Router.Group("/news")

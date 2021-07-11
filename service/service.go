@@ -98,6 +98,51 @@ func QueryAllSubscriptions(userID uint64) (subscriptions []model.Subscription) {
 	return subscriptions
 }
 
+// 查看订阅的城市（实际上是省和直辖市）的信息，如新增确诊、累计确诊、累计死亡、累计治愈
+func QuerySubcriptionsData(subscriptions []model.Subscription) (subscriptionsData []model.CovidDetailCDRProvince, length int) {
+	var chinaCases []model.CovidChinaCases
+	var chinaDeaths []model.CovidChinaDeaths
+	var chinaRecovered []model.CovidChinaRecovered
+
+	err1 := global.DB.Order("date desc, province_name asc").Find(&chinaCases).Error
+	err2 := global.DB.Order("date desc, province_name asc").Find(&chinaDeaths).Error
+	err3 := global.DB.Order("date desc, province_name asc").Find(&chinaRecovered).Error
+
+	if (err1 != nil && errors.Is(err1, gorm.ErrRecordNotFound)) || (err2 != nil && errors.Is(err2, gorm.ErrRecordNotFound)) || (err3 != nil && errors.Is(err3, gorm.ErrRecordNotFound)) {
+		return subscriptionsData, 0
+	} else if err1 != nil && !errors.Is(err1, gorm.ErrRecordNotFound) {
+		panic(err1)
+	} else if err2 != nil && !errors.Is(err2, gorm.ErrRecordNotFound) {
+		panic(err2)
+	} else if err3 != nil && !errors.Is(err3, gorm.ErrRecordNotFound) {
+		panic(err3)
+	} else {
+		lenSubcriptions := len(subscriptions)
+		// 循环获取订阅的省或直辖市的信息
+		for i := 0; i < lenSubcriptions; i++ {
+			provinceNamePinYin := global.MapPinYin(subscriptions[i].CityName)
+			j := 0
+			for ; j < 34; j++ { // 查询省或直辖市相应的下标
+				if chinaCases[j].ProvinceName == provinceNamePinYin {
+					break
+				}
+			}
+			fmt.Println(subscriptions[i].CityName)
+			fmt.Println(chinaCases[j].ProvinceName)
+			subscriptionsData = append(subscriptionsData, model.CovidDetailCDRProvince{ProvinceName: subscriptions[i].CityName,
+				NowCases:     chinaCases[j].Info - chinaDeaths[j].Info - chinaRecovered[j].Info,
+				Cases:        chinaCases[j].Info,
+				NewCases:     chinaCases[j].Info - chinaCases[j+34].Info,
+				Deaths:       chinaDeaths[j].Info,
+				NewDeaths:    chinaDeaths[j].Info - chinaDeaths[j+34].Info,
+				Recovered:    chinaRecovered[j].Info,
+				NewRecovered: chinaRecovered[j].Info - chinaRecovered[j+34].Info,
+				Vaccine:      0, NewVaccine: 0})
+		}
+		return subscriptionsData, len(subscriptionsData)
+	}
+}
+
 // 根据辟谣 ID 查询新闻详情
 func QueryARumorByID(rumorID uint64) (rumor model.Rumor, notFound bool) {
 	err := global.DB.Where("rumor_id = ?", rumorID).First(&rumor).Error

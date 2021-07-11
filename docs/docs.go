@@ -902,6 +902,43 @@ var doc = `{
                 }
             }
         },
+        "/sub/list_subs_data": {
+            "post": {
+                "description": "返回订阅信息",
+                "tags": [
+                    "订阅城市"
+                ],
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "用户ID",
+                        "name": "user_id",
+                        "in": "formData",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "{\"success\":true, \"message\":\"查询成功\",\"data\":\"user的所有订阅\"}",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "401": {
+                        "description": "{\"success\": false, \"message\": \"错误！订阅信息列表为空\"}",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "404": {
+                        "description": "{\"success\": false, \"message\": \"用户ID不存在\"}",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
         "/sub/subscribe": {
             "post": {
                 "description": "订阅城市疫情信息",

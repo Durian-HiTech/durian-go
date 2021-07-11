@@ -1,6 +1,7 @@
 package v1
 
 import (
+	"fmt"
 	"io/ioutil"
 	"net/http"
 	"os"
@@ -226,6 +227,42 @@ func ListAllSubscriptions(c *gin.Context) {
 	}
 	subscriptions := service.QueryAllSubscriptions(userID)
 	c.JSON(http.StatusOK, gin.H{"success": true, "message": "查询成功", "data": subscriptions})
+}
+
+// ListSubscriptionsData doc
+// @description 返回订阅信息
+// @Tags 订阅城市
+// @Param user_id formData string true "用户ID"
+// @Success 200 {string} string "{"success":true, "message":"查询成功","data":"user的所有订阅"}"
+// @Failure 401 {string} string "{"success": false, "message": "错误！订阅信息列表为空"}"
+// @Failure 404 {string} string "{"success": false, "message": "用户ID不存在"}"
+// @Router /sub/list_subs_data [POST]
+func ListSubscriptionsData(c *gin.Context) {
+	userID, _ := strconv.ParseUint(c.Request.FormValue("user_id"), 0, 64)
+	_, notFoundUserByID := service.QueryAUserByID(userID)
+	if notFoundUserByID {
+		c.JSON(404, gin.H{
+			"success": false,
+			"message": "用户ID不存在",
+		})
+		return
+	}
+	subscriptions := service.QueryAllSubscriptions(userID) // 用户订阅的省份、直辖市的列表
+	subscriptionsData, length := service.QuerySubcriptionsData(subscriptions)
+	if length == 0 {
+		c.JSON(401, gin.H{
+			"success": false,
+			"message": "错误！订阅信息列表为空",
+		})
+		return
+	}
+	var information string
+	for i := 0; i < length; i++ {
+		if subscriptionsData[i].NewCases != 0 {
+			information += fmt.Sprintf("%s有%d个新增确诊\n", subscriptionsData[i].ProvinceName, subscriptionsData[i].NewCases)
+		}
+	}
+	c.JSON(http.StatusOK, gin.H{"success": true, "message": "查询成功", "data": subscriptionsData, "information": information})
 }
 
 // RemoveSubscription doc

@@ -573,6 +573,30 @@ paths:
             type: string
       tags:
       - 订阅城市
+  /sub/list_subs_data:
+    post:
+      description: 返回订阅信息
+      parameters:
+      - description: 用户ID
+        in: formData
+        name: user_id
+        required: true
+        type: string
+      responses:
+        "200":
+          description: '{"success":true, "message":"查询成功","data":"user的所有订阅"}'
+          schema:
+            type: string
+        "401":
+          description: '{"success": false, "message": "错误！订阅信息列表为空"}'
+          schema:
+            type: string
+        "404":
+          description: '{"success": false, "message": "用户ID不存在"}'
+          schema:
+            type: string
+      tags:
+      - 订阅城市
   /sub/subscribe:
     post:
       description: 订阅城市疫情信息
