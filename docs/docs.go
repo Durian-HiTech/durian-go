@@ -382,6 +382,31 @@ var doc = `{
                 }
             }
         },
+        "/data/list_province_overview": {
+            "post": {
+                "description": "获取中国某个省份的各类整体数据，以及省份下各市的现存确诊、新增确诊、累积确诊、累计及新增新冠感染/死亡/治愈 [信息综合]，返回列表 [根据日期-市分组] [Province]",
+                "tags": [
+                    "数据"
+                ],
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "省份或直辖市名",
+                        "name": "province",
+                        "in": "formData",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "{\"success\":true, \"message\":\"查询成功\",\"data\":{本部分格式见ChinaAnalysisSample.json}",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
         "/data/query_data": {
             "post": {
                 "description": "获取在数据库中直接存的 Json File",
