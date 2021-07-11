@@ -1014,3 +1014,94 @@ func QueryOtherCountryOverviewAndDetailsForHomeData() (globalTable model.GlobalO
 
 	return globalTable, chinaTable
 }
+
+// // 获取世界历史每天的overview数据和detail数据（每天的各国的数据）
+// func QueryGlobalOverviewAndDetailsHistory(globalTable []model.GlobalOverviewAndDetails) {
+// 	var cases []model.CovidCases
+// 	var deaths []model.CovidDeaths
+// 	var recovered []model.CovidRecovered
+
+// 	// 获取各个国家的信息
+// 	_ = global.DB.Order("date asc, country_name asc").Find(&cases).Error
+// 	_ = global.DB.Order("date asc, country_name asc").Find(&deaths).Error
+// 	_ = global.DB.Order("date asc, country_name asc").Find(&recovered).Error
+
+// 	var globalDetail []model.CovidDetailCDRCountry
+// 	var globalCasesNum uint64    // 今日全球累计确诊
+// 	var globalCasesNewNum uint64 // 今日全球新增确诊
+// 	var globalCasesNowNum uint64 // 今日全球现存确诊
+// 	var globalDeathsNum uint64
+// 	var globalDeathsNewNum uint64
+// 	var globalRecoveredNum uint64
+// 	var globalRecoveredNewNum uint64
+
+// 	var chinaDetail []model.CovidDetailCDRProvince
+// 	var chinaCasesNum uint64
+// 	var chinaCasesNowNum uint64
+// 	var chinaCasesNewNum uint64
+// 	var chinaDeathsNum uint64
+// 	var chinaDeathsNewNum uint64
+// 	var chinaRecoveredNum uint64
+// 	var chinaRecoveredNewNum uint64
+
+// 	countryLength := 0 // 查看有多少个国家
+// 	oneDate := cases[0].Date
+// 	lenCases := len(cases)
+// 	for i := 0; i < lenCases; i++ {
+// 		if oneDate == cases[i].Date {
+// 			countryLength += 1
+// 		} else {
+// 			break
+// 		}
+// 	}
+// 	dateLength := lenCases / countryLength // 一共有多少天 现在共有535天 173个国家
+// 	// 对世界各国进行统计
+// 	for i := 0; i < dateLength; i++ {
+// 		for j := 0; i < countryLength; i++ { // 国家数目
+// 			var casesNum uint64    // 今日累计确诊
+// 			var casesNewNum uint64 // 今日新增确诊
+// 			var casesNowNum uint64 // 今日现存确诊
+// 			var deathsNum uint64
+// 			var deathsNewNum uint64
+// 			var recoveredNum uint64
+// 			var recoveredNewNum uint64
+
+// 			if cases[i].CountryName != "Global" {
+// 				casesNum = cases[i].Info
+// 				deathsNum = deaths[i].Info
+// 				recoveredNum = recovered[i].Info
+
+// 				casesNowNum = casesNum - deathsNum - recoveredNum
+
+// 				casesNewNum = casesNum - cases[i+173].Info
+// 				deathsNewNum = deathsNum - deaths[i+173].Info
+// 				recoveredNewNum = recoveredNum - recovered[i+173].Info
+
+// 				globalDetail = append(globalDetail, model.CovidDetailCDRCountry{CountryName: cases[i].CountryName,
+// 					NowCases: casesNowNum, Cases: casesNum, NewCases: casesNewNum,
+// 					Deaths: deathsNum, NewDeaths: deathsNewNum,
+// 					Recovered: recoveredNum, NewRecovered: recoveredNewNum,
+// 					Vaccine: 0, NewVaccine: 0})
+
+// 			} else {
+// 				globalCasesNum = cases[i].Info
+// 				globalDeathsNum = deaths[i].Info
+// 				globalRecoveredNum = recovered[i].Info
+
+// 				globalCasesNowNum = globalCasesNum - globalDeathsNum - globalRecoveredNum
+// 				globalCasesNewNum = globalCasesNum - cases[i+173].Info
+// 				globalDeathsNewNum = globalDeathsNum - deaths[i+173].Info
+// 				globalRecoveredNewNum = globalRecoveredNum - recovered[i+173].Info
+// 			}
+// 		}
+// 		nowGlobalCasesItem := model.NowCases{NowNum: globalCasesNowNum, NewNum: globalCasesNewNum}
+// 		casesGlobalItem := model.Cases{NowNum: globalCasesNum, NewNum: globalCasesNewNum}
+// 		deathGlobalItem := model.Deaths{NowNum: globalDeathsNum, NewNum: globalDeathsNewNum}
+// 		recoveredGlobalItem := model.Recovered{NowNum: globalRecoveredNum, NewNum: globalRecoveredNewNum}
+// 		vaccineGlobalItem := model.Vaccine{NowNum: 0, NewNum: 0} // 先填0，后续有需求再添加
+
+// 		overviewGlobalItem := model.Overview{NowCases: nowGlobalCasesItem, Cases: casesGlobalItem, Deaths: deathGlobalItem, Vaccine: vaccineGlobalItem, Recovered: recoveredGlobalItem}
+// 		globalTableItem = model.GlobalOverviewAndDetails{Overview: overviewGlobalItem, Detailed: globalDetail}
+// 	}
+
+// }

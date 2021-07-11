@@ -259,10 +259,11 @@ func ListSubscriptionsData(c *gin.Context) {
 	var information string
 	for i := 0; i < length; i++ {
 		if subscriptionsData[i].NewCases != 0 {
-			information += fmt.Sprintf("%s有%d个新增确诊\n", subscriptionsData[i].ProvinceName, subscriptionsData[i].NewCases)
+			information += fmt.Sprintf("%s有%d个新增确诊,", subscriptionsData[i].ProvinceName, subscriptionsData[i].NewCases)
 		}
 	}
-	c.JSON(http.StatusOK, gin.H{"success": true, "message": "查询成功", "data": subscriptionsData, "information": information})
+	informationLength := len(information)
+	c.JSON(http.StatusOK, gin.H{"success": true, "message": "查询成功", "data": subscriptionsData, "information": information[0 : informationLength-1]})
 }
 
 // RemoveSubscription doc
@@ -810,6 +811,17 @@ func ListOverviewData(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"success": true, "message": "查询成功", "Global": globalTable, "China": chinaTable,
 		"globalLen": len(globalTable.Detailed), "chinaLen": len(chinaTable.Detailed)})
 }
+
+// // ListOverviewHistoryData doc
+// // @description 获取世界每一天的现存确诊、新增确诊、累积确诊、累计及新增新冠感染/死亡/治愈 [信息综合]，返回列表 [根据日期分组]
+// // @Tags 数据
+// // @Success 200 {string} string "{""success":true, "message":"查询成功","data":"结果列表""}"
+// // @Router /data/list_overview_history [GET]
+// func ListOverviewHistoryData(c *gin.Context) {
+// 	globalTable, chinaTable := service.QueryGlobalOverviewAndDetailsHistory()
+// 	c.JSON(http.StatusOK, gin.H{"success": true, "message": "查询成功", "Global": globalTable, "China": chinaTable,
+// 		"globalLen": len(globalTable.Detailed), "chinaLen": len(chinaTable.Detailed)})
+// }
 
 // ListDistrictOverviewData doc
 // @description 获取三级行政单位的现存确诊、新增确诊、累积确诊、累计及新增新冠感染/死亡/治愈 [信息综合]，返回列表 [根据日期分组] [Province]
