@@ -455,23 +455,47 @@ func QueryAllCovidRecoveredsResponseProvince(province string) (response []model.
 	}
 }
 
-// 仅用于接口测试，测试二维数组
-func QueryChinaTest() (detail [][]model.CovidChinaCasesNoDate) {
-	var cases []model.CovidChinaCases
+// // 仅用于接口测试，测试二维数组
+// func QueryChinaTest() (detail [][]model.CovidChinaCasesNoDate) {
+// 	var cases []model.CovidChinaCases
 
-	_ = global.DB.Order("date desc, province_name asc").Find(&cases).Error
-	lenCases := len(cases)
+// 	_ = global.DB.Order("date desc, province_name asc").Find(&cases).Error
+// 	lenCases := len(cases)
 
-	days := lenCases / 34         // 现共有534天
-	for i := 0; i < days-1; i++ { // 最前一天（2020.1.22）没有新增，先不要了
-		var temp []model.CovidChinaCasesNoDate
-		for j := 0; j < 34; j++ {
-			temp = append(temp, model.CovidChinaCasesNoDate{ProvinceName: cases[i*34+j].ProvinceName, Info: cases[i*34+j].Info})
-		}
-		detail = append(detail, temp)
-	}
-	return detail
-}
+// 	days := lenCases / 34         // 现共有534天
+// 	for i := 0; i < days-1; i++ { // 最前一天（2020.1.22）没有新增，先不要了
+// 		var temp []model.CovidChinaCasesNoDate
+// 		for j := 0; j < 34; j++ {
+// 			temp = append(temp, model.CovidChinaCasesNoDate{ProvinceName: cases[i*34+j].ProvinceName, Info: cases[i*34+j].Info})
+// 		}
+// 		detail = append(detail, temp)
+// 	}
+// 	return detail
+// }
+
+// 获取某个三级行政单位（如海淀区）的overview数据
+// func QueryDistrictOverview(districtName string) (districtData []model.DistrictOverview) {
+// 	var districtCases []model.CovidHangzhouCases
+// 	var districtDeaths []model.CovidHangzhouDeaths
+// 	var districtRecovered []model.CovidHangzhouRecovered
+// 	err1 := global.DB.Where("city_name = ?", districtName).Order("date asc").Find(&districtCases).Error
+// 	err2 := global.DB.Where("city_name = ?", districtName).Order("date asc").Find(&districtDeaths).Error
+// 	err3 := global.DB.Where("city_name = ?", districtName).Order("date asc").Find(&districtRecovered).Error
+
+// 	if (err1 != nil && errors.Is(err1, gorm.ErrRecordNotFound)) || (err2 != nil && errors.Is(err2, gorm.ErrRecordNotFound)) || (err3 != nil && errors.Is(err3, gorm.ErrRecordNotFound)) {
+// 		return districtData
+// 	} else if err1 != nil && !errors.Is(err1, gorm.ErrRecordNotFound) {
+// 		panic(err1)
+// 	} else if err2 != nil && !errors.Is(err2, gorm.ErrRecordNotFound) {
+// 		panic(err2)
+// 	} else if err3 != nil && !errors.Is(err3, gorm.ErrRecordNotFound) {
+// 		panic(err3)
+// 	} else {
+
+// 	}
+
+// 	return districtData
+// }
 
 // 获取某个外国国家按日期构成的数据，每日数据下包含整体数据、各省数据
 func QueryOtherCountryOverviewAndDetails(countryName string) (data []model.CountryOverviewAndDetails) {
@@ -558,7 +582,7 @@ func QueryOtherCountryOverviewAndDetails(countryName string) (data []model.Count
 		}
 
 		nowCasesItem := model.NowCases{NowNum: casesNowNum, NewNum: casesNewNum}
-		casesItem := model.Cases{NowNum: casesNum}
+		casesItem := model.Cases{NowNum: casesNum, NewNum: casesNewNum}
 		deathItem := model.Deaths{NowNum: deathsNum, NewNum: deathsNewNum}
 		recoveredItem := model.Recovered{NowNum: recoveredNum, NewNum: recoveredNewNum}
 		vaccineItem := model.Vaccine{NowNum: 0, NewNum: 0} // 先填0，后续有需求再添加
@@ -644,7 +668,7 @@ func QueryChinaOverviewAndDetails() (data []model.CountryOverviewAndDetails, not
 			}
 
 			nowCasesItem := model.NowCases{NowNum: casesNowNum, NewNum: casesNewNum}
-			casesItem := model.Cases{NowNum: casesNum}
+			casesItem := model.Cases{NowNum: casesNum, NewNum: casesNewNum}
 			deathItem := model.Deaths{NowNum: deathsNum, NewNum: deathsNewNum}
 			recoveredItem := model.Recovered{NowNum: recoveredNum, NewNum: recoveredNewNum}
 			vaccineItem := model.Vaccine{NowNum: 0, NewNum: 0}
@@ -734,7 +758,7 @@ func QueryOtherCountryOverviewAndDetailsForHomeData() (globalTable model.GlobalO
 		}
 	}
 	nowGlobalCasesItem := model.NowCases{NowNum: globalCasesNowNum, NewNum: globalCasesNewNum}
-	casesGlobalItem := model.Cases{NowNum: globalCasesNum}
+	casesGlobalItem := model.Cases{NowNum: globalCasesNum, NewNum: globalCasesNewNum}
 	deathGlobalItem := model.Deaths{NowNum: globalDeathsNum, NewNum: globalDeathsNewNum}
 	recoveredGlobalItem := model.Recovered{NowNum: globalRecoveredNum, NewNum: globalRecoveredNewNum}
 	vaccineGlobalItem := model.Vaccine{NowNum: 0, NewNum: 0} // 先填0，后续有需求再添加
@@ -759,7 +783,7 @@ func QueryOtherCountryOverviewAndDetailsForHomeData() (globalTable model.GlobalO
 			Vaccine: 0, NewVaccine: 0})
 	}
 	nowChinaCasesItem := model.NowCases{NowNum: chinaCasesNowNum, NewNum: chinaCasesNewNum}
-	casesChinaItem := model.Cases{NowNum: chinaCasesNum}
+	casesChinaItem := model.Cases{NowNum: chinaCasesNum, NewNum: chinaCasesNewNum}
 	deathChinaItem := model.Deaths{NowNum: chinaDeathsNum, NewNum: chinaDeathsNewNum}
 	recoveredChinaItem := model.Recovered{NowNum: chinaRecoveredNum, NewNum: chinaRecoveredNewNum}
 	vaccineChinaItem := model.Vaccine{NowNum: 0, NewNum: 0} // 先填0，后续有需求再添加
