@@ -68,7 +68,19 @@ func Login(c *gin.Context) {
 		if user.Password != password {
 			c.JSON(http.StatusOK, gin.H{"success": false, "message": "密码错误"})
 		} else {
-			c.JSON(http.StatusOK, gin.H{"success": true, "message": "登录成功", "detail": user})
+			subs := service.QueryAllSubscriptions(user.UserID)
+			showSub := false
+			for _, sub := range subs {
+				if sub.CityName == "云南省" {
+					showSub = true
+					break
+				}
+			}
+			if !showSub {
+				c.JSON(http.StatusOK, gin.H{"success": true, "message": "登录成功", "detail": user, "show_sub": false})
+			} else {
+				c.JSON(http.StatusOK, gin.H{"success": true, "message": "登录成功", "detail": user, "show_sub": true})
+			}
 		}
 	}
 }
