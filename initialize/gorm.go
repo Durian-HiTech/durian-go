@@ -42,6 +42,7 @@ func InitMySQL() {
 		&model.News{},
 		&model.Notice{},
 		&model.Rumor{},
+		&model.Knowledge{},
 		&model.Question{},
 		&model.Comment{},
 		&model.HighRiskArea{},
