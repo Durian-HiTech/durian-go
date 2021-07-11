@@ -311,6 +311,13 @@ type ChinaOverviewAndDetails struct {
 	Detailed []CovidDetailCDRProvince `json:"detailed"`
 }
 
+// 世界的overview+detail列表 用于世界每一天的所有国家的数据[临时表]
+type GlobalOverviewAndDetailsWithDate struct {
+	Date     time.Time               `json:"date"`
+	Overview Overview                `json:"overview"`
+	Detailed []CovidDetailCDRCountry `json:"detailed"`
+}
+
 // 某省份某一天的详细信息（多了新增死亡、新增治愈这几个数据） [临时表]
 type CovidDetailCDRProvince struct {
 	ProvinceName string `gorm:"size:255;" json:"name"`

@@ -839,16 +839,21 @@ func ListOverviewData(c *gin.Context) {
 		"globalLen": len(globalTable.Detailed), "chinaLen": len(chinaTable.Detailed)})
 }
 
-// // ListOverviewHistoryData doc
-// // @description 获取世界每一天的现存确诊、新增确诊、累积确诊、累计及新增新冠感染/死亡/治愈 [信息综合]，返回列表 [根据日期分组]
-// // @Tags 数据
-// // @Success 200 {string} string "{""success":true, "message":"查询成功","data":"结果列表""}"
-// // @Router /data/list_overview_history [GET]
-// func ListOverviewHistoryData(c *gin.Context) {
-// 	globalTable, chinaTable := service.QueryGlobalOverviewAndDetailsHistory()
-// 	c.JSON(http.StatusOK, gin.H{"success": true, "message": "查询成功", "Global": globalTable, "China": chinaTable,
-// 		"globalLen": len(globalTable.Detailed), "chinaLen": len(chinaTable.Detailed)})
-// }
+// ListOverviewHistoryData doc
+// @description 获取世界每一天的现存确诊、新增确诊、累积确诊、累计及新增新冠感染/死亡/治愈 [信息综合]，返回列表 [根据日期分组]
+// @Tags 数据
+// @Success 200 {string} string "{""success":true, "message":"查询成功","data":"结果列表""}"
+// @Router /data/list_history_overview [GET]
+func ListHistoryOverviewData(c *gin.Context) {
+	var globalTableRevert []model.GlobalOverviewAndDetailsWithDate
+	globalTable := service.QueryGlobalOverviewAndDetailsHistory()
+	length := len(globalTable)
+	for i := (length - 1); i >= 0; i-- {
+		globalTableRevert = append(globalTableRevert, globalTable[i])
+	}
+	c.JSON(http.StatusOK, gin.H{"success": true, "message": "查询成功", "Global": globalTableRevert[1],
+		"globalLen": len(globalTableRevert[1].Detailed)})
+}
 
 // ListDistrictOverviewData doc
 // @description 获取三级行政单位的现存确诊、新增确诊、累积确诊、累计及新增新冠感染/死亡/治愈 [信息综合]，返回列表 [根据日期分组] [Province]

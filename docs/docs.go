@@ -366,6 +366,22 @@ var doc = `{
                 }
             }
         },
+        "/data/list_history_overview": {
+            "get": {
+                "description": "获取世界每一天的现存确诊、新增确诊、累积确诊、累计及新增新冠感染/死亡/治愈 [信息综合]，返回列表 [根据日期分组]",
+                "tags": [
+                    "数据"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "{\"\"success\":true, \"message\":\"查询成功\",\"data\":\"结果列表\"\"}",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
         "/data/list_overview": {
             "get": {
                 "description": "获取世界或中国的现存确诊、新增确诊、累积确诊、累计及新增新冠感染/死亡/治愈 [信息综合]，返回列表 [根据国家分组] [Province]",
