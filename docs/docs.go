@@ -997,13 +997,6 @@ var doc = `{
                         "name": "password",
                         "in": "formData",
                         "required": true
-                    },
-                    {
-                        "type": "string",
-                        "description": "用户个人信息",
-                        "name": "info",
-                        "in": "formData",
-                        "required": true
                     }
                 ],
                 "responses": {
@@ -1034,6 +1027,13 @@ var doc = `{
                         "type": "string",
                         "description": "用户名",
                         "name": "username",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "用户个人信息",
+                        "name": "user_info",
                         "in": "formData",
                         "required": true
                     },
@@ -1092,7 +1092,7 @@ var doc = `{
                     {
                         "type": "string",
                         "description": "用户个人信息",
-                        "name": "info",
+                        "name": "user_info",
                         "in": "formData",
                         "required": true
                     },

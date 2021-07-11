@@ -7,7 +7,7 @@ type User struct {
 	UserID      uint64 `gorm:"primary_key; not null;" json:"user_id"`
 	Username    string `gorm:"size:25; not null; unique" json:"username"`
 	Password    string `gorm:"size:25; not null" json:"password"`
-	Info        string `gorm:"size:255;" json:"info"`
+	UserInfo    string `gorm:"size:255;" json:"user_info"`
 	UserType    uint64 `gorm:"default:0" json:"user_type"` // 0: 普通用户，1: 认证机构用户
 	Affiliation string `gorm:"size:25;" json:"affiliation"`
 }
@@ -60,9 +60,10 @@ type Question struct {
 	QuestionTime    time.Time `json:"question_time"`
 }
 
-type QuestionWithUsername struct {
+type QuestionWithUserInfo struct {
 	Question
 	Username string `json:"username"`
+	UserInfo string `json:"user_info"`
 }
 
 // 知识版块中对问题的评论
@@ -75,9 +76,10 @@ type Comment struct {
 	UserType       uint64    `gorm:"default:0" json:"user_type"`
 }
 
-type CommentWithUsername struct {
+type CommentWithUserInfo struct {
 	Comment
 	Username string `json:"username"`
+	UserInfo string `json:"user_info"`
 }
 
 type FlightDomestic struct {

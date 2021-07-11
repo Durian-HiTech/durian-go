@@ -26,7 +26,7 @@ func Index(c *gin.Context) {
 // @Tags 用户管理
 // @Param username formData string true "用户名"
 // @Param password formData string true "密码"
-// @Param info formData string true "用户个人信息"
+// @Param user_info formData string true "用户个人信息"
 // @Param user_type formData string true "用户类型（0: 普通用户，1: 认证机构用户）"
 // @Param affiliation formData string false "认证机构名"
 // @Success 200 {string} string "{"success": true, "message": "用户创建成功"}"
@@ -35,10 +35,10 @@ func Index(c *gin.Context) {
 func Register(c *gin.Context) {
 	username := c.Request.FormValue("username")
 	password := c.Request.FormValue("password")
-	info := c.Request.FormValue("info")
+	userInfo := c.Request.FormValue("user_info")
 	userType, _ := strconv.ParseUint(c.Request.FormValue("user_type"), 0, 64)
 	affiliation := c.Request.FormValue("affiliation")
-	user := model.User{Username: username, Password: password, Info: info, UserType: userType, Affiliation: affiliation}
+	user := model.User{Username: username, Password: password, UserInfo: userInfo, UserType: userType, Affiliation: affiliation}
 	_, notFound := service.QueryAUserByUsername(username)
 	if notFound {
 		service.CreateAUser(&user)
@@ -53,7 +53,6 @@ func Register(c *gin.Context) {
 // @Tags 用户管理
 // @Param username formData string true "用户名"
 // @Param password formData string true "密码"
-// @Param info formData string true "用户个人信息"
 // @Success 200 {string} string "{"success": true, "message": "登录成功", "detail": user的信息}"
 // @Failure 200 {string} string "{"success": false, "message": "密码错误"}"
 // @Failure 200 {string} string "{"success": false, "message": "没有该用户"}"
@@ -68,7 +67,19 @@ func Login(c *gin.Context) {
 		if user.Password != password {
 			c.JSON(http.StatusOK, gin.H{"success": false, "message": "密码错误"})
 		} else {
-			c.JSON(http.StatusOK, gin.H{"success": true, "message": "登录成功", "detail": user})
+			subs := service.QueryAllSubscriptions(user.UserID)
+			showSub := false
+			for _, sub := range subs {
+				if sub.CityName == "云南省" {
+					showSub = true
+					break
+				}
+			}
+			if !showSub {
+				c.JSON(http.StatusOK, gin.H{"success": true, "message": "登录成功", "detail": user, "show_sub": false})
+			} else {
+				c.JSON(http.StatusOK, gin.H{"success": true, "message": "登录成功", "detail": user, "show_sub": true})
+			}
 		}
 	}
 }
@@ -78,6 +89,7 @@ func Login(c *gin.Context) {
 // @Tags 用户管理
 // @Param user_id formData string true "用户ID"
 // @Param username formData string true "用户名"
+// @Param user_info formData string true "用户个人信息"
 // @Param password_old formData string true "原密码"
 // @Param password_new formData string true "新密码"
 // @Success 200 {string} string "{"success": true, "message": "修改成功", "data": "model.User的所有信息"}"
@@ -88,7 +100,7 @@ func Login(c *gin.Context) {
 func ModifyUser(c *gin.Context) {
 	userID, _ := strconv.ParseUint(c.Request.FormValue("user_id"), 0, 64)
 	username := c.Request.FormValue("username")
-	info := c.Request.FormValue("info")
+	userInfo := c.Request.FormValue("user_info")
 	passwordOld := c.Request.FormValue("password_old")
 	passwordNew := c.Request.FormValue("password_new")
 	user, notFoundUserByID := service.QueryAUserByID(userID)
@@ -114,7 +126,7 @@ func ModifyUser(c *gin.Context) {
 		})
 		return
 	}
-	err := service.UpdateAUser(&user, username, passwordNew, info)
+	err := service.UpdateAUser(&user, username, passwordNew, userInfo)
 	if err != nil {
 		c.JSON(400, gin.H{
 			"success": false,
