@@ -539,11 +539,12 @@ func QueryDistrictOverview(districtName string) (districtData []model.DistrictOv
 }
 
 // 获取中国某省份按日期构成的数据，每日数据下包含整体数据、省下的各市的数据
-func QueryProvinceOverviewAndDetails(provinceName string) (districtData []model.DistrictOverviewAndDetail) {
+func QueryProvinceOverviewAndDetails(provinceName string, provinceNamePinYin string) (districtData []model.DistrictOverviewAndDetail) {
 	var cases []model.CovidHangzhouCases
 	var deaths []model.CovidHangzhouDeaths
 	var recovered []model.CovidHangzhouRecovered
 
+	// 用中文的省份名字进行查询
 	err1 := global.DB.Where("province_name = ?", provinceName).Order("date asc, city_name asc").Find(&cases).Error
 	err2 := global.DB.Where("province_name = ?", provinceName).Order("date asc, city_name asc").Find(&deaths).Error
 	err3 := global.DB.Where("province_name = ?", provinceName).Order("date asc, city_name asc").Find(&recovered).Error
@@ -561,9 +562,11 @@ func QueryProvinceOverviewAndDetails(provinceName string) (districtData []model.
 		var caseProvince []model.CovidChinaCases
 		var deathsProvince []model.CovidChinaDeaths
 		var recoveredProvince []model.CovidChinaRecovered
-		_ = global.DB.Where("province_name = ?", provinceName).Order("date asc").Find(&caseProvince).Error
-		_ = global.DB.Where("province_name = ?", provinceName).Order("date asc").Find(&deathsProvince).Error
-		_ = global.DB.Where("province_name = ?", provinceName).Order("date asc").Find(&recoveredProvince).Error
+
+		// 用拼音进行查询
+		_ = global.DB.Where("province_name = ?", provinceNamePinYin).Order("date asc").Find(&caseProvince).Error
+		_ = global.DB.Where("province_name = ?", provinceNamePinYin).Order("date asc").Find(&deathsProvince).Error
+		_ = global.DB.Where("province_name = ?", provinceNamePinYin).Order("date asc").Find(&recoveredProvince).Error
 		provinceDateLength := len(caseProvince)
 
 		lenCases := len(cases)
@@ -589,7 +592,7 @@ func QueryProvinceOverviewAndDetails(provinceName string) (districtData []model.
 			var recoveredNum uint64
 			var recoveredNewNum uint64
 
-			curDate := cases[i].Date // 这一天
+			curDate := cases[i*districtLength].Date // 这一天
 			k := 0
 			for k = 0; k < provinceDateLength; k++ { // 查找这一天的全省累计确诊、累计死亡、累计治愈
 				if caseProvince[k].Date == curDate {

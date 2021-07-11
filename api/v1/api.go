@@ -746,12 +746,14 @@ func ListCountryOverviewData(c *gin.Context) {
 // ListProvinceOverviewData doc
 // @description 获取中国某个省份的各类整体数据，以及省份下各市的现存确诊、新增确诊、累积确诊、累计及新增新冠感染/死亡/治愈 [信息综合]，返回列表 [根据日期-市分组] [Province]
 // @Tags 数据
-// @Param province formData string true "省份或直辖市名"
+// @Param name formData string true "省份或直辖市的拼音"
+// @Param zhname formData string true "省份或直辖市的中文"
 // @Success 200 {string} string "{"success":true, "message":"查询成功","data":{本部分格式见ChinaAnalysisSample.json}"
 // @Router /data/list_province_overview [POST]
 func ListProvinceOverviewData(c *gin.Context) {
-	provinceName := c.Request.FormValue("province")
-	data := service.QueryProvinceOverviewAndDetails(provinceName)
+	provinceNamePinYin := c.Request.FormValue("name")
+	provinceName := c.Request.FormValue("zhname")
+	data := service.QueryProvinceOverviewAndDetails(provinceName, provinceNamePinYin)
 	var dataRevert []model.DistrictOverviewAndDetail
 	length := len(data)
 	for i := (length - 1); i >= 0; i-- {
