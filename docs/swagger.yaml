@@ -643,6 +643,11 @@ paths:
         name: username
         required: true
         type: string
+      - description: 用户个人信息
+        in: formData
+        name: user_info
+        required: true
+        type: string
       - description: 原密码
         in: formData
         name: password_old
@@ -680,7 +685,7 @@ paths:
         type: string
       - description: 用户个人信息
         in: formData
-        name: info
+        name: user_info
         required: true
         type: string
       - description: '用户类型（0: 普通用户，1: 认证机构用户）'

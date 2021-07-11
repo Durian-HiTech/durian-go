@@ -1014,6 +1014,13 @@ var doc = `{
                     },
                     {
                         "type": "string",
+                        "description": "用户个人信息",
+                        "name": "user_info",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
                         "description": "原密码",
                         "name": "password_old",
                         "in": "formData",
@@ -1067,7 +1074,7 @@ var doc = `{
                     {
                         "type": "string",
                         "description": "用户个人信息",
-                        "name": "info",
+                        "name": "user_info",
                         "in": "formData",
                         "required": true
                     },

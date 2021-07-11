@@ -43,10 +43,10 @@ func QueryAUserByUsername(username string) (user model.User, notFound bool) {
 }
 
 // 更新用户的用户名、密码、个人信息
-func UpdateAUser(user *model.User, username string, password string, info string) error {
+func UpdateAUser(user *model.User, username string, password string, userInfo string) error {
 	user.Username = username
 	user.Password = password
-	user.Info = info
+	user.UserInfo = userInfo
 	err := global.DB.Save(user).Error
 	return err
 }
@@ -179,27 +179,27 @@ func CreateAQuestion(question *model.Question) (err error) {
 }
 
 // 根据问题 ID 查询一个问题
-func QueryAQuestionByID(questionID uint64) (questionWithUsername model.QuestionWithUsername, notFound bool) {
+func QueryAQuestionByID(questionID uint64) (QuestionWithUserInfo model.QuestionWithUserInfo, notFound bool) {
 	var question model.Question
 	err := global.DB.Where("question_id = ?", questionID).First(&question).Error
 	if err != nil && errors.Is(err, gorm.ErrRecordNotFound) {
-		return questionWithUsername, true
+		return QuestionWithUserInfo, true
 	} else if err != nil && !errors.Is(err, gorm.ErrRecordNotFound) {
 		panic(err)
 	} else {
 		user, _ := QueryAUserByID(question.UserID)
-		questionWithUsername = model.QuestionWithUsername{Question: question, Username: user.Username}
-		return questionWithUsername, false
+		QuestionWithUserInfo = model.QuestionWithUserInfo{Question: question, Username: user.Username, UserInfo: user.UserInfo}
+		return QuestionWithUserInfo, false
 	}
 }
 
 // 查询所有问题
-func QueryAllQuestions() (res []model.QuestionWithUsername) {
+func QueryAllQuestions() (res []model.QuestionWithUserInfo) {
 	var questions []model.Question
 	global.DB.Order("question_time desc").Find(&questions)
 	for _, e := range questions {
 		user, _ := QueryAUserByID(e.UserID)
-		res = append(res, model.QuestionWithUsername{Question: e, Username: user.Username})
+		res = append(res, model.QuestionWithUserInfo{Question: e, Username: user.Username, UserInfo: user.UserInfo})
 	}
 	return res
 }
@@ -213,7 +213,7 @@ func CreateAComment(comment *model.Comment) (err error) {
 }
 
 // 列出某个问题的所有评论
-func QueryAllComments(questionID uint64) (resWithUsername []model.CommentWithUsername) {
+func QueryAllComments(questionID uint64) (resWithUsername []model.CommentWithUserInfo) {
 	var comments []model.Comment
 	var res []model.Comment
 	global.DB.Where("question_id = ?", questionID).Order("comment_time desc").Find(&comments)
@@ -230,7 +230,7 @@ func QueryAllComments(questionID uint64) (resWithUsername []model.CommentWithUse
 	}
 	for _, e := range res {
 		user, _ := QueryAUserByID(e.UserID)
-		resWithUsername = append(resWithUsername, model.CommentWithUsername{Comment: e, Username: user.Username})
+		resWithUsername = append(resWithUsername, model.CommentWithUserInfo{Comment: e, Username: user.Username, UserInfo: user.UserInfo})
 	}
 	return resWithUsername
 }
