@@ -53,7 +53,6 @@ func Register(c *gin.Context) {
 // @Tags 用户管理
 // @Param username formData string true "用户名"
 // @Param password formData string true "密码"
-// @Param info formData string true "用户个人信息"
 // @Success 200 {string} string "{"success": true, "message": "登录成功", "detail": user的信息}"
 // @Failure 200 {string} string "{"success": false, "message": "密码错误"}"
 // @Failure 200 {string} string "{"success": false, "message": "没有该用户"}"
