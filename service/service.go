@@ -315,6 +315,18 @@ func QueryAllMainCity() (city []model.MainCity) {
 	return city
 }
 
+// 查询城市的中心位置坐标
+func QueryCenterCityCoordinate(name string) (city model.CenterCity, notFound bool) {
+	err := global.DB.Where("name LIKE ?", "%"+name+"%").First(&city).Error
+	if err != nil && errors.Is(err, gorm.ErrRecordNotFound) {
+		return city, true
+	} else if err != nil && !errors.Is(err, gorm.ErrRecordNotFound) {
+		panic(err)
+	} else {
+		return city, false
+	}
+}
+
 //----------------------------------------------------
 //----------------------------------------------------
 //------------------------新冠数据---------------------
