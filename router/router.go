@@ -69,6 +69,7 @@ func InitRouter(Router *gin.RouterGroup) {
 
 		DataRouter.GET("/list_overview", v1.ListOverviewData)
 		DataRouter.POST("/list_country_overview", v1.ListCountryOverviewData)
-		// DataRouter.POST("/list_district_overview", v1.ListDistrictOverviewData)
+		// DataRouter.POST("/list_province_overview", v1.ListProvinceOverviewData)
+		DataRouter.POST("/list_district_overview", v1.ListDistrictOverviewData)
 	}
 }

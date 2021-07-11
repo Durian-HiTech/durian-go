@@ -731,6 +731,24 @@ func ListCountryOverviewData(c *gin.Context) {
 	}
 }
 
+// // ListProvinceOverviewData doc
+// // @description 获取中国某个省份的各类整体数据，以及省份下各市的现存确诊、新增确诊、累积确诊、累计及新增新冠感染/死亡/治愈 [信息综合]，返回列表 [根据日期-市分组] [Province]
+// // @Tags 数据
+// // @Param province formData string true "省份或直辖市名"
+// // @Success 200 {string} string "{"success":true, "message":"查询成功","data":{本部分格式见ChinaAnalysisSample.json}"
+// // @Router /data/list_province_overview [POST]
+// func ListProvinceOverviewData(c *gin.Context) {
+// 	provinceName := c.Request.FormValue("province")
+// 	data := service.QueryProvinceOverviewAndDetails(provinceName)
+// 	var dataRevert []model.DistrictOverviewAndDetail
+// 	length := len(data)
+// 	for i := (length - 1); i >= 0; i-- {
+// 		dataRevert = append(dataRevert, data[i])
+// 	}
+// 	c.JSON(http.StatusOK, gin.H{"success": true, "message": "查询成功", "data": dataRevert})
+
+// }
+
 // ListOverviewData doc
 // @description 获取世界或中国的现存确诊、新增确诊、累积确诊、累计及新增新冠感染/死亡/治愈 [信息综合]，返回列表 [根据国家分组] [Province]
 // @Tags 数据
@@ -742,14 +760,19 @@ func ListOverviewData(c *gin.Context) {
 		"globalLen": len(globalTable.Detailed), "chinaLen": len(chinaTable.Detailed)})
 }
 
-// // ListDistrictOverviewData doc
-// // @description 获取三级行政单位的现存确诊、新增确诊、累积确诊、累计及新增新冠感染/死亡/治愈 [信息综合]，返回列表 [根据日期分组] [Province]
-// // @Param district formData string true "三级行政单位名 如长春、白城"
-// // @Tags 数据
-// // @Success 200 {string} string "{"success":true, "message":"查询成功","nowcases":{"nownum": 123, "newnum": 123}等数据}"
-// // @Router /data/list_district_overview [POST]
-// func ListDistrictOverviewData(c *gin.Context) {
-// 	districtName := c.Request.FormValue("district")
-// 	data := service.QueryDistrictOverview(districtName)
-// 	c.JSON(http.StatusOK, gin.H{"success": true, "message": "查询成功", "data": data, "dataLen": len(data)})
-// }
+// ListDistrictOverviewData doc
+// @description 获取三级行政单位的现存确诊、新增确诊、累积确诊、累计及新增新冠感染/死亡/治愈 [信息综合]，返回列表 [根据日期分组] [Province]
+// @Param district formData string true "三级行政单位名 如长春、白城"
+// @Tags 数据
+// @Success 200 {string} string "{"success":true, "message":"查询成功","nowcases":{"nownum": 123, "newnum": 123}等数据}"
+// @Router /data/list_district_overview [POST]
+func ListDistrictOverviewData(c *gin.Context) {
+	districtName := c.Request.FormValue("district")
+	var dataRevert []model.DistrictOverview
+	data := service.QueryDistrictOverview(districtName)
+	length := len(data)
+	for i := (length - 1); i >= 0; i-- {
+		dataRevert = append(dataRevert, data[i])
+	}
+	c.JSON(http.StatusOK, gin.H{"success": true, "message": "查询成功", "data": dataRevert, "len": len(dataRevert)})
+}

@@ -341,6 +341,31 @@ var doc = `{
                 }
             }
         },
+        "/data/list_district_overview": {
+            "post": {
+                "description": "获取三级行政单位的现存确诊、新增确诊、累积确诊、累计及新增新冠感染/死亡/治愈 [信息综合]，返回列表 [根据日期分组] [Province]",
+                "tags": [
+                    "数据"
+                ],
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "三级行政单位名 如长春、白城",
+                        "name": "district",
+                        "in": "formData",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "{\"success\":true, \"message\":\"查询成功\",\"nowcases\":{\"nownum\": 123, \"newnum\": 123}等数据}",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
         "/data/list_overview": {
             "get": {
                 "description": "获取世界或中国的现存确诊、新增确诊、累积确诊、累计及新增新冠感染/死亡/治愈 [信息综合]，返回列表 [根据国家分组] [Province]",

@@ -474,16 +474,82 @@ func QueryAllCovidRecoveredsResponseProvince(province string) (response []model.
 // }
 
 // 获取某个三级行政单位（如海淀区）的overview数据
-// func QueryDistrictOverview(districtName string) (districtData []model.DistrictOverview) {
-// 	var districtCases []model.CovidHangzhouCases
-// 	var districtDeaths []model.CovidHangzhouDeaths
-// 	var districtRecovered []model.CovidHangzhouRecovered
-// 	err1 := global.DB.Where("city_name = ?", districtName).Order("date asc").Find(&districtCases).Error
-// 	err2 := global.DB.Where("city_name = ?", districtName).Order("date asc").Find(&districtDeaths).Error
-// 	err3 := global.DB.Where("city_name = ?", districtName).Order("date asc").Find(&districtRecovered).Error
+func QueryDistrictOverview(districtName string) (districtData []model.DistrictOverview) {
+	var districtCases []model.CovidHangzhouCases
+	var districtDeaths []model.CovidHangzhouDeaths
+	var districtRecovered []model.CovidHangzhouRecovered
+	err1 := global.DB.Where("city_name = ?", districtName).Order("date asc").Find(&districtCases).Error
+	err2 := global.DB.Where("city_name = ?", districtName).Order("date asc").Find(&districtDeaths).Error
+	err3 := global.DB.Where("city_name = ?", districtName).Order("date asc").Find(&districtRecovered).Error
+
+	if (err1 != nil && errors.Is(err1, gorm.ErrRecordNotFound)) || (err2 != nil && errors.Is(err2, gorm.ErrRecordNotFound)) || (err3 != nil && errors.Is(err3, gorm.ErrRecordNotFound)) {
+		return districtData
+	} else if err1 != nil && !errors.Is(err1, gorm.ErrRecordNotFound) {
+		panic(err1)
+	} else if err2 != nil && !errors.Is(err2, gorm.ErrRecordNotFound) {
+		panic(err2)
+	} else if err3 != nil && !errors.Is(err3, gorm.ErrRecordNotFound) {
+		panic(err3)
+	} else {
+		lenCases := len(districtCases)
+		lenDeaths := len(districtDeaths)
+		lenRecovered := len(districtRecovered)
+		length := lenCases
+		if length < lenDeaths {
+			length = lenDeaths
+		}
+		if length < lenRecovered { // 至此找到最短的表
+			length = lenRecovered
+		}
+		for i := 0; i < length; i++ { // 等价于日期
+			var casesNum uint64
+			var casesNewNum uint64
+			var casesNowNum uint64
+			var deathsNum uint64
+			var deathsNewNum uint64
+			var recoveredNum uint64
+			var recoveredNewNum uint64
+
+			casesNum = districtCases[i].Info
+			deathsNum = districtDeaths[i].Info
+			recoveredNum = districtRecovered[i].Info
+			casesNowNum = casesNum - deathsNum - recoveredNum
+			curDate := districtCases[i].Date
+			if i != 0 { // 第二天及以后
+				casesNewNum = casesNum - districtData[i-1].Overview.Cases.NowNum
+				deathsNewNum = deathsNum - districtData[i-1].Overview.Deaths.NowNum
+				recoveredNewNum = recoveredNum - districtData[i-1].Overview.Recovered.NowNum
+			} else {
+				casesNewNum = 0
+				deathsNewNum = 0
+				recoveredNewNum = 0
+			}
+
+			nowCasesItem := model.NowCases{NowNum: casesNowNum, NewNum: casesNewNum}
+			casesItem := model.Cases{NowNum: casesNum, NewNum: casesNewNum}
+			deathItem := model.Deaths{NowNum: deathsNum, NewNum: deathsNewNum}
+			recoveredItem := model.Recovered{NowNum: recoveredNum, NewNum: recoveredNewNum}
+			vaccineItem := model.Vaccine{NowNum: 0, NewNum: 0}
+			overviewItem := model.Overview{NowCases: nowCasesItem, Cases: casesItem, Deaths: deathItem, Vaccine: vaccineItem, Recovered: recoveredItem}
+			districtOverviewItem := model.DistrictOverview{Date: curDate, Overview: overviewItem}
+			districtData = append(districtData, districtOverviewItem)
+		}
+		return districtData
+	}
+}
+
+// 获取中国某省份按日期构成的数据，每日数据下包含整体数据、省下的各市的数据
+// func QueryProvinceOverviewAndDetails(provinceName string) (data []model.DistrictOverviewAndDetail) {
+// 	var cases []model.CovidHangzhouCases
+// 	var deaths []model.CovidHangzhouDeaths
+// 	var recovered []model.CovidHangzhouRecovered
+
+// 	err1 := global.DB.Where("province_name = ?", provinceName).Order("date asc, city_name asc").Find(&cases).Error
+// 	err2 := global.DB.Where("province_name = ?", provinceName).Order("date asc, city_name asc").Find(&deaths).Error
+// 	err3 := global.DB.Where("province_name = ?", provinceName).Order("date asc, city_name asc").Find(&recovered).Error
 
 // 	if (err1 != nil && errors.Is(err1, gorm.ErrRecordNotFound)) || (err2 != nil && errors.Is(err2, gorm.ErrRecordNotFound)) || (err3 != nil && errors.Is(err3, gorm.ErrRecordNotFound)) {
-// 		return districtData
+// 		return data
 // 	} else if err1 != nil && !errors.Is(err1, gorm.ErrRecordNotFound) {
 // 		panic(err1)
 // 	} else if err2 != nil && !errors.Is(err2, gorm.ErrRecordNotFound) {
@@ -491,10 +557,75 @@ func QueryAllCovidRecoveredsResponseProvince(province string) (response []model.
 // 	} else if err3 != nil && !errors.Is(err3, gorm.ErrRecordNotFound) {
 // 		panic(err3)
 // 	} else {
+// 		lenCases := len(cases)
+// 		districtLength := 0 // 这个省份/直辖市下有多少个市/区
+// 		oneDate := cases[0].Date
+// 		for i := 0; i < lenCases; i++ {
+// 			if oneDate == cases[i].Date {
+// 				districtLength += 1
+// 			} else {
+// 				break
+// 			}
+// 		}
 
+// 		days := lenCases / districtLength // 共有
+// 		for i := 0; i < days; i++ {
+// 			var detail []model.CovidDetailCDRDistrict
+// 			var casesNum uint64
+// 			var casesNewNum uint64
+// 			var casesNowNum uint64
+// 			var deathsNum uint64
+// 			var deathsNewNum uint64
+// 			var recoveredNum uint64
+// 			var recoveredNewNum uint64
+
+// 			casesNum = districtCases[i].Info
+// 			deathsNum = districtDeaths[i].Info
+// 			recoveredNum = districtRecovered[i].Info
+// 			for j := 0; j < districtLength; j++ {
+
+// 				if i != 0 { // 第二天及以后
+// 					casesNewNum = casesNum - districtData[i-1].Overview.Cases.NowNum
+// 					deathsNewNum = deathsNum - districtData[i-1].Overview.Deaths.NowNum
+// 					recoveredNewNum = recoveredNum - districtData[i-1].Overview.Recovered.NowNum
+// 				} else {
+// 					casesNewNum = 0
+// 					deathsNewNum = 0
+// 					recoveredNewNum = 0
+// 				}
+
+// 				detail = append(detail, model.CovidDetailCDRDistrict{DistrictName: cases[i*districtLength+j].ProvinceName,
+// 					NowCases:  cases[i*districtLength+j].Info - deaths[i*districtLength+j].Info - recovered[i*districtLength+j].Info,
+// 					Cases:     cases[i*districtLength+j].Info,
+// 					NewCases: ,
+// 					Deaths:    deaths[i*districtLength+j].Info,
+// 					Recovered: recovered[i*districtLength+j].Info})
+// 			}
+
+// 			casesNowNum = casesNum - deathsNum - recoveredNum
+// 			curDate := cases[i*34].Date
+// 			if i != 0 { // 第二天及以后
+// 				casesNewNum = casesNum - data[i-1].Overview.Cases.NowNum
+// 				deathsNewNum = deathsNum - data[i-1].Overview.Deaths.NowNum
+// 				recoveredNewNum = recoveredNum - data[i-1].Overview.Recovered.NowNum
+
+// 			} else {
+// 				casesNewNum = 0
+// 				deathsNewNum = 0
+// 				recoveredNewNum = 0
+// 			}
+
+// 			nowCasesItem := model.NowCases{NowNum: casesNowNum, NewNum: casesNewNum}
+// 			casesItem := model.Cases{NowNum: casesNum, NewNum: casesNewNum}
+// 			deathItem := model.Deaths{NowNum: deathsNum, NewNum: deathsNewNum}
+// 			recoveredItem := model.Recovered{NowNum: recoveredNum, NewNum: recoveredNewNum}
+// 			vaccineItem := model.Vaccine{NowNum: 0, NewNum: 0}
+// 			overviewItem := model.Overview{NowCases: nowCasesItem, Cases: casesItem, Deaths: deathItem, Vaccine: vaccineItem, Recovered: recoveredItem}
+// 			countryOverviewAndDetailsItem := model.CountryOverviewAndDetails{Date: curDate, Overview: overviewItem, Detailed: detail}
+// 			data = append(data, countryOverviewAndDetailsItem)
+// 		}
+// 		return data, false
 // 	}
-
-// 	return districtData
 // }
 
 // 获取某个外国国家按日期构成的数据，每日数据下包含整体数据、各省数据
