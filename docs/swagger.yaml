@@ -628,10 +628,10 @@ paths:
       - 订阅城市
   /travel/list_all_flights:
     get:
-      description: 获取所有航班信息，返回列表
+      description: 获取所有主要城市，返回列表
       responses:
         "200":
-          description: '{"success":true, "message":"查询成功","data":"所有航班信息""}'
+          description: '{"success":true, "message":"查询成功","data":"所有主要城市列表""}'
           schema:
             type: string
       tags:

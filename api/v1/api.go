@@ -547,6 +547,16 @@ func ListAllTrains(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"success": true, "message": "查询成功", "data": trainList})
 }
 
+// ListAllCities doc
+// @description 获取所有主要城市，返回列表
+// @Tags 出行
+// @Success 200 {string} string "{"success":true, "message":"查询成功","data":"所有主要城市列表""}"
+// @Router /travel/list_all_flights [GET]
+func ListAllCities(c *gin.Context) {
+	cityList := service.QueryAllMainCity()
+	c.JSON(http.StatusOK, gin.H{"success": true, "message": "查询成功", "data": cityList})
+}
+
 //----------------------------------------------------
 //----------------------------------------------------
 //------------------------新冠-------------------------

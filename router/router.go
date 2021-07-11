@@ -46,6 +46,7 @@ func InitRouter(Router *gin.RouterGroup) {
 	{
 		TravelRouter.GET("/list_all_flights", v1.ListAllFlights)
 		TravelRouter.GET("/list_all_trains", v1.ListAllTrains)
+		TravelRouter.GET("/list_all_main_cities", v1.ListAllCities)
 	}
 
 	DataRouter := Router.Group("/data")

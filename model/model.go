@@ -113,3 +113,8 @@ type TrainDomesticWithStatus struct {
 	TrainDomestic
 	Status string `gorm:"size:255;" json:"status"`
 }
+
+type MainCity struct {
+	Province string `gorm:"size:255" json:"province"`
+	City     string `gorm:"size:255" json:"city"`
+}
