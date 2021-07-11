@@ -851,8 +851,7 @@ func ListHistoryOverviewData(c *gin.Context) {
 	for i := (length - 1); i >= 0; i-- {
 		globalTableRevert = append(globalTableRevert, globalTable[i])
 	}
-	c.JSON(http.StatusOK, gin.H{"success": true, "message": "查询成功", "Global": globalTableRevert[1],
-		"globalLen": len(globalTableRevert[1].Detailed)})
+	c.JSON(http.StatusOK, gin.H{"success": true, "message": "查询成功", "Global": globalTableRevert})
 }
 
 // ListDistrictOverviewData doc
