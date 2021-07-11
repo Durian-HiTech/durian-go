@@ -287,11 +287,11 @@ func CreateAQuestion(c *gin.Context) {
 // ListAllQuestions doc
 // @description 列出全部问题
 // @Tags 防控知识板块
-// @Success 200 {string} string "{"success": true, "message": "查看成功", "data": "全部问题"}"
+// @Success 200 {string} string "{"success": true, "message": "查看成功", "data": "全部问题列表", "recommend_questions":"推荐问题列表"}"
 // @Router /notice/list_all_questions [GET]
 func ListAllQuestions(c *gin.Context) {
-	questionList := service.QueryAllQuestions()
-	c.JSON(http.StatusOK, gin.H{"success": true, "message": "查询成功", "data": questionList})
+	questionList, recommendQuestions := service.QueryAllQuestions()
+	c.JSON(http.StatusOK, gin.H{"success": true, "message": "查询成功", "data": questionList, "recommend_questions": recommendQuestions})
 }
 
 // ListAQuestion doc
