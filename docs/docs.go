@@ -983,6 +983,22 @@ var doc = `{
                 }
             }
         },
+        "/travel/find_center_city_coordinate": {
+            "post": {
+                "description": "查询城市的中心位置坐标 [模糊搜索]",
+                "tags": [
+                    "出行"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "{\"success\":false, \"message\":\"查询失败\",\"data\":\"没有找到该城市\"\"}",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
         "/travel/list_all_flights": {
             "get": {
                 "description": "获取所有航班信息，返回列表",
@@ -992,6 +1008,22 @@ var doc = `{
                 "responses": {
                     "200": {
                         "description": "{\"success\":true, \"message\":\"查询成功\",\"data\":\"所有航班信息\"\"}",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/travel/list_all_main_cities": {
+            "get": {
+                "description": "获取所有主要城市，返回列表",
+                "tags": [
+                    "出行"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "{\"success\":true, \"message\":\"查询成功\",\"data\":\"所有主要城市列表\"\"}",
                         "schema": {
                             "type": "string"
                         }

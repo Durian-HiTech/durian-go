@@ -113,3 +113,16 @@ type TrainDomesticWithStatus struct {
 	TrainDomestic
 	Status string `gorm:"size:255;" json:"status"`
 }
+
+// 主要城市省份和其对应城市
+type MainCity struct {
+	Province string `gorm:"size:255" json:"province"`
+	City     string `gorm:"size:255" json:"city"`
+}
+
+// 城市中心的坐标
+type CenterCity struct {
+	Name      string `gorm:"size:255" json:"name"`
+	Longitude string `gorm:"size:255" json:"longitude"`
+	Latitude  string `gorm:"size:255" json:"latitude"`
+}

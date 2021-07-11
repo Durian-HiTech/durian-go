@@ -548,6 +548,33 @@ func ListAllTrains(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"success": true, "message": "查询成功", "data": trainList})
 }
 
+// ListAllCities doc
+// @description 获取所有主要城市，返回列表
+// @Tags 出行
+// @Success 200 {string} string "{"success":true, "message":"查询成功","data":"所有主要城市列表""}"
+// @Router /travel/list_all_main_cities [GET]
+func ListAllCities(c *gin.Context) {
+	cityList := service.QueryAllMainCity()
+	c.JSON(http.StatusOK, gin.H{"success": true, "message": "查询成功", "data": cityList})
+}
+
+// ListAllCities doc
+// @description 查询城市的中心位置坐标 [模糊搜索]
+// @Tags 出行
+// @Success 200 {string} string "{"success":true, "message":"查询成功","data":"城市坐标""}"
+// @Failure 200 {string} string "{"success":false, "message":"查询失败","data":"没有找到该城市""}"
+// @Router /travel/find_center_city_coordinate [POST]
+func FindCenterCityCoordinate(c *gin.Context) {
+	cityName := c.Request.FormValue("name")
+	city, notFound := service.QueryCenterCityCoordinate(cityName)
+	if notFound {
+		c.JSON(http.StatusOK, gin.H{"success": false, "message": "查询失败", "data": "没有找到该城市"})
+	} else {
+		c.JSON(http.StatusOK, gin.H{"success": true, "message": "查询成功", "data": city})
+	}
+
+}
+
 //----------------------------------------------------
 //----------------------------------------------------
 //------------------------新冠-------------------------
