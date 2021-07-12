@@ -1049,13 +1049,13 @@ var doc = `{
         },
         "/travel/list_all_train_info": {
             "get": {
-                "description": "获取所有火车信息，返回列表 [更新]",
+                "description": "根据起始地查询列车信息",
                 "tags": [
                     "出行"
                 ],
                 "responses": {
                     "200": {
-                        "description": "{\"success\":true, \"message\":\"查询成功\",\"data\":\"所有火车信息\"\"}",
+                        "description": "{\"success\":true, \"message\":\"查询成功\",\"data\":\"查询到的火车信息\"\"}",
                         "schema": {
                             "type": "string"
                         }

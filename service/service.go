@@ -315,6 +315,18 @@ func QueryAllTrainInfo() (trains []model.TrainInfo) {
 	return trains
 }
 
+// 根据起始地查询列车信息
+func QuerySpecificTrainInfo(departureCity string, arrivalCity string) (train model.TrainInfo, notFound bool) {
+	err := global.DB.Where("departure_city LIKE ? AND arrival_city LIKE ?", "%"+departureCity+"%", "%"+arrivalCity+"%").First(&train).Error
+	if err != nil && errors.Is(err, gorm.ErrRecordNotFound) {
+		return train, true
+	} else if err != nil && !errors.Is(err, gorm.ErrRecordNotFound) {
+		panic(err)
+	} else {
+		return train, false
+	}
+}
+
 // 查询所有主要城市
 func QueryAllMainCity() (city []model.MainCity) {
 	global.DB.Find(&city)
