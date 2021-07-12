@@ -1297,9 +1297,11 @@ func QueryGlobalOverviewAndDetailsHistory() (globalTable []model.GlobalOverviewA
 // 世界接种数据
 func QueryVaccineOverviewData() (globalTable []model.GlobalVaccineOverviewAndDetailsWithDate) {
 	var cases []model.CovidVaccine
+	var vaccineGlobal []model.CovidGlobalVaccine
 
 	// 获取各个国家的信息
 	_ = global.DB.Order("date asc, country_name asc").Find(&cases).Error
+	_ = global.DB.Order("date asc").Find(&vaccineGlobal).Error
 	countryLength := 0 // 查看有多少个国家
 	oneDate := cases[0].Date
 	lenCases := len(cases)
@@ -1321,6 +1323,12 @@ func QueryVaccineOverviewData() (globalTable []model.GlobalVaccineOverviewAndDet
 		var globalDetail []model.CovidVaccineCountry // 记录今日全球的detail数据，也即每个国家的接种数据
 		var globalVaccineNum uint64                  // 今日全球累计接种
 		var globalVaccineNewNum uint64               // 今日全球新增接种
+		var globalTotalPerHundred uint64
+		var globalDailyPerMillion uint64
+		globalVaccineNum = vaccineGlobal[i].Total
+		globalVaccineNewNum = vaccineGlobal[i].Daily
+		globalTotalPerHundred = vaccineGlobal[i].TotalPerHundred
+		globalDailyPerMillion = vaccineGlobal[i].DailyPerMillion
 
 		curDate := cases[i*countryLength].Date
 		for j := 0; j < countryLength; j++ { // 国家数目
@@ -1338,19 +1346,13 @@ func QueryVaccineOverviewData() (globalTable []model.GlobalVaccineOverviewAndDet
 			} else {
 				vaccineNewNum = 0
 			}
-			globalVaccineNum += vaccineNum
 
 			globalDetail = append(globalDetail, model.CovidVaccineCountry{CountryName: cases[i*countryLength+j].CountryName,
 				NewVaccine: vaccineNewNum, Vaccine: vaccineNum,
 				TotalPerHundred: totalPerHundred, DailyPerMillion: dailyPerMillion})
 		}
-		if i != 0 {
-			globalVaccineNewNum = globalVaccineNum - globalTable[i-1].Overview.Vaccine
-		} else {
-			globalVaccineNewNum = 0
-		}
 
-		vaccineGlobalItem := model.CovidVaccineGlobal{Vaccine: globalVaccineNum, NewVaccine: globalVaccineNewNum}
+		vaccineGlobalItem := model.CovidVaccineGlobalOview{Vaccine: globalVaccineNum, NewVaccine: globalVaccineNewNum, TotalPerHundred: globalTotalPerHundred, DailyPerMillion: globalDailyPerMillion}
 		globalTableItem := model.GlobalVaccineOverviewAndDetailsWithDate{Date: curDate, Overview: vaccineGlobalItem, Detailed: globalDetail}
 		globalTable = append(globalTable, globalTableItem)
 	}

@@ -83,6 +83,15 @@ type CovidVaccine struct {
 	DailyPerMillion uint64    `json:"dailypermillion"`
 }
 
+// 新冠疫苗接种人数
+type CovidGlobalVaccine struct {
+	Date            time.Time `json:"date"`
+	Total           uint64    `json:"total"`
+	Daily           uint64    `json:"daily"`
+	TotalPerHundred uint64    `json:"totalperhundred"`
+	DailyPerMillion uint64    `json:"dailypermillion"`
+}
+
 // 新冠疫苗接种人数 [临时表]
 type CovidVaccineNoDate struct {
 	CountryName     string `gorm:"size:255;" json:"name"`
@@ -375,14 +384,16 @@ type CovidVaccineCountry struct {
 }
 
 // 全球某一天的接种信息 [临时表]
-type CovidVaccineGlobal struct {
-	Vaccine    uint64 `json:"vaccine"`
-	NewVaccine uint64 `json:"newvaccine"`
+type CovidVaccineGlobalOview struct {
+	Vaccine         uint64 `json:"vaccine"`
+	NewVaccine      uint64 `json:"newvaccine"`
+	TotalPerHundred uint64 `json:"totalperhundred"`
+	DailyPerMillion uint64 `json:"dailypermillion"`
 }
 
 // 世界疫苗接种的overview+detail列表 用于世界每一天的所有国家的接种数据[临时表]
 type GlobalVaccineOverviewAndDetailsWithDate struct {
-	Date     time.Time             `json:"date"`
-	Overview CovidVaccineGlobal    `json:"overview"`
-	Detailed []CovidVaccineCountry `json:"detailed"`
+	Date     time.Time               `json:"date"`
+	Overview CovidVaccineGlobalOview `json:"overview"`
+	Detailed []CovidVaccineCountry   `json:"detailed"`
 }
