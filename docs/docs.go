@@ -1049,7 +1049,7 @@ var doc = `{
         },
         "/travel/find_specific_train_info": {
             "get": {
-                "description": "根据起始地查询列车信息",
+                "description": "根据起始地查询列车信息，返回列表",
                 "tags": [
                     "出行"
                 ],

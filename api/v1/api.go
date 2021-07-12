@@ -578,7 +578,7 @@ func ListAllTrainInfo(c *gin.Context) {
 }
 
 // FindSpecificTrainInfo doc
-// @description 根据起始地查询列车信息
+// @description 根据起始地查询列车信息，返回列表
 // @Tags 出行
 // @Param departure_city formData string true "出发地"
 // @Param arrival_city formData string true "到达地"
