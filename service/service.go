@@ -578,14 +578,15 @@ func QueryAllCovidRecoveredsResponseProvince(province string) (response []model.
 
 // 几个临时的service 获取当前位置的疫情信息
 // 获取某国的数据，暂时专门用来获取美国的数据
-func QueryCountryData(countryName string) (data model.CovidDetailCDRProvince) {
+func QueryCountryData(dataMap map[string]string, countryName string) (data model.CovidDetailCDRProvince) {
 	var cases []model.CovidCases
 	var deaths []model.CovidDeaths
 	var recovered []model.CovidRecovered
+	countryEnName := dataMap[countryName]
 
-	err1 := global.DB.Where("country_name = ?", countryName).Order("date desc").Find(&cases).Error
-	err2 := global.DB.Where("country_name = ?", countryName).Order("date desc").Find(&deaths).Error
-	err3 := global.DB.Where("country_name = ?", countryName).Order("date desc").Find(&recovered).Error
+	err1 := global.DB.Where("country_name = ?", countryEnName).Order("date desc").Find(&cases).Error
+	err2 := global.DB.Where("country_name = ?", countryEnName).Order("date desc").Find(&deaths).Error
+	err3 := global.DB.Where("country_name = ?", countryEnName).Order("date desc").Find(&recovered).Error
 
 	if (err1 != nil && errors.Is(err1, gorm.ErrRecordNotFound)) || (err2 != nil && errors.Is(err2, gorm.ErrRecordNotFound)) || (err3 != nil && errors.Is(err3, gorm.ErrRecordNotFound)) {
 		return data
@@ -620,15 +621,24 @@ func QueryCountryData(countryName string) (data model.CovidDetailCDRProvince) {
 }
 
 // 获取中国某省下某市/某直辖市下某区的数据
-// 暂时专门处理海淀区
+// 通过模糊查询的方法处理“海淀区”有“区“字 “金山”没有”区“字
 func QueryDistrictData(districtName string) (data model.CovidDetailCDRProvince) {
+
+	temp := districtName
+	wordLen := len(districtName)
+	if districtName[wordLen-3:wordLen] == "区" {
+		temp = districtName[0:(wordLen-3)] + "%"
+	} else {
+		temp += "%"
+	}
+
 	var cases []model.CovidHangzhouCases
 	var deaths []model.CovidHangzhouDeaths
 	var recovered []model.CovidHangzhouRecovered
 
-	err1 := global.DB.Where("city_name = ?", districtName).Order("date desc").Find(&cases).Error
-	err2 := global.DB.Where("city_name = ?", districtName).Order("date desc").Find(&deaths).Error
-	err3 := global.DB.Where("city_name = ?", districtName).Order("date desc").Find(&recovered).Error
+	err1 := global.DB.Where("city_name LIKE ?", temp).Order("date desc").Find(&cases).Error
+	err2 := global.DB.Where("city_name LIKE ?", temp).Order("date desc").Find(&deaths).Error
+	err3 := global.DB.Where("city_name LIKE ?", temp).Order("date desc").Find(&recovered).Error
 
 	if (err1 != nil && errors.Is(err1, gorm.ErrRecordNotFound)) || (err2 != nil && errors.Is(err2, gorm.ErrRecordNotFound)) || (err3 != nil && errors.Is(err3, gorm.ErrRecordNotFound)) {
 		return data
@@ -647,8 +657,6 @@ func QueryDistrictData(districtName string) (data model.CovidDetailCDRProvince) 
 		var recoveredNum uint64
 		var recoveredNewNum uint64
 
-		fmt.Println(len(cases))
-		fmt.Println(districtName)
 		casesNum = cases[0].Info
 		casesNewNum = cases[0].Info - cases[1].Info
 		deathsNum = deaths[0].Info

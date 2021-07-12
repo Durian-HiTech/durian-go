@@ -1,6 +1,7 @@
 package v1
 
 import (
+	"encoding/json"
 	"fmt"
 	"io/ioutil"
 	"net/http"
@@ -946,14 +947,36 @@ func ListVaccineOverviewData(c *gin.Context) {
 func ListCurrentLocationData(c *gin.Context) {
 	countryName := c.Request.FormValue("country")
 	provinceName := c.Request.FormValue("province")
-	// cityName := c.Request.FormValue("city")
+	cityName := c.Request.FormValue("city")
 	districtName := c.Request.FormValue("district")
 
+	fh, err := os.Open("countryzh2en.json")
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	defer fh.Close()
+	jsonData, err := ioutil.ReadAll(fh)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+
+	// 定义空接口接收解析后的json数据
+	var dataMap map[string]string
+	// 或：map[string]interface{} 结果是完全一样的
+	err = json.Unmarshal(jsonData, &dataMap)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
 	var data model.CovidDetailCDRProvince
-	if districtName != "" {
-		data = service.QueryDistrictData("海淀") // covid_hangzhou_cases
+	if districtName != "" && (cityName == "上海市" || cityName == "北京市" || cityName == "天津市" || cityName == "重庆市") {
+		data = service.QueryDistrictData(districtName) // 直辖市下的区的查询
+	} else if cityName != "" {
+		data = service.QueryDistrictData(cityName) // 对省下的市的查询
 	} else if countryName != "中国" {
-		data = service.QueryCountryData("United States of America") // covid_cases
+		data = service.QueryCountryData(dataMap, countryName) // 外国的查询
 	} else if provinceName == "香港特别行政区" {
 		data = service.QueryProvinceData("Hong Kong") // covid_china_cases
 	}
