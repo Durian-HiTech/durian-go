@@ -476,7 +476,8 @@ func QueryAllCovidVaccinesResponse() (response []model.CovidVaccineResponse) {
 		var tmp []model.CovidVaccineNoDate
 		for j := i; j < lenCases; j++ {
 			if cases[j].Date == curDate {
-				tmp = append(tmp, model.CovidVaccineNoDate{CountryName: cases[j].CountryName, Info: cases[j].Info})
+				tmp = append(tmp, model.CovidVaccineNoDate{CountryName: cases[j].CountryName, Info: cases[j].Info,
+					TotalPerHundred: cases[j].TotalPerHundred, DailyPerMillion: cases[j].DailyPerMillion})
 			} else {
 				curDate = cases[j].Date
 				i = j
@@ -1054,7 +1055,7 @@ func QueryGlobalOverviewAndDetailsHistory() (globalTable []model.GlobalOverviewA
 			break
 		}
 	}
-	dateLength := lenCases / countryLength // 一共有多少天 现在共有535天 173个国家
+	dateLength := lenCases / countryLength // 一共有多少天 现在共有535天 173个国家（包含global）
 	// 对世界各国进行统计
 	// 按照日期进行遍历
 	for i := 0; i < dateLength; i++ {
@@ -1127,6 +1128,64 @@ func QueryGlobalOverviewAndDetailsHistory() (globalTable []model.GlobalOverviewA
 
 		overviewGlobalItem := model.Overview{NowCases: nowGlobalCasesItem, Cases: casesGlobalItem, Deaths: deathGlobalItem, Vaccine: vaccineGlobalItem, Recovered: recoveredGlobalItem}
 		globalTableItem := model.GlobalOverviewAndDetailsWithDate{Date: curDate, Overview: overviewGlobalItem, Detailed: globalDetail}
+		globalTable = append(globalTable, globalTableItem)
+	}
+	return globalTable
+}
+
+// 世界接种数据
+func QueryVaccineOverviewData() (globalTable []model.GlobalVaccineOverviewAndDetailsWithDate) {
+	var cases []model.CovidVaccine
+
+	// 获取各个国家的信息
+	_ = global.DB.Order("date asc, country_name asc").Find(&cases).Error
+	countryLength := 0 // 查看有多少个国家
+	oneDate := cases[0].Date
+	lenCases := len(cases)
+	for i := 0; i < lenCases; i++ {
+		if oneDate == cases[i].Date {
+			countryLength += 1
+		} else {
+			break
+		}
+	}
+	dateLength := lenCases / countryLength // 一共有多少天 现在共有537天 172个国家 Vaccine表没有global
+	fmt.Println(lenCases)
+	fmt.Println(countryLength)
+	fmt.Println(dateLength)
+	// 对世界各国进行统计
+	// 按照日期进行遍历
+	for i := 0; i < dateLength; i++ {
+
+		var globalDetail []model.CovidVaccineCountry // 记录今日全球的detail数据，也即每个国家的接种数据
+		var globalVaccineNum uint64                  // 今日全球累计接种
+		var globalVaccineNewNum uint64               // 今日全球新增接种
+
+		curDate := cases[i*countryLength].Date
+		for j := 0; j < countryLength; j++ { // 国家数目
+			var vaccineNum uint64    // 今日累计接种
+			var vaccineNewNum uint64 // 今日新增接种
+			var totalPerHundred uint64
+			var dailyPerMillion uint64
+
+			vaccineNum = cases[i*countryLength+j].Info
+			totalPerHundred = cases[i*countryLength+j].TotalPerHundred
+			dailyPerMillion = cases[i*countryLength+j].DailyPerMillion
+
+			if i != 0 { // 减去前一天的
+				vaccineNewNum = vaccineNum - cases[(i-1)*countryLength+j].Info
+			} else {
+				vaccineNewNum = 0
+			}
+			globalVaccineNum += vaccineNum
+			globalVaccineNewNum += vaccineNewNum
+
+			globalDetail = append(globalDetail, model.CovidVaccineCountry{CountryName: cases[i*countryLength+j].CountryName,
+				NewVaccine: vaccineNewNum, Vaccine: vaccineNum,
+				TotalPerHundred: totalPerHundred, DailyPerMillion: dailyPerMillion})
+		}
+		vaccineGlobalItem := model.CovidVaccineGlobal{Vaccine: globalVaccineNum, NewVaccine: globalVaccineNewNum}
+		globalTableItem := model.GlobalVaccineOverviewAndDetailsWithDate{Date: curDate, Overview: vaccineGlobalItem, Detailed: globalDetail}
 		globalTable = append(globalTable, globalTableItem)
 	}
 	return globalTable

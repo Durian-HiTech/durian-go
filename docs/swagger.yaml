@@ -266,6 +266,16 @@ paths:
             type: string
       tags:
       - 数据
+  /data/list_vaccine_overview:
+    get:
+      description: 获取世界每一天的疫苗接种数据，以及每一天的各国的疫苗接种数据[信息综合]，返回列表 [根据日期分组]
+      responses:
+        "200":
+          description: '{""success":true, "message":"查询成功","data":"结果列表""}'
+          schema:
+            type: string
+      tags:
+      - 数据
   /data/query_data:
     post:
       description: 获取在数据库中直接存的 Json File

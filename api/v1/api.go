@@ -870,3 +870,18 @@ func ListDistrictOverviewData(c *gin.Context) {
 	}
 	c.JSON(http.StatusOK, gin.H{"success": true, "message": "查询成功", "data": dataRevert, "len": len(dataRevert)})
 }
+
+// ListVaccineOverviewData doc
+// @description 获取世界每一天的疫苗接种数据，以及每一天的各国的疫苗接种数据[信息综合]，返回列表 [根据日期分组]
+// @Tags 数据
+// @Success 200 {string} string "{""success":true, "message":"查询成功","data":"结果列表""}"
+// @Router /data/list_vaccine_overview [GET]
+func ListVaccineOverviewData(c *gin.Context) {
+	var globalTableRevert []model.GlobalVaccineOverviewAndDetailsWithDate
+	globalTable := service.QueryVaccineOverviewData()
+	length := len(globalTable)
+	for i := (length - 1); i >= 0; i-- {
+		globalTableRevert = append(globalTableRevert, globalTable[i])
+	}
+	c.JSON(http.StatusOK, gin.H{"success": true, "message": "查询成功", "Global": globalTableRevert})
+}
