@@ -987,7 +987,7 @@ func ListCurrentLocationData(c *gin.Context) {
 // @description 获取各个省份的疫苗接种数据
 // @Tags 数据
 // @Success 200 {string} string "{"success":true, "message":"查询成功","data":"所有信息""}"
-// @Router /data/list_vaccine_province_rate [GET]
+// @Router /data/list_vaccine_province_info [GET]
 func ListVaccineProvinceRate(c *gin.Context) {
 	data := service.QueryVaccineProvince()
 	c.JSON(http.StatusOK, gin.H{"success": true, "message": "查询成功", "data": data})
