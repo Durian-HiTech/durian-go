@@ -114,6 +114,19 @@ type TrainDomesticWithStatus struct {
 	Status string `gorm:"size:255;" json:"status"`
 }
 
+type TrainInfo struct {
+	TrainID          string `gorm:"size:255;" json:"train_id"`
+	DepartureCity    string `gorm:"size:255;" json:"departure_city"`
+	ArrivalCity      string `gorm:"size:255;" json:"arrival_city"`
+	DepartureStation string `gorm:"size:255;" json:"departure_station"`
+	ArrivalStation   string `gorm:"size:255;" json:"arrival_station"`
+	TrainStartDate   string `gorm:"size:255;" json:"train_start_date"`
+	DepartureTime    string `gorm:"size:255;" json:"departure_time"`
+	ArrivalTime      string `gorm:"size:255;" json:"arrival_time"`
+	DurationTime     string `gorm:"size:255;" json:"duration_time"`
+	PassCity         string `gorm:"size:255;" json:"pass_city"`
+}
+
 // 主要城市省份和其对应城市
 type MainCity struct {
 	Province string `gorm:"size:255" json:"province"`

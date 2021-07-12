@@ -309,6 +309,12 @@ func QueryAllTrains() (trainDomesticWithStatus []model.TrainDomesticWithStatus) 
 	return trainDomesticWithStatus
 }
 
+// 查看所有国内列车信息 [更新]
+func QueryAllTrainInfo() (trains []model.TrainInfo) {
+	global.DB.Find(&trains)
+	return trains
+}
+
 // 查询所有主要城市
 func QueryAllMainCity() (city []model.MainCity) {
 	global.DB.Find(&city)

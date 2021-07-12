@@ -538,13 +538,23 @@ func ListAllFlights(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"success": true, "message": "查询成功", "data": flightList})
 }
 
-// ListAllFlights doc
+// ListAllTrains doc
 // @description 获取所有火车信息，返回列表
 // @Tags 出行
 // @Success 200 {string} string "{"success":true, "message":"查询成功","data":"所有火车信息""}"
 // @Router /travel/list_all_trains [GET]
 func ListAllTrains(c *gin.Context) {
 	trainList := service.QueryAllTrains()
+	c.JSON(http.StatusOK, gin.H{"success": true, "message": "查询成功", "data": trainList})
+}
+
+// ListAllTrainInfo doc
+// @description 获取所有火车信息，返回列表 [更新]
+// @Tags 出行
+// @Success 200 {string} string "{"success":true, "message":"查询成功","data":"所有火车信息""}"
+// @Router /travel/list_all_train_info [GET]
+func ListAllTrainInfo(c *gin.Context) {
+	trainList := service.QueryAllTrainInfo()
 	c.JSON(http.StatusOK, gin.H{"success": true, "message": "查询成功", "data": trainList})
 }
 
