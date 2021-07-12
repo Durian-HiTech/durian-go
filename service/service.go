@@ -315,7 +315,7 @@ func QueryAllTrainInfo() (trains []model.TrainInfo) {
 	return trains
 }
 
-// 根据起始地查询列车信息
+// 根据起始地查询列车信息 [模糊搜索]
 func QuerySpecificTrainInfo(departureCity string, arrivalCity string) (train model.TrainInfo, notFound bool) {
 	err := global.DB.Where("departure_city LIKE ? AND arrival_city LIKE ?", "%"+departureCity+"%", "%"+arrivalCity+"%").First(&train).Error
 	if err != nil && errors.Is(err, gorm.ErrRecordNotFound) {
