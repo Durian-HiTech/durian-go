@@ -54,7 +54,7 @@ func UpdateAUser(user *model.User, username string, password string, userInfo st
 
 // 创建用户订阅城市
 func CreateASubscription(userID uint64, cityName string) (err error) {
-	subscription := model.Subscription{UserID: userID, CityName: cityName}
+	subscription := model.Subscription{UserID: userID, Name: cityName}
 	if err = global.DB.Create(&subscription).Error; err != nil {
 		return err
 	}
@@ -75,7 +75,7 @@ func QueryASubscriptionByID(subscriptionID uint64) (subscription model.Subscript
 
 // 根据用户 ID 和其订阅城市名查询某个订阅情况
 func QueryASubscriptionByUserIDAndCityName(userID uint64, cityName string) (subscription model.Subscription, notFound bool) {
-	err := global.DB.Where("user_id = ? AND city_name = ?", userID, cityName).First(&subscription).Error
+	err := global.DB.Where("user_id = ? AND name = ?", userID, cityName).First(&subscription).Error
 	if err != nil && errors.Is(err, gorm.ErrRecordNotFound) {
 		return subscription, true
 	} else if err != nil && !errors.Is(err, gorm.ErrRecordNotFound) {
@@ -88,7 +88,7 @@ func QueryASubscriptionByUserIDAndCityName(userID uint64, cityName string) (subs
 // 根据用户 ID 和其订阅城市名删除订阅城市
 func DeleteASubscription(userID uint64, cityName string) (err error) {
 	var subscription model.Subscription
-	err = global.DB.Where("user_id = ? AND city_name = ?", userID, cityName).First(&subscription).Error
+	err = global.DB.Where("user_id = ? AND name = ?", userID, cityName).First(&subscription).Error
 	_ = global.DB.Delete(&subscription).Error
 	return err
 }
@@ -121,16 +121,16 @@ func QuerySubcriptionsData(subscriptions []model.Subscription) (subscriptionsDat
 		lenSubcriptions := len(subscriptions)
 		// 循环获取订阅的省或直辖市的信息
 		for i := 0; i < lenSubcriptions; i++ {
-			provinceNamePinYin := global.MapPinYin(subscriptions[i].CityName)
+			provinceNamePinYin := global.MapPinYin(subscriptions[i].Name)
 			j := 0
 			for ; j < 34; j++ { // 查询省或直辖市相应的下标
 				if chinaCases[j].ProvinceName == provinceNamePinYin {
 					break
 				}
 			}
-			fmt.Println(subscriptions[i].CityName)
+			fmt.Println(subscriptions[i].Name)
 			fmt.Println(chinaCases[j].ProvinceName)
-			subscriptionsData = append(subscriptionsData, model.CovidDetailCDRProvince{ProvinceName: subscriptions[i].CityName,
+			subscriptionsData = append(subscriptionsData, model.CovidDetailCDRProvince{ProvinceName: subscriptions[i].Name,
 				NowCases:     chinaCases[j].Info - chinaDeaths[j].Info - chinaRecovered[j].Info,
 				Cases:        chinaCases[j].Info,
 				NewCases:     chinaCases[j].Info - chinaCases[j+34].Info,

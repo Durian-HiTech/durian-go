@@ -71,7 +71,7 @@ func Login(c *gin.Context) {
 			subs := service.QueryAllSubscriptions(user.UserID)
 			showSub := false
 			for _, sub := range subs {
-				if sub.CityName == "云南省" {
+				if sub.Name == "云南省" {
 					showSub = true
 					break
 				}
@@ -171,7 +171,7 @@ func TellUserInfo(c *gin.Context) {
 // @description 订阅城市疫情信息
 // @Tags 订阅城市
 // @Param user_id formData string true "用户ID"
-// @Param city_name formData string true "城市名字"
+// @Param name formData string true "城市名字"
 // @Success 200 {string} string "{"success":true, "message":"订阅成功"}"
 // @Failure 200 {string} string "{"success": false, "message": "已经订阅过这个城市的疫情信息"}"
 // @Failure 401 {string} string "{"success": false, "message": "数据库error, 一些其他错误"}"
@@ -179,7 +179,7 @@ func TellUserInfo(c *gin.Context) {
 // @Router /sub/subscribe [POST]
 func Subscribe(c *gin.Context) {
 	userID, _ := strconv.ParseUint(c.Request.FormValue("user_id"), 0, 64)
-	cityName := c.Request.FormValue("city_name")
+	cityName := c.Request.FormValue("name")
 
 	_, notFoundUserByID := service.QueryAUserByID(userID)
 	if notFoundUserByID {
@@ -211,7 +211,7 @@ func Subscribe(c *gin.Context) {
 // @description 获取订阅列表
 // @Tags 订阅城市
 // @Param user_id formData string true "用户ID"
-// @Param city_name formData string true "城市名字"
+// @Param name formData string true "城市名字"
 // @Success 200 {string} string "{"success":true, "message":"查询成功","data":"user的所有订阅"}"
 // @Failure 404 {string} string "{"success": false, "message": "用户ID不存在"}"
 // @Router /sub/list_all_subs [POST]
@@ -277,7 +277,7 @@ func ListSubscriptionsData(c *gin.Context) {
 // @Router /sub/del_sub [POST]
 func RemoveSubscription(c *gin.Context) {
 	userID, _ := strconv.ParseUint(c.Request.FormValue("user_id"), 0, 64)
-	cityName := c.Request.FormValue("city_name")
+	cityName := c.Request.FormValue("name")
 	if err := service.DeleteASubscription(userID, cityName); err != nil {
 		c.JSON(401, gin.H{"success": false, "message": err.Error()})
 	} else {

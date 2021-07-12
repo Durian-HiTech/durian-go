@@ -897,7 +897,7 @@ var doc = `{
                     {
                         "type": "string",
                         "description": "城市名字",
-                        "name": "city_name",
+                        "name": "name",
                         "in": "formData",
                         "required": true
                     }
@@ -972,7 +972,7 @@ var doc = `{
                     {
                         "type": "string",
                         "description": "城市名字",
-                        "name": "city_name",
+                        "name": "name",
                         "in": "formData",
                         "required": true
                     }
