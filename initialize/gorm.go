@@ -63,5 +63,6 @@ func InitMySQL() {
 		&model.FlightDomestic{},
 		&model.MainCity{},
 		&model.CenterCity{},
+		&model.TrainInfo{},
 	)
 }

@@ -16,7 +16,7 @@ type User struct {
 type Subscription struct {
 	SubscriptionID uint64 `gorm:"primary_key;" json:"subscription_id"`
 	UserID         uint64 `gorm:"not null" json:"user_id"`
-	CityName       string `gorm:"size:25;not null" json:"city_name"`
+	Name           string `gorm:"size:25;not null" json:"name"`
 }
 
 // 新闻
@@ -92,6 +92,7 @@ type FlightDomestic struct {
 	DepartureAirportName string `gorm:"size:255;" json:"departure_airport_name"`
 	ArrivalCityName      string `gorm:"size:255;" json:"arrival_city_name"`
 	ArrivalAirportName   string `gorm:"size:255;" json:"arrival_airport_name"`
+	State                string `gorm:"size:255;" json:"state"`
 }
 
 type FlightDomesticWithStatus struct {
@@ -112,6 +113,19 @@ type TrainDomestic struct {
 type TrainDomesticWithStatus struct {
 	TrainDomestic
 	Status string `gorm:"size:255;" json:"status"`
+}
+
+type TrainInfo struct {
+	TrainID          string `gorm:"size:255;" json:"train_id"`
+	DepartureCity    string `gorm:"size:255;" json:"departure_city"`
+	ArrivalCity      string `gorm:"size:255;" json:"arrival_city"`
+	DepartureStation string `gorm:"size:255;" json:"departure_station"`
+	ArrivalStation   string `gorm:"size:255;" json:"arrival_station"`
+	TrainStartDate   string `gorm:"size:255;" json:"train_start_date"`
+	DepartureTime    string `gorm:"size:255;" json:"departure_time"`
+	ArrivalTime      string `gorm:"size:255;" json:"arrival_time"`
+	DurationTime     string `gorm:"size:255;" json:"duration_time"`
+	PassCity         string `gorm:"size:255;" json:"pass_city"`
 }
 
 // 主要城市省份和其对应城市

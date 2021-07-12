@@ -579,7 +579,7 @@ paths:
         type: string
       - description: 城市名字
         in: formData
-        name: city_name
+        name: name
         required: true
         type: string
       responses:
@@ -628,7 +628,7 @@ paths:
         type: string
       - description: 城市名字
         in: formData
-        name: city_name
+        name: name
         required: true
         type: string
       responses:
@@ -656,6 +656,48 @@ paths:
             type: string
       tags:
       - 出行
+  /travel/find_specific_flight_info:
+    post:
+      description: 根据起始地查询航班信息，返回列表
+      parameters:
+      - description: 出发地
+        in: formData
+        name: departure_city
+        required: true
+        type: string
+      - description: 到达地
+        in: formData
+        name: arrival_city
+        required: true
+        type: string
+      responses:
+        "200":
+          description: '{"success":true, "message":"查询成功","data":"查询到的航班信息""}'
+          schema:
+            type: string
+      tags:
+      - 出行
+  /travel/find_specific_train_info:
+    post:
+      description: 根据起始地查询列车信息，返回列表
+      parameters:
+      - description: 出发地
+        in: formData
+        name: departure_city
+        required: true
+        type: string
+      - description: 到达地
+        in: formData
+        name: arrival_city
+        required: true
+        type: string
+      responses:
+        "200":
+          description: '{"success":true, "message":"查询成功","data":"查询到的火车信息""}'
+          schema:
+            type: string
+      tags:
+      - 出行
   /travel/list_all_flights:
     get:
       description: 获取所有航班信息，返回列表
@@ -672,6 +714,16 @@ paths:
       responses:
         "200":
           description: '{"success":true, "message":"查询成功","data":"所有主要城市列表""}'
+          schema:
+            type: string
+      tags:
+      - 出行
+  /travel/list_all_train_info:
+    get:
+      description: 获取所有火车信息，返回列表 [更新]
+      responses:
+        "200":
+          description: '{"success":true, "message":"查询成功","data":"所有火车信息""}'
           schema:
             type: string
       tags:

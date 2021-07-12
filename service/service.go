@@ -54,7 +54,7 @@ func UpdateAUser(user *model.User, username string, password string, userInfo st
 
 // 创建用户订阅城市
 func CreateASubscription(userID uint64, cityName string) (err error) {
-	subscription := model.Subscription{UserID: userID, CityName: cityName}
+	subscription := model.Subscription{UserID: userID, Name: cityName}
 	if err = global.DB.Create(&subscription).Error; err != nil {
 		return err
 	}
@@ -75,7 +75,7 @@ func QueryASubscriptionByID(subscriptionID uint64) (subscription model.Subscript
 
 // 根据用户 ID 和其订阅城市名查询某个订阅情况
 func QueryASubscriptionByUserIDAndCityName(userID uint64, cityName string) (subscription model.Subscription, notFound bool) {
-	err := global.DB.Where("user_id = ? AND city_name = ?", userID, cityName).First(&subscription).Error
+	err := global.DB.Where("user_id = ? AND name = ?", userID, cityName).First(&subscription).Error
 	if err != nil && errors.Is(err, gorm.ErrRecordNotFound) {
 		return subscription, true
 	} else if err != nil && !errors.Is(err, gorm.ErrRecordNotFound) {
@@ -88,7 +88,7 @@ func QueryASubscriptionByUserIDAndCityName(userID uint64, cityName string) (subs
 // 根据用户 ID 和其订阅城市名删除订阅城市
 func DeleteASubscription(userID uint64, cityName string) (err error) {
 	var subscription model.Subscription
-	err = global.DB.Where("user_id = ? AND city_name = ?", userID, cityName).First(&subscription).Error
+	err = global.DB.Where("user_id = ? AND name = ?", userID, cityName).First(&subscription).Error
 	_ = global.DB.Delete(&subscription).Error
 	return err
 }
@@ -121,16 +121,16 @@ func QuerySubcriptionsData(subscriptions []model.Subscription) (subscriptionsDat
 		lenSubcriptions := len(subscriptions)
 		// 循环获取订阅的省或直辖市的信息
 		for i := 0; i < lenSubcriptions; i++ {
-			provinceNamePinYin := global.MapPinYin(subscriptions[i].CityName)
+			provinceNamePinYin := global.MapPinYin(subscriptions[i].Name)
 			j := 0
 			for ; j < 34; j++ { // 查询省或直辖市相应的下标
 				if chinaCases[j].ProvinceName == provinceNamePinYin {
 					break
 				}
 			}
-			fmt.Println(subscriptions[i].CityName)
+			fmt.Println(subscriptions[i].Name)
 			fmt.Println(chinaCases[j].ProvinceName)
-			subscriptionsData = append(subscriptionsData, model.CovidDetailCDRProvince{ProvinceName: subscriptions[i].CityName,
+			subscriptionsData = append(subscriptionsData, model.CovidDetailCDRProvince{ProvinceName: subscriptions[i].Name,
 				NowCases:     chinaCases[j].Info - chinaDeaths[j].Info - chinaRecovered[j].Info,
 				Cases:        chinaCases[j].Info,
 				NewCases:     chinaCases[j].Info - chinaCases[j+34].Info,
@@ -290,13 +290,25 @@ func QueryAllComments(questionID uint64) (resWithUsername []model.CommentWithUse
 }
 
 // 查看所有国内航班
-func QueryAllFlights() (flightDomesticWithStatus []model.FlightDomesticWithStatus) {
+func QueryAllFlights() (FlightDomestic []model.FlightDomestic) {
 	var flights []model.FlightDomestic
 	global.DB.Find(&flights)
-	for _, v := range flights {
-		flightDomesticWithStatus = append(flightDomesticWithStatus, model.FlightDomesticWithStatus{FlightDomestic: v, Status: "已取消"})
+	// for _, v := range flights {
+	// 	flightDomesticWithStatus = append(flightDomesticWithStatus, model.FlightDomesticWithStatus{FlightDomestic: v, Status: "已取消"})
+	// }
+	return flights
+}
+
+// 根据起始地查询国内航班 [模糊搜索]
+func QuerySpecificFlightInfo(departureCity string, arrivalCity string) (flights []model.FlightDomestic, notFound bool) {
+	err := global.DB.Where("departure_city_name LIKE ? AND arrival_city_name LIKE ?", "%"+departureCity+"%", "%"+arrivalCity+"%").Find(&flights).Error
+	if err != nil && errors.Is(err, gorm.ErrRecordNotFound) {
+		return flights, true
+	} else if err != nil && !errors.Is(err, gorm.ErrRecordNotFound) {
+		panic(err)
+	} else {
+		return flights, false
 	}
-	return flightDomesticWithStatus
 }
 
 // 查看所有国内列车
@@ -307,6 +319,24 @@ func QueryAllTrains() (trainDomesticWithStatus []model.TrainDomesticWithStatus) 
 		trainDomesticWithStatus = append(trainDomesticWithStatus, model.TrainDomesticWithStatus{TrainDomestic: v, Status: "预计准点"})
 	}
 	return trainDomesticWithStatus
+}
+
+// 查看所有国内列车信息 [更新]
+func QueryAllTrainInfo() (trains []model.TrainInfo) {
+	global.DB.Find(&trains)
+	return trains
+}
+
+// 根据起始地查询列车信息 [模糊搜索]
+func QuerySpecificTrainInfo(departureCity string, arrivalCity string) (train []model.TrainInfo, notFound bool) {
+	err := global.DB.Where("departure_city LIKE ? AND arrival_city LIKE ?", "%"+departureCity+"%", "%"+arrivalCity+"%").Find(&train).Error
+	if err != nil && errors.Is(err, gorm.ErrRecordNotFound) {
+		return train, true
+	} else if err != nil && !errors.Is(err, gorm.ErrRecordNotFound) {
+		panic(err)
+	} else {
+		return train, false
+	}
 }
 
 // 查询所有主要城市

@@ -71,7 +71,7 @@ func Login(c *gin.Context) {
 			subs := service.QueryAllSubscriptions(user.UserID)
 			showSub := false
 			for _, sub := range subs {
-				if sub.CityName == "云南省" {
+				if sub.Name == "云南省" {
 					showSub = true
 					break
 				}
@@ -171,7 +171,7 @@ func TellUserInfo(c *gin.Context) {
 // @description 订阅城市疫情信息
 // @Tags 订阅城市
 // @Param user_id formData string true "用户ID"
-// @Param city_name formData string true "城市名字"
+// @Param name formData string true "城市名字"
 // @Success 200 {string} string "{"success":true, "message":"订阅成功"}"
 // @Failure 200 {string} string "{"success": false, "message": "已经订阅过这个城市的疫情信息"}"
 // @Failure 401 {string} string "{"success": false, "message": "数据库error, 一些其他错误"}"
@@ -179,7 +179,7 @@ func TellUserInfo(c *gin.Context) {
 // @Router /sub/subscribe [POST]
 func Subscribe(c *gin.Context) {
 	userID, _ := strconv.ParseUint(c.Request.FormValue("user_id"), 0, 64)
-	cityName := c.Request.FormValue("city_name")
+	cityName := c.Request.FormValue("name")
 
 	_, notFoundUserByID := service.QueryAUserByID(userID)
 	if notFoundUserByID {
@@ -211,7 +211,7 @@ func Subscribe(c *gin.Context) {
 // @description 获取订阅列表
 // @Tags 订阅城市
 // @Param user_id formData string true "用户ID"
-// @Param city_name formData string true "城市名字"
+// @Param name formData string true "城市名字"
 // @Success 200 {string} string "{"success":true, "message":"查询成功","data":"user的所有订阅"}"
 // @Failure 404 {string} string "{"success": false, "message": "用户ID不存在"}"
 // @Router /sub/list_all_subs [POST]
@@ -259,7 +259,7 @@ func ListSubscriptionsData(c *gin.Context) {
 	var information string
 	for i := 0; i < length; i++ {
 		if subscriptionsData[i].NewCases != 0 {
-			information += fmt.Sprintf("%s有%d个新增确诊,", subscriptionsData[i].ProvinceName, subscriptionsData[i].NewCases)
+			information += fmt.Sprintf("%s有 %d 个新增确诊病例 ", subscriptionsData[i].ProvinceName, subscriptionsData[i].NewCases)
 		}
 	}
 	informationLength := len(information)
@@ -277,7 +277,7 @@ func ListSubscriptionsData(c *gin.Context) {
 // @Router /sub/del_sub [POST]
 func RemoveSubscription(c *gin.Context) {
 	userID, _ := strconv.ParseUint(c.Request.FormValue("user_id"), 0, 64)
-	cityName := c.Request.FormValue("city_name")
+	cityName := c.Request.FormValue("name")
 	if err := service.DeleteASubscription(userID, cityName); err != nil {
 		c.JSON(401, gin.H{"success": false, "message": err.Error()})
 	} else {
@@ -538,7 +538,26 @@ func ListAllFlights(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"success": true, "message": "查询成功", "data": flightList})
 }
 
-// ListAllFlights doc
+// FindSpecificFlightInfo doc
+// @description 根据起始地查询航班信息，返回列表
+// @Tags 出行
+// @Param departure_city formData string true "出发地"
+// @Param arrival_city formData string true "到达地"
+// @Success 200 {string} string "{"success":true, "message":"查询成功","data":"查询到的航班信息""}"
+// @Failue 200 {string} string "{"success":true, "message":"查询成功","data":"没有找到该航班""}"
+// @Router /travel/find_specific_flight_info [POST]
+func FindSpecificFlightInfo(c *gin.Context) {
+	departureCity := c.Request.FormValue("departure_city")
+	arrivalCity := c.Request.FormValue("arrival_city")
+	train, notFound := service.QuerySpecificFlightInfo(departureCity, arrivalCity)
+	if notFound {
+		c.JSON(http.StatusOK, gin.H{"success": false, "message": "查询失败", "data": "没有找到该航班"})
+	} else {
+		c.JSON(http.StatusOK, gin.H{"success": true, "message": "查询成功", "data": train})
+	}
+}
+
+// ListAllTrains doc
 // @description 获取所有火车信息，返回列表
 // @Tags 出行
 // @Success 200 {string} string "{"success":true, "message":"查询成功","data":"所有火车信息""}"
@@ -546,6 +565,35 @@ func ListAllFlights(c *gin.Context) {
 func ListAllTrains(c *gin.Context) {
 	trainList := service.QueryAllTrains()
 	c.JSON(http.StatusOK, gin.H{"success": true, "message": "查询成功", "data": trainList})
+}
+
+// ListAllTrainInfo doc
+// @description 获取所有火车信息，返回列表 [更新]
+// @Tags 出行
+// @Success 200 {string} string "{"success":true, "message":"查询成功","data":"所有火车信息""}"
+// @Router /travel/list_all_train_info [GET]
+func ListAllTrainInfo(c *gin.Context) {
+	trainList := service.QueryAllTrainInfo()
+	c.JSON(http.StatusOK, gin.H{"success": true, "message": "查询成功", "data": trainList})
+}
+
+// FindSpecificTrainInfo doc
+// @description 根据起始地查询列车信息，返回列表
+// @Tags 出行
+// @Param departure_city formData string true "出发地"
+// @Param arrival_city formData string true "到达地"
+// @Success 200 {string} string "{"success":true, "message":"查询成功","data":"查询到的火车信息""}"
+// @Failue 200 {string} string "{"success":true, "message":"查询成功","data":"没有找到该列车""}"
+// @Router /travel/find_specific_train_info [POST]
+func FindSpecificTrainInfo(c *gin.Context) {
+	departureCity := c.Request.FormValue("departure_city")
+	arrivalCity := c.Request.FormValue("arrival_city")
+	train, notFound := service.QuerySpecificTrainInfo(departureCity, arrivalCity)
+	if notFound {
+		c.JSON(http.StatusOK, gin.H{"success": false, "message": "查询失败", "data": "没有找到该列车"})
+	} else {
+		c.JSON(http.StatusOK, gin.H{"success": true, "message": "查询成功", "data": train})
+	}
 }
 
 // ListAllCities doc
