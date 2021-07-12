@@ -561,12 +561,14 @@ func ListAllTrainInfo(c *gin.Context) {
 // FindSpecificTrainInfo doc
 // @description 根据起始地查询列车信息
 // @Tags 出行
+// @Param departure_city formData string true "出发地"
+// @Param arrival_city formData string true "到达地"
 // @Success 200 {string} string "{"success":true, "message":"查询成功","data":"查询到的火车信息""}"
 // @Failue 200 {string} string "{"success":true, "message":"查询成功","data":"没有找到该列车""}"
-// @Router /travel/list_all_train_info [GET]
+// @Router /travel/find_specific_train_info [GET]
 func FindSpecificTrainInfo(c *gin.Context) {
-	departureCity := c.Request.FormValue("name")
-	arrivalCity := c.Request.FormValue("name")
+	departureCity := c.Request.FormValue("departure_city")
+	arrivalCity := c.Request.FormValue("arrival_city")
 	train, notFound := service.QuerySpecificTrainInfo(departureCity, arrivalCity)
 	if notFound {
 		c.JSON(http.StatusOK, gin.H{"success": false, "message": "查询失败", "data": "没有找到该列车"})
