@@ -492,6 +492,22 @@ var doc = `{
                 }
             }
         },
+        "/data/list_vaccine_province_rate": {
+            "get": {
+                "description": "获取各个省份的疫苗接种数据",
+                "tags": [
+                    "数据"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "{\"success\":true, \"message\":\"查询成功\",\"data\":\"所有信息\"\"}",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
         "/data/query_data": {
             "post": {
                 "description": "获取在数据库中直接存的 Json File",

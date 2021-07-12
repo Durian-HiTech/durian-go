@@ -83,6 +83,31 @@ type CovidVaccine struct {
 	DailyPerMillion uint64    `json:"dailypermillion"`
 }
 
+// 各省的疫苗接种数据
+type VaccineChina struct {
+	Id       uint64  `json:"id"`
+	Time     string  `json:"time"`
+	Name     string  `gorm:"size:255;" json:"name"`
+	Count    uint64  `json:"count"`
+	IsParent uint64  `json:"isparent"`
+	Parent   string  `gorm:"size:255;" json:"parent"`
+	Rate     float64 `json:"rate"`
+}
+
+// [临时表]
+type ProvinceVaccineData struct {
+	ParentCity  string                 `gorm:"size:255;" json:"parent_city"`
+	ParentCount uint64                 `json:"parent_count"`
+	Rate        float64                `json:"rate"`
+	ChildCity   []ChildCityVaccineData `json:"child_city"`
+}
+
+// [临时表]
+type ChildCityVaccineData struct {
+	Child string `gorm:"size:255;" json:"child"`
+	Count uint64 `json:"count"`
+}
+
 // 新冠疫苗接种人数
 type CovidGlobalVaccine struct {
 	Date            time.Time `json:"date"`

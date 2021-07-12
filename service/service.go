@@ -492,6 +492,33 @@ func QueryAllCovidVaccines() (vaccines []model.CovidVaccine) {
 	return vaccines
 }
 
+// 查询分省的疫苗接种数据
+func QueryVaccineProvince() (data []model.ProvinceVaccineData) {
+	var vaccineChina []model.VaccineChina
+	global.DB.Order("id asc").Find(&vaccineChina)
+
+	length := len(vaccineChina)
+
+	var provinceName string
+	var rate float64
+	var parentCount uint64
+	var i int
+	for i = 0; i < length; i++ {
+		var childCityVaccineData []model.ChildCityVaccineData
+		if vaccineChina[i].IsParent == 1 { // 省份
+			provinceName = vaccineChina[i].Name
+			rate = vaccineChina[i].Rate
+			parentCount = vaccineChina[i].Count
+			for i++; i < length && vaccineChina[i].IsParent == 0; i++ {
+				childCityVaccineData = append(childCityVaccineData, model.ChildCityVaccineData{Child: vaccineChina[i].Name, Count: vaccineChina[i].Count})
+			}
+			i--
+			data = append(data, model.ProvinceVaccineData{ParentCity: provinceName, ParentCount: parentCount, Rate: rate, ChildCity: childCityVaccineData})
+		}
+	}
+	return data
+}
+
 // 查询所有地区的新冠疫苗接种人数（根据日期汇总）
 func QueryAllCovidVaccinesResponse() (response []model.CovidVaccineResponse) {
 	var cases []model.CovidVaccine
@@ -859,7 +886,11 @@ func QueryProvinceOverviewAndDetails(provinceName string, provinceNamePinYin str
 				deathsNewNum = 0
 				recoveredNewNum = 0
 			}
-			casesNowNum = casesNum - deathsNum - recoveredNum
+			if casesNum >= deathsNum+recoveredNum {
+				casesNowNum = casesNum - deathsNum - recoveredNum
+			} else {
+				casesNowNum = -casesNum + deathsNum + recoveredNum
+			}
 
 			nowCasesItem := model.NowCases{NowNum: casesNowNum, NewNum: casesNewNum}
 			casesItem := model.Cases{NowNum: casesNum, NewNum: casesNewNum}
@@ -955,7 +986,12 @@ func QueryOtherCountryOverviewAndDetails(countryName string) (data []model.Count
 		for provinceName, casesProvinceNum := range casesMap {
 			deathsProvinceNum := deathsMap[provinceName]
 			recoveredProvinceNum := recoveredMap[provinceName]
-			casesProvinceNowNum := casesProvinceNum - deathsProvinceNum - recoveredProvinceNum
+			var casesProvinceNowNum uint64
+			if casesProvinceNum >= deathsProvinceNum+recoveredProvinceNum {
+				casesProvinceNowNum = casesProvinceNum - deathsProvinceNum - recoveredProvinceNum
+			} else {
+				casesProvinceNowNum = -casesProvinceNum + deathsProvinceNum + recoveredProvinceNum
+			}
 			detail = append(detail, model.CovidCDRProvince{ProvinceName: provinceName, NowCases: casesProvinceNowNum,
 				Cases: casesProvinceNum, Deaths: deathsProvinceNum, Recovered: recoveredProvinceNum})
 
@@ -978,9 +1014,12 @@ func QueryOtherCountryOverviewAndDetails(countryName string) (data []model.Count
 			deathsNum = 0
 			recoveredNum = 0
 		}
-
-		casesNowNum = casesNum - deathsNum - recoveredNum // 现存确诊=今日累计确诊-今日累计死亡-今日累计治愈
-		if i != 0 {                                       // 第二天及以后
+		if casesNum >= deathsNum+recoveredNum {
+			casesNowNum = casesNum - deathsNum - recoveredNum // 现存确诊=今日累计确诊-今日累计死亡-今日累计治愈
+		} else {
+			casesNowNum = -casesNum + deathsNum + recoveredNum // 现存确诊=今日累计确诊-今日累计死亡-今日累计治愈
+		}
+		if i != 0 { // 第二天及以后
 			casesNewNum = casesNum - data[i-1].Overview.Cases.NowNum // 新增确诊=今日累计确诊-昨日累计确诊
 			deathsNewNum = deathsNum - data[i-1].Overview.Deaths.NowNum
 			recoveredNewNum = recoveredNum - data[i-1].Overview.Recovered.NowNum
@@ -1042,8 +1081,14 @@ func QueryChinaOverviewAndDetails() (data []model.CountryOverviewAndDetails, not
 			// var vaccineNum uint64
 			// var vaccineNewNum uint64
 			for j := 0; j < 34; j++ {
+				var temp uint64
+				if cases[i*34+j].Info >= deaths[i*34+j].Info+recovered[i*34+j].Info {
+					temp = cases[i*34+j].Info - deaths[i*34+j].Info - recovered[i*34+j].Info
+				} else {
+					temp = -cases[i*34+j].Info + deaths[i*34+j].Info + recovered[i*34+j].Info
+				}
 				detail = append(detail, model.CovidCDRProvince{ProvinceName: cases[i*34+j].ProvinceName,
-					NowCases:  cases[i*34+j].Info - deaths[i*34+j].Info - recovered[i*34+j].Info,
+					NowCases:  temp,
 					Cases:     cases[i*34+j].Info,
 					Deaths:    deaths[i*34+j].Info,
 					Recovered: recovered[i*34+j].Info})
@@ -1051,24 +1096,16 @@ func QueryChinaOverviewAndDetails() (data []model.CountryOverviewAndDetails, not
 				deathsNum += deaths[i*34+j].Info
 				recoveredNum += recovered[i*34+j].Info
 			}
-
-			casesNowNum = casesNum - deathsNum - recoveredNum
+			if casesNum >= deathsNum+recoveredNum {
+				casesNowNum = casesNum - deathsNum - recoveredNum
+			} else {
+				casesNowNum = -casesNum + deathsNum + recoveredNum
+			}
 			curDate := cases[i*34].Date
-			// var chinaVaccineToday model.CovidVaccine
-			// err := global.DB.Where("country_name = ? AND date = ?", "China", curDate).First(&chinaVaccineToday).Error
 			if i != 0 { // 第二天及以后
 				casesNewNum = casesNum - data[i-1].Overview.Cases.NowNum
 				deathsNewNum = deathsNum - data[i-1].Overview.Deaths.NowNum
 				recoveredNewNum = recoveredNum - data[i-1].Overview.Recovered.NowNum
-				// if err != nil && errors.Is(err, gorm.ErrRecordNotFound) { // covid_vaccine最新一天(7.9)的一定查不到，用前一天(7.8)的代替
-				// 	fmt.Println(curDate)
-				// 	fmt.Println(data[i-1].Overview.Vaccine.NowNum)
-				// 	vaccineNum = data[i-1].Overview.Vaccine.NowNum
-				// 	vaccineNewNum = data[i-1].Overview.Vaccine.NewNum
-				// } else {
-				// 	vaccineNum = chinaVaccineToday.Info
-				// 	vaccineNewNum = chinaVaccineToday.Info - data[i-1].Overview.Vaccine.NowNum
-				// }
 			} else {
 				casesNewNum = 0
 				deathsNewNum = 0
@@ -1133,8 +1170,11 @@ func QueryOtherCountryOverviewAndDetailsForHomeData() (globalTable model.GlobalO
 			casesNum = cases[i].Info
 			deathsNum = deaths[i].Info
 			recoveredNum = recovered[i].Info
-
-			casesNowNum = casesNum - deathsNum - recoveredNum
+			if casesNum >= deathsNum+recoveredNum {
+				casesNowNum = casesNum - deathsNum - recoveredNum
+			} else {
+				casesNowNum = -casesNum + deathsNum + recoveredNum
+			}
 
 			casesNewNum = casesNum - cases[i+173].Info
 			deathsNewNum = deathsNum - deaths[i+173].Info
@@ -1253,7 +1293,11 @@ func QueryGlobalOverviewAndDetailsHistory() (globalTable []model.GlobalOverviewA
 				deathsNum = deaths[i*countryLength+j].Info
 				recoveredNum = recovered[i*countryLength+j].Info
 
-				casesNowNum = casesNum - deathsNum - recoveredNum
+				if casesNum >= deathsNum+recoveredNum {
+					casesNowNum = casesNum - deathsNum - recoveredNum
+				} else {
+					casesNowNum = -casesNum + deathsNum + recoveredNum
+				}
 
 				if i != 0 { // 减去前一天的
 					casesNewNum = casesNum - cases[(i-1)*countryLength+j].Info
@@ -1276,7 +1320,11 @@ func QueryGlobalOverviewAndDetailsHistory() (globalTable []model.GlobalOverviewA
 				globalDeathsNum = deaths[i*countryLength+j].Info
 				globalRecoveredNum = recovered[i*countryLength+j].Info
 
-				globalCasesNowNum = globalCasesNum - globalDeathsNum - globalRecoveredNum
+				if globalCasesNum >= globalDeathsNum+globalRecoveredNum {
+					globalCasesNowNum = globalCasesNum - globalDeathsNum - globalRecoveredNum
+				} else {
+					globalCasesNowNum = -globalCasesNum + globalDeathsNum + globalRecoveredNum
+				}
 
 				if i != 0 { // 直接减去前一天
 					globalCasesNewNum = globalCasesNum - cases[(i-1)*countryLength+j].Info
