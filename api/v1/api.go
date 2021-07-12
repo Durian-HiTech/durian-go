@@ -933,3 +933,29 @@ func ListVaccineOverviewData(c *gin.Context) {
 	}
 	c.JSON(http.StatusOK, gin.H{"success": true, "message": "查询成功", "Global": globalTableRevert})
 }
+
+// ListCurrentLocationData doc
+// @description 获取当前位置的疫情信息：临时写一个支持北京香港和美国的，后续添加其他地区
+// @Param country formData string true "国家名"
+// @Param province formData string true "省份名"
+// @Param city formData string true "城市名"
+// @Param district formData string true "区名"
+// @Tags 数据
+// @Success 200 {string} string "{"success":true, "message":"查询成功","data":"所有信息""}"
+// @Router /data/current_location_data [POST]
+func ListCurrentLocationData(c *gin.Context) {
+	countryName := c.Request.FormValue("country")
+	provinceName := c.Request.FormValue("province")
+	// cityName := c.Request.FormValue("city")
+	districtName := c.Request.FormValue("district")
+
+	var data model.CovidDetailCDRProvince
+	if districtName != "" {
+		data = service.QueryDistrictData("海淀") // covid_hangzhou_cases
+	} else if countryName != "中国" {
+		data = service.QueryCountryData("United States of America") // covid_cases
+	} else if provinceName == "香港特别行政区" {
+		data = service.QueryProvinceData("Hong Kong") // covid_china_cases
+	}
+	c.JSON(http.StatusOK, gin.H{"success": true, "message": "查询成功", "data": data})
+}

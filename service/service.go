@@ -576,6 +576,137 @@ func QueryAllCovidRecoveredsResponseProvince(province string) (response []model.
 // 	return detail
 // }
 
+// 几个临时的service 获取当前位置的疫情信息
+// 获取某国的数据，暂时专门用来获取美国的数据
+func QueryCountryData(countryName string) (data model.CovidDetailCDRProvince) {
+	var cases []model.CovidCases
+	var deaths []model.CovidDeaths
+	var recovered []model.CovidRecovered
+
+	err1 := global.DB.Where("country_name = ?", countryName).Order("date desc").Find(&cases).Error
+	err2 := global.DB.Where("country_name = ?", countryName).Order("date desc").Find(&deaths).Error
+	err3 := global.DB.Where("country_name = ?", countryName).Order("date desc").Find(&recovered).Error
+
+	if (err1 != nil && errors.Is(err1, gorm.ErrRecordNotFound)) || (err2 != nil && errors.Is(err2, gorm.ErrRecordNotFound)) || (err3 != nil && errors.Is(err3, gorm.ErrRecordNotFound)) {
+		return data
+	} else if err1 != nil && !errors.Is(err1, gorm.ErrRecordNotFound) {
+		panic(err1)
+	} else if err2 != nil && !errors.Is(err2, gorm.ErrRecordNotFound) {
+		panic(err2)
+	} else if err3 != nil && !errors.Is(err3, gorm.ErrRecordNotFound) {
+		panic(err3)
+	} else {
+		var casesNum uint64
+		var casesNewNum uint64
+		var casesNowNum uint64
+		var deathsNum uint64
+		var deathsNewNum uint64
+		var recoveredNum uint64
+		var recoveredNewNum uint64
+
+		casesNum = cases[0].Info
+		casesNewNum = cases[0].Info - cases[1].Info
+		deathsNum = deaths[0].Info
+		deathsNewNum = deaths[0].Info - deaths[1].Info
+		recoveredNum = recovered[0].Info
+		recoveredNewNum = recovered[0].Info - recovered[1].Info
+		casesNowNum = casesNum - deathsNum - recoveredNum
+		data = model.CovidDetailCDRProvince{ProvinceName: "美国",
+			Cases: casesNum, NowCases: casesNowNum, NewCases: casesNewNum,
+			Deaths: deathsNum, NewDeaths: deathsNewNum,
+			Recovered: recoveredNum, NewRecovered: recoveredNewNum}
+		return data
+	}
+}
+
+// 获取中国某省下某市/某直辖市下某区的数据
+// 暂时专门处理海淀区
+func QueryDistrictData(districtName string) (data model.CovidDetailCDRProvince) {
+	var cases []model.CovidHangzhouCases
+	var deaths []model.CovidHangzhouDeaths
+	var recovered []model.CovidHangzhouRecovered
+
+	err1 := global.DB.Where("city_name = ?", districtName).Order("date desc").Find(&cases).Error
+	err2 := global.DB.Where("city_name = ?", districtName).Order("date desc").Find(&deaths).Error
+	err3 := global.DB.Where("city_name = ?", districtName).Order("date desc").Find(&recovered).Error
+
+	if (err1 != nil && errors.Is(err1, gorm.ErrRecordNotFound)) || (err2 != nil && errors.Is(err2, gorm.ErrRecordNotFound)) || (err3 != nil && errors.Is(err3, gorm.ErrRecordNotFound)) {
+		return data
+	} else if err1 != nil && !errors.Is(err1, gorm.ErrRecordNotFound) {
+		panic(err1)
+	} else if err2 != nil && !errors.Is(err2, gorm.ErrRecordNotFound) {
+		panic(err2)
+	} else if err3 != nil && !errors.Is(err3, gorm.ErrRecordNotFound) {
+		panic(err3)
+	} else {
+		var casesNum uint64
+		var casesNewNum uint64
+		var casesNowNum uint64
+		var deathsNum uint64
+		var deathsNewNum uint64
+		var recoveredNum uint64
+		var recoveredNewNum uint64
+
+		fmt.Println(len(cases))
+		fmt.Println(districtName)
+		casesNum = cases[0].Info
+		casesNewNum = cases[0].Info - cases[1].Info
+		deathsNum = deaths[0].Info
+		deathsNewNum = deaths[0].Info - deaths[1].Info
+		recoveredNum = recovered[0].Info
+		recoveredNewNum = recovered[0].Info - recovered[1].Info
+		casesNowNum = casesNum - deathsNum - recoveredNum
+		data = model.CovidDetailCDRProvince{ProvinceName: districtName,
+			Cases: casesNum, NowCases: casesNowNum, NewCases: casesNewNum,
+			Deaths: deathsNum, NewDeaths: deathsNewNum,
+			Recovered: recoveredNum, NewRecovered: recoveredNewNum}
+		return data
+	}
+}
+
+// 获取中国某省下/某直辖市的数据
+// 暂时用来专门处理香港的数据
+func QueryProvinceData(provinceName string) (data model.CovidDetailCDRProvince) {
+	var cases []model.CovidChinaCases
+	var deaths []model.CovidChinaDeaths
+	var recovered []model.CovidChinaRecovered
+
+	err1 := global.DB.Where("province_name = ?", provinceName).Order("date desc").Find(&cases).Error
+	err2 := global.DB.Where("province_name = ?", provinceName).Order("date desc").Find(&deaths).Error
+	err3 := global.DB.Where("province_name = ?", provinceName).Order("date desc").Find(&recovered).Error
+
+	if (err1 != nil && errors.Is(err1, gorm.ErrRecordNotFound)) || (err2 != nil && errors.Is(err2, gorm.ErrRecordNotFound)) || (err3 != nil && errors.Is(err3, gorm.ErrRecordNotFound)) {
+		return data
+	} else if err1 != nil && !errors.Is(err1, gorm.ErrRecordNotFound) {
+		panic(err1)
+	} else if err2 != nil && !errors.Is(err2, gorm.ErrRecordNotFound) {
+		panic(err2)
+	} else if err3 != nil && !errors.Is(err3, gorm.ErrRecordNotFound) {
+		panic(err3)
+	} else {
+		var casesNum uint64
+		var casesNewNum uint64
+		var casesNowNum uint64
+		var deathsNum uint64
+		var deathsNewNum uint64
+		var recoveredNum uint64
+		var recoveredNewNum uint64
+
+		casesNum = cases[0].Info
+		casesNewNum = cases[0].Info - cases[1].Info
+		deathsNum = deaths[0].Info
+		deathsNewNum = deaths[0].Info - deaths[1].Info
+		recoveredNum = recovered[0].Info
+		recoveredNewNum = recovered[0].Info - recovered[1].Info
+		casesNowNum = casesNum - deathsNum - recoveredNum
+		data = model.CovidDetailCDRProvince{ProvinceName: "香港特别行政区",
+			Cases: casesNum, NowCases: casesNowNum, NewCases: casesNewNum,
+			Deaths: deathsNum, NewDeaths: deathsNewNum,
+			Recovered: recoveredNum, NewRecovered: recoveredNewNum}
+		return data
+	}
+}
+
 // 获取某个三级行政单位（如海淀区）的overview数据
 func QueryDistrictOverview(districtName string) (districtData []model.DistrictOverview) {
 	var districtCases []model.CovidHangzhouCases
@@ -1208,12 +1339,17 @@ func QueryVaccineOverviewData() (globalTable []model.GlobalVaccineOverviewAndDet
 				vaccineNewNum = 0
 			}
 			globalVaccineNum += vaccineNum
-			globalVaccineNewNum += vaccineNewNum
 
 			globalDetail = append(globalDetail, model.CovidVaccineCountry{CountryName: cases[i*countryLength+j].CountryName,
 				NewVaccine: vaccineNewNum, Vaccine: vaccineNum,
 				TotalPerHundred: totalPerHundred, DailyPerMillion: dailyPerMillion})
 		}
+		if i != 0 {
+			globalVaccineNewNum = globalVaccineNum - globalTable[i-1].Overview.Vaccine
+		} else {
+			globalVaccineNewNum = 0
+		}
+
 		vaccineGlobalItem := model.CovidVaccineGlobal{Vaccine: globalVaccineNum, NewVaccine: globalVaccineNewNum}
 		globalTableItem := model.GlobalVaccineOverviewAndDetailsWithDate{Date: curDate, Overview: vaccineGlobalItem, Detailed: globalDetail}
 		globalTable = append(globalTable, globalTableItem)

@@ -14,6 +14,37 @@ paths:
             type: string
       tags:
       - 测试
+  /data/current_location_data:
+    post:
+      description: 获取当前位置的疫情信息：临时写一个支持北京香港和美国的，后续添加其他地区
+      parameters:
+      - description: 国家名
+        in: formData
+        name: country
+        required: true
+        type: string
+      - description: 省份名
+        in: formData
+        name: province
+        required: true
+        type: string
+      - description: 城市名
+        in: formData
+        name: city
+        required: true
+        type: string
+      - description: 区名
+        in: formData
+        name: district
+        required: true
+        type: string
+      responses:
+        "200":
+          description: '{"success":true, "message":"查询成功","data":"所有信息""}'
+          schema:
+            type: string
+      tags:
+      - 数据
   /data/list_all_covid_cases:
     get:
       description: 获取所有地区的新冠感染人数，返回列表

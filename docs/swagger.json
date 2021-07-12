@@ -26,6 +26,52 @@
                 }
             }
         },
+        "/data/current_location_data": {
+            "post": {
+                "description": "获取当前位置的疫情信息：临时写一个支持北京香港和美国的，后续添加其他地区",
+                "tags": [
+                    "数据"
+                ],
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "国家名",
+                        "name": "country",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "省份名",
+                        "name": "province",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "城市名",
+                        "name": "city",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "区名",
+                        "name": "district",
+                        "in": "formData",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "{\"success\":true, \"message\":\"查询成功\",\"data\":\"所有信息\"\"}",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
         "/data/list_all_covid_cases": {
             "get": {
                 "description": "获取所有地区的新冠感染人数，返回列表",
