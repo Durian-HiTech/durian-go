@@ -92,6 +92,7 @@ type FlightDomestic struct {
 	DepartureAirportName string `gorm:"size:255;" json:"departure_airport_name"`
 	ArrivalCityName      string `gorm:"size:255;" json:"arrival_city_name"`
 	ArrivalAirportName   string `gorm:"size:255;" json:"arrival_airport_name"`
+	State                string `gorm:"size:255;" json:"state"`
 }
 
 type FlightDomesticWithStatus struct {

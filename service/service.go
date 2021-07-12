@@ -290,13 +290,25 @@ func QueryAllComments(questionID uint64) (resWithUsername []model.CommentWithUse
 }
 
 // 查看所有国内航班
-func QueryAllFlights() (flightDomesticWithStatus []model.FlightDomesticWithStatus) {
+func QueryAllFlights() (FlightDomestic []model.FlightDomestic) {
 	var flights []model.FlightDomestic
 	global.DB.Find(&flights)
-	for _, v := range flights {
-		flightDomesticWithStatus = append(flightDomesticWithStatus, model.FlightDomesticWithStatus{FlightDomestic: v, Status: "已取消"})
+	// for _, v := range flights {
+	// 	flightDomesticWithStatus = append(flightDomesticWithStatus, model.FlightDomesticWithStatus{FlightDomestic: v, Status: "已取消"})
+	// }
+	return flights
+}
+
+// 根据起始地查询国内航班 [模糊搜索]
+func QuerySpecificFlightInfo(departureCity string, arrivalCity string) (flights []model.FlightDomestic, notFound bool) {
+	err := global.DB.Where("departure_city_name LIKE ? AND arrival_city_name LIKE ?", "%"+departureCity+"%", "%"+arrivalCity+"%").Find(&flights).Error
+	if err != nil && errors.Is(err, gorm.ErrRecordNotFound) {
+		return flights, true
+	} else if err != nil && !errors.Is(err, gorm.ErrRecordNotFound) {
+		panic(err)
+	} else {
+		return flights, false
 	}
-	return flightDomesticWithStatus
 }
 
 // 查看所有国内列车

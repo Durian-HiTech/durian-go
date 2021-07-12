@@ -538,6 +538,25 @@ func ListAllFlights(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"success": true, "message": "查询成功", "data": flightList})
 }
 
+// FindSpecificFlightInfo doc
+// @description 根据起始地查询航班信息，返回列表
+// @Tags 出行
+// @Param departure_city formData string true "出发地"
+// @Param arrival_city formData string true "到达地"
+// @Success 200 {string} string "{"success":true, "message":"查询成功","data":"查询到的航班信息""}"
+// @Failue 200 {string} string "{"success":true, "message":"查询成功","data":"没有找到该航班""}"
+// @Router /travel/find_specific_flight_info [GET]
+func FindSpecificFlightInfo(c *gin.Context) {
+	departureCity := c.Request.FormValue("departure_city")
+	arrivalCity := c.Request.FormValue("arrival_city")
+	train, notFound := service.QuerySpecificFlightInfo(departureCity, arrivalCity)
+	if notFound {
+		c.JSON(http.StatusOK, gin.H{"success": false, "message": "查询失败", "data": "没有找到该航班"})
+	} else {
+		c.JSON(http.StatusOK, gin.H{"success": true, "message": "查询成功", "data": train})
+	}
+}
+
 // ListAllTrains doc
 // @description 获取所有火车信息，返回列表
 // @Tags 出行

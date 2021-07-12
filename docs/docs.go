@@ -1015,6 +1015,38 @@ var doc = `{
                 }
             }
         },
+        "/travel/find_specific_flight_info": {
+            "get": {
+                "description": "根据起始地查询航班信息，返回列表",
+                "tags": [
+                    "出行"
+                ],
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "出发地",
+                        "name": "departure_city",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "到达地",
+                        "name": "arrival_city",
+                        "in": "formData",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "{\"success\":true, \"message\":\"查询成功\",\"data\":\"查询到的航班信息\"\"}",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
         "/travel/find_specific_train_info": {
             "get": {
                 "description": "根据起始地查询列车信息",
