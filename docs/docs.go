@@ -1016,7 +1016,7 @@ var doc = `{
             }
         },
         "/travel/find_specific_flight_info": {
-            "get": {
+            "post": {
                 "description": "根据起始地查询航班信息，返回列表",
                 "tags": [
                     "出行"
@@ -1048,7 +1048,7 @@ var doc = `{
             }
         },
         "/travel/find_specific_train_info": {
-            "get": {
+            "post": {
                 "description": "根据起始地查询列车信息，返回列表",
                 "tags": [
                     "出行"

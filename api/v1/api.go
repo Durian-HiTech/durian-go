@@ -545,7 +545,7 @@ func ListAllFlights(c *gin.Context) {
 // @Param arrival_city formData string true "到达地"
 // @Success 200 {string} string "{"success":true, "message":"查询成功","data":"查询到的航班信息""}"
 // @Failue 200 {string} string "{"success":true, "message":"查询成功","data":"没有找到该航班""}"
-// @Router /travel/find_specific_flight_info [GET]
+// @Router /travel/find_specific_flight_info [POST]
 func FindSpecificFlightInfo(c *gin.Context) {
 	departureCity := c.Request.FormValue("departure_city")
 	arrivalCity := c.Request.FormValue("arrival_city")
@@ -584,7 +584,7 @@ func ListAllTrainInfo(c *gin.Context) {
 // @Param arrival_city formData string true "到达地"
 // @Success 200 {string} string "{"success":true, "message":"查询成功","data":"查询到的火车信息""}"
 // @Failue 200 {string} string "{"success":true, "message":"查询成功","data":"没有找到该列车""}"
-// @Router /travel/find_specific_train_info [GET]
+// @Router /travel/find_specific_train_info [POST]
 func FindSpecificTrainInfo(c *gin.Context) {
 	departureCity := c.Request.FormValue("departure_city")
 	arrivalCity := c.Request.FormValue("arrival_city")
