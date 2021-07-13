@@ -639,7 +639,7 @@ func QueryCountryData(dataMap map[string]string, countryName string) (data model
 		recoveredNum = recovered[0].Info
 		recoveredNewNum = recovered[0].Info - recovered[1].Info
 		casesNowNum = casesNum - deathsNum - recoveredNum
-		data = model.CovidDetailCDRProvince{ProvinceName: "美国",
+		data = model.CovidDetailCDRProvince{ProvinceName: countryName,
 			Cases: casesNum, NowCases: casesNowNum, NewCases: casesNewNum,
 			Deaths: deathsNum, NewDeaths: deathsNewNum,
 			Recovered: recoveredNum, NewRecovered: recoveredNewNum}

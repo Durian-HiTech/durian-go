@@ -971,12 +971,12 @@ func ListCurrentLocationData(c *gin.Context) {
 		return
 	}
 	var data model.CovidDetailCDRProvince
-	if districtName != "" && (cityName == "上海市" || cityName == "北京市" || cityName == "天津市" || cityName == "重庆市") {
+	if countryName != "中国" {
+		data = service.QueryCountryData(dataMap, countryName) // 外国的查询
+	} else if districtName != "" && (cityName == "上海市" || cityName == "北京市" || cityName == "天津市" || cityName == "重庆市") {
 		data = service.QueryDistrictData(districtName) // 直辖市下的区的查询
 	} else if cityName != "" {
 		data = service.QueryDistrictData(cityName) // 对省下的市的查询
-	} else if countryName != "中国" {
-		data = service.QueryCountryData(dataMap, countryName) // 外国的查询
 	} else if provinceName == "香港特别行政区" {
 		data = service.QueryProvinceData("Hong Kong") // covid_china_cases
 	}
