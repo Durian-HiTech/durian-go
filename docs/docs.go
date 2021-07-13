@@ -492,7 +492,7 @@ var doc = `{
                 }
             }
         },
-        "/data/list_vaccine_province_rate": {
+        "/data/list_vaccine_province_info": {
             "get": {
                 "description": "获取各个省份的疫苗接种数据",
                 "tags": [

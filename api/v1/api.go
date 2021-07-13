@@ -257,14 +257,13 @@ func ListSubscriptionsData(c *gin.Context) {
 		})
 		return
 	}
-	var information string
+	var information []string
 	for i := 0; i < length; i++ {
 		if subscriptionsData[i].NewCases != 0 {
-			information += fmt.Sprintf("%s有 %d 个新增确诊病例 ", subscriptionsData[i].ProvinceName, subscriptionsData[i].NewCases)
+			information = append(information, fmt.Sprintf("%s有 %d 个新增确诊病例", subscriptionsData[i].ProvinceName, subscriptionsData[i].NewCases))
 		}
 	}
-	informationLength := len(information)
-	c.JSON(http.StatusOK, gin.H{"success": true, "message": "查询成功", "data": subscriptionsData, "information": information[0 : informationLength-1]})
+	c.JSON(http.StatusOK, gin.H{"success": true, "message": "查询成功", "data": subscriptionsData, "information": information})
 }
 
 // RemoveSubscription doc
@@ -987,7 +986,7 @@ func ListCurrentLocationData(c *gin.Context) {
 // @description 获取各个省份的疫苗接种数据
 // @Tags 数据
 // @Success 200 {string} string "{"success":true, "message":"查询成功","data":"所有信息""}"
-// @Router /data/list_vaccine_province_rate [GET]
+// @Router /data/list_vaccine_province_info [GET]
 func ListVaccineProvinceRate(c *gin.Context) {
 	data := service.QueryVaccineProvince()
 	c.JSON(http.StatusOK, gin.H{"success": true, "message": "查询成功", "data": data})
